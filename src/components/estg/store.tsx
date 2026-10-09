@@ -1,3 +1,4 @@
+import type * as React from "react";
 import { createContext, useContext, useState, type ReactNode } from "react";
 type Item = { id: string; quantity: number };
 type Store = {
@@ -5,7 +6,9 @@ type Store = {
   add: (id: string, quantity?: number) => void;
   update: (id: string, quantity: number) => void;
 };
-const Context = createContext<Store | null>(null);
+// Keep one context instance across hot reloads so provider and consumers always match.
+const g = globalThis as unknown as { __estgStoreContext?: React.Context<Store | null> };
+const Context = (g.__estgStoreContext ??= createContext<Store | null>(null));
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<Item[]>([]);
   const add = (id: string, quantity = 1) =>

@@ -1,0 +1,71 @@
+import rooftop from "@/assets/solar-rooftop.jpg";
+import battery from "@/assets/battery.jpg";
+import charger from "@/assets/charger.jpg";
+export const articles = [
+  {
+    slug: "energieopslag",
+    title: "Energieopslag: de volgende stap in jouw project",
+    category: "ENERGIEOPSLAG",
+    image: battery,
+    intro:
+      "Opgewekte energie benutten wanneer je die nodig hebt. Wat neem je mee bij de keuze voor een batterijsysteem?",
+    sections: [
+      [
+        "Begin bij het energieprofiel",
+        "Breng het verbruik en de opwekking van de installatie in kaart. Een passend batterijsysteem sluit aan op het dagelijkse energieprofiel en de doelen van de gebruiker.",
+      ],
+      [
+        "Denk in complete systemen",
+        "Controleer de compatibiliteit van batterij, omvormer en energiemanagementsysteem. Kijk ook naar de mogelijkheden om de opslag later uit te breiden.",
+      ],
+      [
+        "Plan de installatie zorgvuldig",
+        "Houd rekening met de beschikbare ruimte, installatievoorschriften en toepasselijke veiligheidsnormen. Raadpleeg altijd de actuele documentatie van de fabrikant.",
+      ],
+    ],
+  },
+  {
+    slug: "zonne-energie",
+    title: "Een sterke basis voor jouw zonne-energieproject",
+    category: "ZONNE-ENERGIE",
+    image: rooftop,
+    intro:
+      "Een goede installatie begint met de juiste combinatie van zonnepanelen, omvormers en montagemateriaal.",
+    sections: [
+      [
+        "Bekijk het complete dak",
+        "Oriëntatie, daktype, schaduw en beschikbare ruimte bepalen de mogelijkheden. Maak een ontwerp dat past bij de locatie en het verwachte verbruik.",
+      ],
+      [
+        "Kies componenten die samenwerken",
+        "Stem panelen, omvormers en montagemateriaal op elkaar af. Controleer elektrische grenzen en montagevoorschriften aan de hand van de fabrikantdocumentatie.",
+      ],
+      [
+        "Blijf vooruitdenken",
+        "Toekomstige energieopslag of elektrisch laden kan invloed hebben op je ontwerp. Bespreek uitbreidingsplannen voordat de installatie wordt gerealiseerd.",
+      ],
+    ],
+  },
+  {
+    slug: "slim-laden",
+    title: "Slim laden begint bij de juiste oplossing",
+    category: "EV-LADEN",
+    image: charger,
+    intro:
+      "Van een laadpunt thuis tot laadoplossingen op het werk. Zo kijk je verder dan alleen de laadpaal.",
+    sections: [
+      [
+        "De locatie bepaalt de keuze",
+        "Kijk naar de aansluiting, de gebruikers en het beschikbare vermogen. Een laadpunt thuis stelt andere eisen dan een laadplein voor meerdere voertuigen.",
+      ],
+      [
+        "Verdeel het vermogen slim",
+        "Load balancing kan helpen om het beschikbare vermogen te verdelen. Laat de aansluiting en het ontwerp beoordelen door een gekwalificeerde installateur.",
+      ],
+      [
+        "Verbind laden met zonne-energie",
+        "Onderzoek de mogelijkheden voor koppeling met zonnepanelen en energiemanagement. Compatibiliteit en configuratie verschillen per product en fabrikant.",
+      ],
+    ],
+  },
+];

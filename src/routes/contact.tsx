@@ -1,0 +1,100 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowUpRight, Mail, Phone, MapPin } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { PageIntro } from "@/components/estg/page-intro";
+import { pageHead } from "@/lib/catalog";
+export const Route = createFileRoute("/contact")({
+  head: () =>
+    pageHead(
+      "Contact",
+      "Neem contact op met ESTG voor jouw duurzame energieproject. Vind ons in Oosterhout of bel +31 (0)85 016 7800.",
+    ),
+  component: Contact,
+});
+function Contact() {
+  const [ready, setReady] = useState(false);
+  return (
+    <>
+      <PageIntro
+        title="Hoe kunnen we jou verder helpen?"
+        description="Een productvraag, een nieuw project of kennismaken? We denken graag met je mee."
+      />
+      <div className="container content-grid">
+        <div>
+          <span className="eyebrow muted">Persoonlijk contact</span>
+          <h2>
+            Jouw vraag.
+            <br />
+            Onze aandacht.
+          </h2>
+          <p className="flex items-center gap-3">
+            <Phone size={18} />
+            <a href="tel:+31850167800">+31 (0)85 016 7800</a>
+          </p>
+          <p>Maandag t/m vrijdag, 08:30 – 17:30</p>
+          <p className="flex items-start gap-3">
+            <MapPin size={18} />
+            <span>
+              Rietgraaf 2a
+              <br />
+              6678 PJ Oosterhout (Gld)
+              <br />
+              Nederland
+            </span>
+          </p>
+          <Button asChild variant="outline">
+            <a href="https://www.estg.eu/en-gb/about-estg/contact" target="_blank" rel="noreferrer">
+              Contact via ESTG <ArrowUpRight />
+            </a>
+          </Button>
+        </div>
+        <div className="contact-panel">
+          <h3>Bereid je bericht voor</h3>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setReady(true);
+            }}
+          >
+            <div className="field">
+              <label htmlFor="name">Naam</label>
+              <input id="name" required placeholder="Jouw naam" />
+            </div>
+            <div className="field">
+              <label htmlFor="company">Bedrijfsnaam</label>
+              <input id="company" required placeholder="Jouw bedrijf" />
+            </div>
+            <div className="field">
+              <label htmlFor="email">E-mailadres</label>
+              <input id="email" type="email" required placeholder="naam@bedrijf.nl" />
+            </div>
+            <div className="field">
+              <label htmlFor="message">Waar kunnen we je mee helpen?</label>
+              <textarea
+                id="message"
+                rows={4}
+                required
+                placeholder="Vertel ons over jouw vraag of project"
+              />
+            </div>
+            <Button type="submit">
+              <Mail />
+              Bericht controleren
+            </Button>
+          </form>
+          {ready && (
+            <div className="confirmation mt-5" role="status">
+              Je bericht is compleet, maar nog niet verstuurd. Neem telefonisch contact op of
+              gebruik het contactformulier op estg.eu.
+            </div>
+          )}
+          <p className="sample-note">
+            Dit formulier is nog niet aangesloten op ESTG. Er worden geen berichten verzonden of
+            gegevens opgeslagen.
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}

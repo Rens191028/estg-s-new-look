@@ -10,33 +10,150 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as KennisRouteImport } from './routes/kennis'
+import { Route as MerkenRouteImport } from './routes/merken'
+import { Route as OverEstgRouteImport } from './routes/over-estg'
+import { Route as WebshopRouteImport } from './routes/webshop'
+import { Route as WinkelwagenRouteImport } from './routes/winkelwagen'
+import { Route as KennisIndexRouteImport } from './routes/kennis.index'
+import { Route as KennisSlugRouteImport } from './routes/kennis.$slug'
+import { Route as ProductenIdRouteImport } from './routes/producten.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KennisRoute = KennisRouteImport.update({
+  id: '/kennis',
+  path: '/kennis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerkenRoute = MerkenRouteImport.update({
+  id: '/merken',
+  path: '/merken',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OverEstgRoute = OverEstgRouteImport.update({
+  id: '/over-estg',
+  path: '/over-estg',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WebshopRoute = WebshopRouteImport.update({
+  id: '/webshop',
+  path: '/webshop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WinkelwagenRoute = WinkelwagenRouteImport.update({
+  id: '/winkelwagen',
+  path: '/winkelwagen',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KennisIndexRoute = KennisIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => KennisRoute,
+} as any)
+const KennisSlugRoute = KennisSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => KennisRoute,
+} as any)
+const ProductenIdRoute = ProductenIdRouteImport.update({
+  id: '/producten/$id',
+  path: '/producten/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/kennis': typeof KennisRouteWithChildren
+  '/merken': typeof MerkenRoute
+  '/over-estg': typeof OverEstgRoute
+  '/webshop': typeof WebshopRoute
+  '/winkelwagen': typeof WinkelwagenRoute
+  '/kennis/$slug': typeof KennisSlugRoute
+  '/producten/$id': typeof ProductenIdRoute
+  '/kennis/': typeof KennisIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/merken': typeof MerkenRoute
+  '/over-estg': typeof OverEstgRoute
+  '/webshop': typeof WebshopRoute
+  '/winkelwagen': typeof WinkelwagenRoute
+  '/kennis/$slug': typeof KennisSlugRoute
+  '/producten/$id': typeof ProductenIdRoute
+  '/kennis': typeof KennisIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/kennis': typeof KennisRouteWithChildren
+  '/merken': typeof MerkenRoute
+  '/over-estg': typeof OverEstgRoute
+  '/webshop': typeof WebshopRoute
+  '/winkelwagen': typeof WinkelwagenRoute
+  '/kennis/$slug': typeof KennisSlugRoute
+  '/producten/$id': typeof ProductenIdRoute
+  '/kennis/': typeof KennisIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/kennis'
+    | '/merken'
+    | '/over-estg'
+    | '/webshop'
+    | '/winkelwagen'
+    | '/kennis/$slug'
+    | '/producten/$id'
+    | '/kennis/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/contact'
+    | '/merken'
+    | '/over-estg'
+    | '/webshop'
+    | '/winkelwagen'
+    | '/kennis/$slug'
+    | '/producten/$id'
+    | '/kennis'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/kennis'
+    | '/merken'
+    | '/over-estg'
+    | '/webshop'
+    | '/winkelwagen'
+    | '/kennis/$slug'
+    | '/producten/$id'
+    | '/kennis/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  KennisRoute: typeof KennisRouteWithChildren
+  MerkenRoute: typeof MerkenRoute
+  OverEstgRoute: typeof OverEstgRoute
+  WebshopRoute: typeof WebshopRoute
+  WinkelwagenRoute: typeof WinkelwagenRoute
+  ProductenIdRoute: typeof ProductenIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +165,94 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kennis': {
+      id: '/kennis'
+      path: '/kennis'
+      fullPath: '/kennis'
+      preLoaderRoute: typeof KennisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/merken': {
+      id: '/merken'
+      path: '/merken'
+      fullPath: '/merken'
+      preLoaderRoute: typeof MerkenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/over-estg': {
+      id: '/over-estg'
+      path: '/over-estg'
+      fullPath: '/over-estg'
+      preLoaderRoute: typeof OverEstgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/webshop': {
+      id: '/webshop'
+      path: '/webshop'
+      fullPath: '/webshop'
+      preLoaderRoute: typeof WebshopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/winkelwagen': {
+      id: '/winkelwagen'
+      path: '/winkelwagen'
+      fullPath: '/winkelwagen'
+      preLoaderRoute: typeof WinkelwagenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kennis/': {
+      id: '/kennis/'
+      path: '/'
+      fullPath: '/kennis/'
+      preLoaderRoute: typeof KennisIndexRouteImport
+      parentRoute: typeof KennisRoute
+    }
+    '/kennis/$slug': {
+      id: '/kennis/$slug'
+      path: '/$slug'
+      fullPath: '/kennis/$slug'
+      preLoaderRoute: typeof KennisSlugRouteImport
+      parentRoute: typeof KennisRoute
+    }
+    '/producten/$id': {
+      id: '/producten/$id'
+      path: '/producten/$id'
+      fullPath: '/producten/$id'
+      preLoaderRoute: typeof ProductenIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface KennisRouteChildren {
+  KennisSlugRoute: typeof KennisSlugRoute
+  KennisIndexRoute: typeof KennisIndexRoute
+}
+
+const KennisRouteChildren: KennisRouteChildren = {
+  KennisSlugRoute: KennisSlugRoute,
+  KennisIndexRoute: KennisIndexRoute,
+}
+
+const KennisRouteWithChildren =
+  KennisRoute._addFileChildren(KennisRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  KennisRoute: KennisRouteWithChildren,
+  MerkenRoute: MerkenRoute,
+  OverEstgRoute: OverEstgRoute,
+  WebshopRoute: WebshopRoute,
+  WinkelwagenRoute: WinkelwagenRoute,
+  ProductenIdRoute: ProductenIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

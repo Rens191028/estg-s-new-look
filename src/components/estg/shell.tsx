@@ -1,0 +1,192 @@
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  ArrowUpRight,
+  Check,
+  ChevronDown,
+  Menu,
+  Search,
+  ShoppingBag,
+  X,
+  Zap,
+  Headphones,
+  Truck,
+  ShieldCheck,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useStore } from "./store";
+export function Logo() {
+  return (
+    <span className="logo">
+      estg<span className="logo-dot">.</span>
+      <Zap className="logo-bolt" fill="currentColor" />
+    </span>
+  );
+}
+export function Header() {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const { items } = useStore();
+  return (
+    <>
+      <div className="utility-bar">
+        <div className="container utility-inner">
+          <span>
+            <Check size={13} /> Jouw partner in duurzame energie
+          </span>
+          <span className="utility-right">
+            <Link to="/contact">Contact & support</Link>
+            <span className="language">
+              Nederland · NL <ChevronDown size={12} />
+            </span>
+          </span>
+        </div>
+      </div>
+      <header className="site-header">
+        <div className="container main-header">
+          <Link to="/" aria-label="ESTG home">
+            <Logo />
+          </Link>
+          <form
+            className="search-box"
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate({ to: "/webshop", search: { q: query, category: "", brand: "" } });
+            }}
+          >
+            <Search size={19} />
+            <input
+              aria-label="Zoeken naar producten"
+              placeholder="Zoek producten, merken of artikelnummers..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <Button type="submit" variant="ghost" size="icon" aria-label="Zoeken">
+              <ArrowUpRight size={20} />
+            </Button>
+          </form>
+          <div className="header-actions">
+            <Link to="/contact" className="account-link">
+              <Headphones size={20} />
+              <span>
+                Persoonlijk
+                <br />
+                <strong>advies</strong>
+              </span>
+            </Link>
+            <Link
+              to="/winkelwagen"
+              className="bag-link"
+              aria-label={`Aanvraaglijst, ${items.reduce((a, x) => a + x.quantity, 0)} producten`}
+            >
+              <ShoppingBag size={23} />
+              <span className="bag-count">{items.reduce((a, x) => a + x.quantity, 0)}</span>
+            </Link>
+            <Button
+              className="mobile-menu"
+              variant="ghost"
+              size="icon"
+              aria-label="Menu"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <X /> : <Menu />}
+            </Button>
+          </div>
+        </div>
+        <nav
+          className={`container main-nav ${open ? "is-open" : ""}`}
+          aria-label="Hoofdnavigatie"
+          onClick={() => setOpen(false)}
+        >
+          <Link to="/webshop" search={{ q: "", category: "", brand: "" }} className="all-products">
+            <Menu size={18} /> Alle producten <ChevronDown size={14} />
+          </Link>
+          <Link to="/webshop" search={{ category: "Zonnepanelen", q: "", brand: "" }}>
+            Zonnepanelen
+          </Link>
+          <Link to="/webshop" search={{ category: "Omvormers", q: "", brand: "" }}>
+            Omvormers
+          </Link>
+          <Link to="/webshop" search={{ category: "Energieopslag", q: "", brand: "" }}>
+            Energieopslag
+          </Link>
+          <Link to="/webshop" search={{ category: "EV-laders", q: "", brand: "" }}>
+            EV-laders
+          </Link>
+          <Link to="/merken">Merken</Link>
+          <Link to="/kennis">Kennis & inspiratie</Link>
+          <Link to="/over-estg" className="about-nav">
+            Over ESTG <ArrowUpRight size={14} />
+          </Link>
+        </nav>
+      </header>
+    </>
+  );
+}
+export function Benefits() {
+  return (
+    <div className="benefits">
+      <div className="container benefits-inner">
+        <span>
+          <Truck /> Europese distributie
+        </span>
+        <span>
+          <ShieldCheck /> Toonaangevende A-merken
+        </span>
+        <span>
+          <Headphones /> Expertise voor jouw project
+        </span>
+        <span>
+          <Zap /> Exclusief voor professionals
+        </span>
+      </div>
+    </div>
+  );
+}
+export function Footer() {
+  return (
+    <footer className="site-footer">
+      <div className="container footer-grid">
+        <div>
+          <Link to="/" aria-label="ESTG home">
+            <Logo />
+          </Link>
+          <p>Leading in positive energy.</p>
+          <span>Jouw partner in de energietransitie.</span>
+        </div>
+        <div>
+          <h4>Assortiment</h4>
+          {["Zonnepanelen", "Omvormers", "Energieopslag", "EV-laders"].map((c) => (
+            <Link key={c} to="/webshop" search={{ category: c, q: "", brand: "" }}>
+              {c}
+            </Link>
+          ))}
+        </div>
+        <div>
+          <h4>Ontdek ESTG</h4>
+          <Link to="/over-estg">Over ons</Link>
+          <Link to="/merken">Onze merken</Link>
+          <Link to="/kennis">Kennis & inspiratie</Link>
+          <Link to="/contact">Contact</Link>
+        </div>
+        <div>
+          <h4>Samen vooruit</h4>
+          <p>Een vraag over jouw volgende project?</p>
+          <Button asChild variant="outline">
+            <Link to="/contact">
+              Neem contact op <ArrowUpRight />
+            </Link>
+          </Button>
+        </div>
+      </div>
+      <div className="container footer-bottom">
+        <span>© {new Date().getFullYear()} ESTG</span>
+        <span>European Sustainable Technology Group</span>
+        <a href="https://www.estg.eu/nl-nl" target="_blank" rel="noreferrer">
+          Huidige ESTG-website <ArrowUpRight size={12} />
+        </a>
+      </div>
+    </footer>
+  );
+}

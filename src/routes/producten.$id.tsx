@@ -1,9 +1,115 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { useState } from 'react';
-import { Check, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { products, pageHead } from '@/lib/catalog';
-import { useStore } from '@/components/estg/store';
-export const Route = createFileRoute('/producten/$id')({ head: ({ params }) => pageHead(products.find(p => p.id === params.id)?.name || 'Product niet gevonden', 'Bekijk deze duurzame energieoplossing bij ESTG en voeg deze toe aan jouw productaanvraag.'), component: Product });
-function Product() { const { id } = Route.useParams(); const p = products.find(p => p.id === id); const [quantity, setQuantity] = useState(1); const [added,setAdded] = useState(false); const {add} = useStore(); if (!p) return <div className="container empty-state"><h1>Product niet gevonden</h1><Button asChild><Link to="/webshop" search={{ q:'',category:'',brand:'' }}>Terug naar de webshop</Link></Button></div>;
-return <div className="container"><div className="breadcrumb mt-7"><Link to="/webshop" search={{ category:p.category,q:'',brand:'' }}>{p.category}</Link><span>/</span><span>{p.name}</span></div><div className="detail-grid"><img className="detail-photo" src={p.image} alt={p.name} width={816} height={816}/><div className="detail-info"><span className="eyebrow muted">{p.brand}</span><h1>{p.name}</h1><p>{p.note}</p><dl><div><dt>Merk</dt><dd>{p.brand}</dd></div><div><dt>Categorie</dt><dd>{p.category}</dd></div><div><dt>Prijs & beschikbaarheid</dt><dd>Op aanvraag</dd></div></dl><h3>Stel jouw productaanvraag samen</h3><div className="detail-buy"><div className="quantity"><Button variant="ghost" size="icon" aria-label="Aantal verminderen" onClick={() => setQuantity(Math.max(1,quantity-1))}><Minus/></Button><input aria-label="Aantal" type="number" min={1} max={999} value={quantity} onChange={e => setQuantity(Math.max(1,Math.min(999,Number(e.target.value)||1)))}/><Button variant="ghost" size="icon" aria-label="Aantal verhogen" onClick={() => setQuantity(Math.min(999,quantity+1))}><Plus/></Button></div><Button size="lg" onClick={() => { add(p.id,quantity);setAdded(true); }}>{added ? <Check/> : <ShoppingBag/>}{added ? 'Toegevoegd' : 'Toevoegen'}</Button></div>{added && <Link className="text-link mt-5" to="/winkelwagen">Bekijk jouw aanvraag →</Link>}<p className="sample-note">Voorbeeldproduct met illustratieve afbeelding. Exacte uitvoering, technische specificaties en prijzen worden bevestigd door ESTG.</p></div></div></div>; }
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { Check, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { products, pageHead } from "@/lib/catalog";
+import { useStore } from "@/components/estg/store";
+export const Route = createFileRoute("/producten/$id")({
+  head: ({ params }) =>
+    pageHead(
+      products.find((p) => p.id === params.id)?.name || "Product niet gevonden",
+      "Bekijk deze duurzame energieoplossing bij ESTG en voeg deze toe aan jouw productaanvraag.",
+    ),
+  component: Product,
+});
+function Product() {
+  const { id } = Route.useParams();
+  const p = products.find((p) => p.id === id);
+  const [quantity, setQuantity] = useState(1);
+  const [added, setAdded] = useState(false);
+  const { add } = useStore();
+  if (!p)
+    return (
+      <div className="container empty-state">
+        <h1>Product niet gevonden</h1>
+        <Button asChild>
+          <Link to="/webshop" search={{ q: "", category: "", brand: "" }}>
+            Terug naar de webshop
+          </Link>
+        </Button>
+      </div>
+    );
+  return (
+    <div className="container">
+      <div className="breadcrumb mt-7">
+        <Link to="/webshop" search={{ category: p.category, q: "", brand: "" }}>
+          {p.category}
+        </Link>
+        <span>/</span>
+        <span>{p.name}</span>
+      </div>
+      <div className="detail-grid">
+        <img className="detail-photo" src={p.image} alt={p.name} width={816} height={816} />
+        <div className="detail-info">
+          <span className="eyebrow muted">{p.brand}</span>
+          <h1>{p.name}</h1>
+          <p>{p.note}</p>
+          <dl>
+            <div>
+              <dt>Merk</dt>
+              <dd>{p.brand}</dd>
+            </div>
+            <div>
+              <dt>Categorie</dt>
+              <dd>{p.category}</dd>
+            </div>
+            <div>
+              <dt>Prijs & beschikbaarheid</dt>
+              <dd>Op aanvraag</dd>
+            </div>
+          </dl>
+          <h3>Stel jouw productaanvraag samen</h3>
+          <div className="detail-buy">
+            <div className="quantity">
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Aantal verminderen"
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              >
+                <Minus />
+              </Button>
+              <input
+                aria-label="Aantal"
+                type="number"
+                min={1}
+                max={999}
+                value={quantity}
+                onChange={(e) =>
+                  setQuantity(Math.max(1, Math.min(999, Number(e.target.value) || 1)))
+                }
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Aantal verhogen"
+                onClick={() => setQuantity(Math.min(999, quantity + 1))}
+              >
+                <Plus />
+              </Button>
+            </div>
+            <Button
+              size="lg"
+              onClick={() => {
+                add(p.id, quantity);
+                setAdded(true);
+              }}
+            >
+              {added ? <Check /> : <ShoppingBag />}
+              {added ? "Toegevoegd" : "Toevoegen"}
+            </Button>
+          </div>
+          {added && (
+            <Link className="text-link mt-5" to="/winkelwagen">
+              Bekijk jouw aanvraag →
+            </Link>
+          )}
+          <p className="sample-note">
+            Voorbeeldproduct met illustratieve afbeelding. Exacte uitvoering, technische
+            specificaties en prijzen worden bevestigd door ESTG.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

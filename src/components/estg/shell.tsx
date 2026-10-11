@@ -1,20 +1,27 @@
-import { Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
-  Check,
   ChevronDown,
+  Headphones,
+  Mail,
   Menu,
-  Search,
+  Phone,
+  Scale,
+  ShieldCheck,
   ShoppingBag,
+  Truck,
   X,
   Zap,
-  Headphones,
-  Truck,
-  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { brands, categories } from "@/lib/catalog";
+import { HeaderSearch } from "./search";
 import { useStore } from "./store";
+import { CategoryIcon } from "./ui-bits";
+
+// Het officiële logobestand (assets/estg-logo.png) is nog niet aangeleverd. Tot die tijd tonen
+// we een tijdelijke weergave; vervang deze component door het logobestand zodra het er is.
 export function Logo() {
   return (
     <span className="logo">
@@ -23,107 +30,141 @@ export function Logo() {
     </span>
   );
 }
+
+function BrandBar() {
+  const set = (hidden: boolean) => (
+    <div className="brand-bar-set" aria-hidden={hidden || undefined}>
+      {brands.map((b) => (
+        <Link
+          key={b}
+          to="/webshop"
+          search={{ q: "", category: "", brand: b }}
+          tabIndex={hidden ? -1 : undefined}
+        >
+          {b}
+        </Link>
+      ))}
+    </div>
+  );
+  return (
+    <div className="brand-bar" aria-label="Merken bij ESTG">
+      <div className="brand-bar-inner">
+        {set(false)}
+        {set(true)}
+      </div>
+    </div>
+  );
+}
+
 export function Header() {
-  const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const { items } = useStore();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const { count } = useStore();
+  const close = () => {
+    setMenuOpen(false);
+    setMegaOpen(false);
+  };
   return (
     <>
-      <div className="utility-bar">
-        <div className="container utility-inner">
-          <span>
-            <Check size={13} /> Jouw partner in duurzame energie
-          </span>
-          <span className="utility-right">
-            <Link to="/contact">Contact & support</Link>
-            <span className="language">
-              Nederland · NL <ChevronDown size={12} />
-            </span>
-          </span>
-        </div>
-      </div>
+      <BrandBar />
       <header className="site-header">
         <div className="container main-header">
-          <Link to="/" aria-label="ESTG home">
+          <Link to="/" aria-label="ESTG home" onClick={close}>
             <Logo />
           </Link>
-          <form
-            className="search-box"
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate({ to: "/webshop", search: { q: query, category: "", brand: "" } });
-            }}
-          >
-            <Search size={19} />
-            <input
-              aria-label="Zoeken naar producten"
-              placeholder="Zoek producten, merken of artikelnummers..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <Button type="submit" variant="ghost" size="icon" aria-label="Zoeken">
-              <ArrowUpRight size={20} />
-            </Button>
-          </form>
+          <HeaderSearch />
           <div className="header-actions">
-            <Link to="/contact" className="account-link">
-              <Headphones size={20} />
-              <span>
-                Persoonlijk
-                <br />
-                <strong>advies</strong>
-              </span>
+            <a href="tel:+31850167800" className="header-link">
+              <Phone size={18} />
+              <span>+31 (0)85 016 7800</span>
+            </a>
+            <Link to="/contact" className="header-link" onClick={close}>
+              <Headphones size={18} />
+              <span>Persoonlijk advies</span>
             </Link>
+            <span className="lang" title="Nu beschikbaar in het Nederlands">
+              NL
+            </span>
             <Link
               to="/winkelwagen"
               className="bag-link"
-              aria-label={`Aanvraaglijst, ${items.reduce((a, x) => a + x.quantity, 0)} producten`}
+              aria-label={`Mijn Project, ${count} producten`}
+              onClick={close}
             >
-              <ShoppingBag size={23} />
-              <span className="bag-count">{items.reduce((a, x) => a + x.quantity, 0)}</span>
+              <ShoppingBag size={22} />
+              {count > 0 && <span className="bag-count">{count}</span>}
             </Link>
             <Button
               className="mobile-menu"
               variant="ghost"
               size="icon"
               aria-label="Menu"
-              onClick={() => setOpen(!open)}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              {open ? <X /> : <Menu />}
+              {menuOpen ? <X /> : <Menu />}
             </Button>
           </div>
         </div>
-        <nav
-          className={`container main-nav ${open ? "is-open" : ""}`}
-          aria-label="Hoofdnavigatie"
-          onClick={() => setOpen(false)}
-        >
-          <Link to="/webshop" search={{ q: "", category: "", brand: "" }} className="all-products">
-            <Menu size={18} /> Alle producten <ChevronDown size={14} />
-          </Link>
-          <Link to="/webshop" search={{ category: "Zonnepanelen", q: "", brand: "" }}>
-            Zonnepanelen
-          </Link>
-          <Link to="/webshop" search={{ category: "Omvormers", q: "", brand: "" }}>
-            Omvormers
-          </Link>
-          <Link to="/webshop" search={{ category: "Energieopslag", q: "", brand: "" }}>
-            Energieopslag
-          </Link>
-          <Link to="/webshop" search={{ category: "EV-laders", q: "", brand: "" }}>
-            EV-laders
-          </Link>
-          <Link to="/merken">Merken</Link>
-          <Link to="/kennis">Kennis & inspiratie</Link>
-          <Link to="/over-estg" className="about-nav">
-            Over ESTG <ArrowUpRight size={14} />
-          </Link>
-        </nav>
+        <div className={`main-nav-wrap ${menuOpen ? "open" : ""}`}>
+          <nav className="container main-nav" aria-label="Hoofdnavigatie">
+            <button
+              type="button"
+              className="nav-trigger"
+              aria-expanded={megaOpen}
+              aria-controls="mega-menu"
+              onClick={() => setMegaOpen(!megaOpen)}
+            >
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Menu size={18} /> Alle producten
+              </span>
+              <ChevronDown size={14} />
+            </button>
+            {categories.slice(0, 4).map((c) => (
+              <Link
+                key={c}
+                to="/webshop"
+                search={{ category: c, q: "", brand: "" }}
+                onClick={close}
+              >
+                {c}
+              </Link>
+            ))}
+            <Link to="/merken" onClick={close}>
+              Merken
+            </Link>
+            <Link to="/kennis" onClick={close}>
+              Kennis & inspiratie
+            </Link>
+            <Link to="/over-estg" className="about-nav" onClick={close}>
+              Over ESTG <ArrowUpRight size={14} />
+            </Link>
+          </nav>
+        </div>
+        {megaOpen && (
+          <div className="mega" id="mega-menu">
+            <div className="container mega-grid">
+              {categories.map((c) => (
+                <Link
+                  key={c}
+                  to="/webshop"
+                  search={{ category: c, q: "", brand: "" }}
+                  onClick={close}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <CategoryIcon category={c} size={20} /> {c}
+                  </span>
+                  <ArrowUpRight size={15} />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
     </>
   );
 }
+
 export function Benefits() {
   return (
     <div className="benefits">
@@ -144,48 +185,77 @@ export function Benefits() {
     </div>
   );
 }
+
+function FooterCol({
+  title,
+  children,
+  className = "",
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={`footer-col ${open ? "open" : ""} ${className}`.trim()}>
+      <button
+        type="button"
+        className="footer-toggle"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
+        <h4>{title}</h4>
+        <ChevronDown size={18} className="chev" />
+      </button>
+      <div className="footer-body">{children}</div>
+    </div>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
-        <div>
+        <div className="footer-col footer-brand">
           <Link to="/" aria-label="ESTG home">
             <Logo />
           </Link>
-          <p>Leading in positive energy.</p>
-          <span>Jouw partner in de energietransitie.</span>
+          <p>Leading in positive energy. Jouw partner in de energietransitie.</p>
+          <div className="footer-contact">
+            <a href="tel:+31850167800">
+              <Phone size={16} /> +31 (0)85 016 7800
+            </a>
+            <Link to="/contact">
+              <Mail size={16} /> Contact opnemen
+            </Link>
+          </div>
         </div>
-        <div>
-          <h4>Assortiment</h4>
-          {["Zonnepanelen", "Omvormers", "Energieopslag", "EV-laders"].map((c) => (
+        <FooterCol title="Assortiment">
+          {categories.map((c) => (
             <Link key={c} to="/webshop" search={{ category: c, q: "", brand: "" }}>
               {c}
             </Link>
           ))}
-        </div>
-        <div>
-          <h4>Ontdek ESTG</h4>
-          <Link to="/over-estg">Over ons</Link>
-          <Link to="/merken">Onze merken</Link>
-          <Link to="/kennis">Kennis & inspiratie</Link>
+        </FooterCol>
+        <FooterCol title="Klantenservice">
           <Link to="/contact">Contact</Link>
-        </div>
-        <div>
-          <h4>Samen vooruit</h4>
-          <p>Een vraag over jouw volgende project?</p>
-          <Button asChild variant="outline">
-            <Link to="/contact">
-              Neem contact op <ArrowUpRight />
-            </Link>
-          </Button>
-        </div>
+          <Link to="/kennis">Kennis & inspiratie</Link>
+          <Link to="/merken">Onze merken</Link>
+          <Link to="/vergelijken">Producten vergelijken</Link>
+        </FooterCol>
+        <FooterCol title="Ontdek ESTG">
+          <Link to="/over-estg">Over ons</Link>
+          <Link to="/winkelwagen">Mijn Project</Link>
+          <a href="https://www.estg.eu/nl-nl" target="_blank" rel="noreferrer">
+            Huidige ESTG-website
+          </a>
+        </FooterCol>
       </div>
       <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} ESTG</span>
-        <span>European Sustainable Technology Group</span>
-        <a href="https://www.estg.eu/nl-nl" target="_blank" rel="noreferrer">
-          Huidige ESTG-website <ArrowUpRight size={12} />
-        </a>
+        <span>© {new Date().getFullYear()} ESTG · European Sustainable Technology Group</span>
+        <span style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
+          <Scale size={14} /> Voorbeeldwebsite: geen bestellingen, geen betalingen
+        </span>
       </div>
     </footer>
   );

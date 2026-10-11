@@ -87,21 +87,13 @@ export function Header() {
           </Link>
           <HeaderSearch />
           <div className="header-actions">
-            <a href="tel:+31850167800" className="header-link">
-              <Phone size={18} />
-              <span>+31 (0)85 016 7800</span>
-            </a>
-            <Link to="/contact" className="header-link" onClick={close}>
-              <Headphones size={18} />
-              <span>Persoonlijk advies</span>
-            </Link>
             <span className="lang" title="Nu beschikbaar in het Nederlands">
               NL
             </span>
             <Link
               to="/winkelwagen"
               className="bag-link"
-              aria-label={`Mijn Project, ${count} producten`}
+              aria-label={`Winkelmand, ${count} producten`}
               onClick={close}
             >
               <ShoppingBag size={22} />
@@ -146,7 +138,7 @@ export function Header() {
             <Link to="/merken" onClick={close}>
               Merken
             </Link>
-            <Link to="/advisor" onClick={close}>
+            <Link to="/advisor" search={{ vraag: "" }} onClick={close}>
               AI-adviseur
             </Link>
             <Link to="/kennis" onClick={close}>
@@ -261,7 +253,7 @@ export function Footer() {
         </FooterCol>
         <FooterCol title="Ontdek ESTG">
           <Link to="/over-estg">Over ons</Link>
-          <Link to="/winkelwagen">Mijn Project</Link>
+          <Link to="/winkelwagen">Winkelmand</Link>
           <a href="https://www.estg.eu/nl-nl" target="_blank" rel="noreferrer">
             Huidige ESTG-website
           </a>

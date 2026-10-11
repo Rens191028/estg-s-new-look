@@ -84,3 +84,13 @@ describe("demo-catalogus", () => {
     for (const p of products) expect(brands).toContain(p.brand);
   });
 });
+
+describe("prijzen", () => {
+  it("geeft elk product een positieve voorbeeldprijs", () => {
+    for (const p of products) expect(p.price).toBeGreaterThan(0);
+  });
+  it("markeert precies één bestseller per categorie", () => {
+    for (const c of categories)
+      expect(products.filter((p) => p.category === c && p.isBestseller)).toHaveLength(1);
+  });
+});

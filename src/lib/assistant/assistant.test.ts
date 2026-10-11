@@ -47,7 +47,8 @@ describe("catalogusfilter en prompt", () => {
   it("neemt geen prijzen of onbekende producten op in de prompt", () => {
     const prompt = buildSystemPrompt({ source: "widget", list: relevantProducts("omvormer") });
     expect(prompt).toContain("Geverifieerde compatibiliteitscontroles");
-    expect(prompt).toContain("Noem nooit prijzen");
+    expect(prompt).toContain("Verzin nooit een korting");
+    expect(prompt).toMatch(/€\d+ excl\. btw/);
   });
 });
 

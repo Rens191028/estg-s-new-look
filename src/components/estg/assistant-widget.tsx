@@ -87,7 +87,7 @@ export function AssistantWidget() {
           </div>
           <p className="assistant-note">
             Wil je een set laten samenstellen?{" "}
-            <Link to="/advisor" onClick={() => setOpen(false)}>
+            <Link to="/advisor" search={{ vraag: "" }} onClick={() => setOpen(false)}>
               Open de AI-adviseur
             </Link>
           </p>

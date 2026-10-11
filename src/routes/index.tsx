@@ -1,12 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BookOpen, Check, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Benefits } from "@/components/estg/shell";
 import { ProductCard } from "@/components/estg/product-card";
-import { CategoryIcon, Reveal } from "@/components/estg/ui-bits";
-import { brands, categories, products, pageHead } from "@/lib/catalog";
+import { CategoryIcon, CountUp, Reveal } from "@/components/estg/ui-bits";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { articles } from "@/lib/articles";
+import { googleRating, reviews } from "@/lib/reviews";
+import { categories, findProduct, products, pageHead } from "@/lib/catalog";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
-import { formatInt } from "@/lib/format";
+import { formatEuro, formatInt, formatKwp } from "@/lib/format";
 import rooftop from "@/assets/solar-rooftop.jpg";
 import inverter from "@/assets/inverter.jpg";
 import battery from "@/assets/battery.jpg";
@@ -23,22 +31,30 @@ export const Route = createFileRoute("/")({
 
 const allProducts = { q: "", category: "", brand: "" };
 
-// Alleen cijfers die uit de catalogus of een berekening komen; echte bedrijfscijfers zijn nog niet aangeleverd.
+// Bedrijfscijfers van ESTG (bron: estg.eu, aangeleverd door ESTG).
+const COMPANY_STATS = [
+  { to: 38, suffix: "", label: "landen in Europa beleverd" },
+  { to: 50, suffix: "+", label: "toonaangevende A-merken" },
+  { to: 15, suffix: "+", label: "jaar ervaring" },
+];
+
 function Stats() {
   const example = estimateCo2Savings(10);
   return (
     <section className="stats" aria-label="ESTG in cijfers">
       <div className="container stats-grid">
+        {COMPANY_STATS.map((s) => (
+          <div className="stat" key={s.label}>
+            <strong>
+              <CountUp to={s.to} suffix={s.suffix} />
+            </strong>
+            <span>{s.label}</span>
+          </div>
+        ))}
         <div className="stat">
-          <strong>{brands.length}+</strong>
-          <span>A-merken in het assortiment</span>
-        </div>
-        <div className="stat">
-          <strong>{categories.length}</strong>
-          <span>productcategorieën, van opwekken tot opslaan</span>
-        </div>
-        <div className="stat">
-          <strong>~{formatInt(Math.round(example.kgCo2PerYear / 100) * 100)} kg</strong>
+          <strong>
+            <CountUp to={Math.round(example.kgCo2PerYear / 100) * 100} prefix="~" suffix=" kg" />
+          </strong>
           <span>CO₂-besparing per jaar bij een systeem van 10 kWp</span>
           <small>
             Indicatie, op basis van{" "}
@@ -48,6 +64,227 @@ function Stats() {
           </small>
         </div>
       </div>
+    </section>
+  );
+}
+
+const ADVISOR_QUESTIONS = [
+  "20 zonnepanelen + batterij voor noodstroom",
+  "Een batterij die past bij mijn Huawei-omvormer",
+  "Laadpaal voor een bedrijfsparkeerplaats, 3-fase",
+];
+
+function AdvisorBand() {
+  return (
+    <section className="advisor-band">
+      <div className="container advisor-inner">
+        <div>
+          <h2>Niet zeker welke set je nodig hebt?</h2>
+          <p className="muted">Vraag het onze AI-adviseur.</p>
+        </div>
+        <div className="chips">
+          {ADVISOR_QUESTIONS.map((q) => (
+            <Link key={q} to="/advisor" search={{ vraag: q }} className="chip chip-link">
+              <Sparkles size={14} /> {q}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Reviews() {
+  return (
+    <section className="section container">
+      <Reveal>
+        <div className="section-heading">
+          <div>
+            <h2>
+              {String(googleRating.average).replace(".", ",")} ★ op basis van {googleRating.count}{" "}
+              Google-reviews
+            </h2>
+            <p>Dit zeggen klanten over ESTG.</p>
+          </div>
+          <a className="text-link" href={googleRating.url} target="_blank" rel="noreferrer">
+            Bekijk alle reviews op Google <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </Reveal>
+      <div className="review-grid">
+        {reviews.map((r, i) => (
+          <Reveal key={i} delay={i * 70}>
+            <figure className="review-card">
+              <div className="stars" role="img" aria-label={`${r.rating} van 5 sterren`}>
+                {Array.from({ length: r.rating }, (_, k) => (
+                  <Star key={k} size={16} fill="currentColor" />
+                ))}
+              </div>
+              <blockquote>“{r.quote}”</blockquote>
+            </figure>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FeaturedProject() {
+  const panel = findProduct("all-black-zonnepaneel");
+  const kwp = ((panel?.powerWp ?? 0) * 120) / 1000;
+  const co2 = estimateCo2Savings(kwp);
+  return (
+    <section className="section container">
+      <Reveal>
+        <div className="split">
+          <img
+            src={rooftop}
+            alt="Bedrijfsdak met zonnepanelen"
+            width={1920}
+            height={1024}
+            loading="lazy"
+          />
+          <div>
+            <span className="badge-note">Voorbeeldproject, ter illustratie</span>
+            <h2>Bedrijfsdak vol potentieel</h2>
+            <p>Logistiek bedrijf, Gelderland</p>
+            <ul className="usp-list">
+              <li>
+                <Check size={18} /> 120 × All Black zonnepaneel (JA Solar, 430 Wp) ={" "}
+                {formatKwp(kwp)}
+              </li>
+              <li>
+                <Check size={18} /> Sungrow hybride omvormers en 2 × modulaire thuisbatterij (BYD,
+                10,2 kWh)
+              </li>
+              <li>
+                <Check size={18} /> ~{formatInt(Math.round(co2.kgCo2PerYear))} kg CO₂-besparing per
+                jaar (indicatie)
+              </li>
+            </ul>
+            <Button asChild variant="outline">
+              <Link to="/advisor" search={{ vraag: "" }}>
+                Stel zelf een set samen <ArrowRight />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function Blog() {
+  const latest = articles.slice(-3);
+  return (
+    <section className="section alt-section">
+      <div className="container">
+        <Reveal>
+          <div className="section-heading">
+            <div>
+              <h2>Kennis die je verder brengt</h2>
+              <p>Praktische inzichten voor installateurs.</p>
+            </div>
+            <Link className="text-link" to="/kennis">
+              Alle artikelen <ArrowRight size={16} />
+            </Link>
+          </div>
+        </Reveal>
+        <div className="article-grid">
+          {latest.map((a, i) => (
+            <Reveal key={a.slug} delay={i * 70}>
+              <article className="article-card">
+                <Link to="/kennis/$slug" params={{ slug: a.slug }}>
+                  {a.image ? (
+                    <img src={a.image} alt={a.title} width={816} height={816} loading="lazy" />
+                  ) : (
+                    <span className="article-placeholder">
+                      <BookOpen size={44} strokeWidth={1.4} aria-hidden />
+                    </span>
+                  )}
+                </Link>
+                <div>
+                  <span className="eyebrow muted">{a.category}</span>
+                  <h3>
+                    <Link to="/kennis/$slug" params={{ slug: a.slug }}>
+                      {a.title}
+                    </Link>
+                  </h3>
+                  <p>{a.intro}</p>
+                  <Link className="text-link" to="/kennis/$slug" params={{ slug: a.slug }}>
+                    Lees verder <ArrowRight size={15} />
+                  </Link>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const FAQ = [
+  {
+    q: "Kan ik op deze website al bestellen?",
+    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en bespreek je aanvraag met ESTG.",
+  },
+  {
+    q: "Zijn de getoonde prijzen definitief?",
+    a: "Nee, het zijn indicatieve voorbeeldprijzen excl. btw. ESTG bevestigt de definitieve prijs bij je aanvraag.",
+  },
+  {
+    q: "Hoe bepaal ik de juiste batterijcapaciteit?",
+    a: "Kijk naar het dagelijkse en jaarlijkse verbruik, de grootte van het zonnepaneelsysteem en toekomstig verbruik zoals een auto of warmtepomp.",
+    slug: "batterij-dimensioneren",
+  },
+  {
+    q: "Kan ik airco combineren met zonnepanelen en een batterij?",
+    a: "Ja. De piekproductie van zonnepanelen valt vaak samen met de uren waarop een airco het hardst werkt; een batterij vangt de stroompieken op.",
+    slug: "airco-zonnepanelen-batterijen",
+  },
+  {
+    q: "Wat verandert er met de nieuwe EU-batterijverordening?",
+    a: "Opslagsystemen boven 2 kWh krijgen een digitaal batterijpaspoort via een QR-code, met onder meer de status, het onderhoud en reparatie-instructies.",
+    slug: "eu-batterijverordening",
+  },
+  {
+    q: "Hoe werkt de AI-adviseur?",
+    a: "De adviseur beantwoordt vragen en stelt sets samen uit de voorbeeldcatalogus. Hij noemt nooit een product of prijs die niet in de catalogus staat.",
+  },
+];
+
+function Faq() {
+  return (
+    <section className="section container" style={{ maxWidth: 860 }}>
+      <Reveal>
+        <h2 style={{ marginBottom: 24 }}>Veelgestelde vragen</h2>
+        <Accordion type="single" collapsible>
+          {FAQ.map((f, i) => (
+            <AccordionItem key={f.q} value={`faq-${i}`}>
+              <AccordionTrigger className="text-base font-semibold">{f.q}</AccordionTrigger>
+              <AccordionContent>
+                <p className="muted" style={{ margin: 0 }}>
+                  {f.a}
+                  {f.slug && (
+                    <>
+                      {" "}
+                      <Link
+                        className="text-link"
+                        style={{ textDecoration: "underline" }}
+                        to="/kennis/$slug"
+                        params={{ slug: f.slug }}
+                      >
+                        Lees het artikel
+                      </Link>
+                    </>
+                  )}
+                </p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </Reveal>
     </section>
   );
 }
@@ -98,6 +335,7 @@ function Index() {
       </section>
       <Benefits />
       <Stats />
+      <AdvisorBand />
 
       <section className="section container">
         <Reveal>
@@ -131,6 +369,26 @@ function Index() {
               </Link>
             </Reveal>
           ))}
+        </div>
+      </section>
+
+      <section className="section container">
+        <Reveal>
+          <div className="section-heading">
+            <div>
+              <h2>Veelgekozen door installateurs</h2>
+              <p>Dit kiezen professionals het vaakst bij ESTG.</p>
+            </div>
+          </div>
+        </Reveal>
+        <div className="product-grid bestsellers">
+          {products
+            .filter((p) => p.isBestseller)
+            .map((p, i) => (
+              <Reveal key={p.id} delay={i * 70}>
+                <ProductCard product={p} />
+              </Reveal>
+            ))}
         </div>
       </section>
 
@@ -189,14 +447,14 @@ function Index() {
         <Reveal>
           <div className="split reverse">
             <div>
-              <h2>Stel je project samen</h2>
+              <h2>Stel je selectie samen</h2>
               <p>
-                Verzamel producten in Mijn Project, controleer of de set compleet is en download je
+                Verzamel producten in je winkelmand, controleer of de set compleet is en download je
                 selectie om met ESTG te bespreken.
               </p>
               <Button asChild>
                 <Link to="/winkelwagen">
-                  Naar Mijn Project <ArrowRight />
+                  Naar winkelmand <ArrowRight />
                 </Link>
               </Button>
             </div>
@@ -204,6 +462,11 @@ function Index() {
           </div>
         </Reveal>
       </section>
+
+      <FeaturedProject />
+      <Reviews />
+      <Blog />
+      <Faq />
 
       <section className="cta-dark">
         <div className="container cta-inner">

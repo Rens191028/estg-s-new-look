@@ -37,7 +37,7 @@ export function catalogLines(list: Product[]) {
   return list
     .map(
       (p) =>
-        `- ${p.id} | ${p.name} | ${p.brand} | ${p.category} | ${p.specs.map((s) => `${s.label}: ${s.value}`).join("; ")}`,
+        `- ${p.id} | ${p.name} | ${p.brand} | ${p.category} | €${p.price} excl. btw | ${p.specs.map((s) => `${s.label}: ${s.value}`).join("; ")}`,
     )
     .join("\n");
 }
@@ -63,7 +63,7 @@ export function buildSystemPrompt({
     "Feiten:\n" + KNOWLEDGE_FACTS.map((f) => `- ${f}`).join("\n"),
     "Regels:\n" + KNOWLEDGE_RULES.map((r) => `- ${r}`).join("\n"),
     `Categorieën: ${categories.join(", ")}.`,
-    "Relevante catalogus (id | naam | merk | categorie | specs):\n" + catalogLines(list),
+    "Relevante catalogus (id | naam | merk | categorie | prijs | specs):\n" + catalogLines(list),
     "Geverifieerde compatibiliteitscontroles (door code vastgesteld):\n" +
       (facts.length ? facts.join("\n") : "- Geen controles beschikbaar voor deze selectie."),
   ].join("\n\n");

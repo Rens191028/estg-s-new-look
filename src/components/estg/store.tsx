@@ -15,7 +15,7 @@ const g = globalThis as unknown as { __estgStoreContext?: React.Context<Store | 
 const Context = (g.__estgStoreContext ??= createContext<Store | null>(null));
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<Item[]>([]);
-  const [projectName, setProjectName] = useState("Mijn project");
+  const [projectName, setProjectName] = useState("");
   const add = (id: string, quantity = 1) =>
     setItems((prev) => {
       const old = prev.find((x) => x.id === id);

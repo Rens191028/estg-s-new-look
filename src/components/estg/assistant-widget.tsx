@@ -31,6 +31,7 @@ export function AssistantWidget() {
   const [busy, setBusy] = useState(false);
   const [streaming, setStreaming] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const streamingRef = useRef(false);
 
   // Gesprek hervatten na verversen, pas na hydratie.
   useEffect(() => {
@@ -57,13 +58,14 @@ export function AssistantWidget() {
       const res = await streamWidget(
         { message, ...(conversationId ? { conversation_id: conversationId } : {}) },
         (full) => {
+          const first = !streamingRef.current;
+          streamingRef.current = true;
           setStreaming(true);
-          setTurns((t) => {
-            const last = t[t.length - 1];
-            return last?.role === "assistant" && last !== GREETING && t.length > 0 && streamingRef.current
-              ? [...t.slice(0, -1), { role: "assistant", content: full }]
-              : ((streamingRef.current = true), [...t, { role: "assistant", content: full }]);
-          });
+          setTurns((t) =>
+            first
+              ? [...t, { role: "assistant", content: full }]
+              : [...t.slice(0, -1), { role: "assistant", content: full }],
+          );
         },
       );
       if (res.conversationId) {
@@ -83,7 +85,6 @@ export function AssistantWidget() {
       setStreaming(false);
     }
   };
-  const streamingRef = useRef(false);
 
   return (
     <>
@@ -105,7 +106,7 @@ export function AssistantWidget() {
                 {t.content}
               </p>
             ))}
-            {busy && <p className="bubble assistant muted">Even denken…</p>}
+            {busy && !streaming && <p className="bubble assistant muted">Even denken…</p>}
             <div ref={endRef} />
           </div>
           <p className="assistant-note">

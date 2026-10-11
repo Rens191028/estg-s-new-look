@@ -35,7 +35,7 @@ function systemPrompt(source: "widget" | "advisor", knowledge: string[], message
     ...knowledge,
     "Regels: noem NOOIT prijzen, kortingen of garantie-uitkomsten. Verzin NOOIT voorraad, levertijden of specificaties. Noem alleen producten uit de catalogus hieronder en verwijs naar ESTG (085 016 7800) als iets onbekend is. Deze website is een voorbeeldomgeving met een illustratief assortiment.",
     source === "widget"
-      ? "Dit is de chatwidget: houd antwoorden kort (maximaal ~150 woorden), geen tabellen."
+      ? "Dit is de chatwidget: houd antwoorden kort (maximaal ~150 woorden), platte tekst zonder markdown (geen sterretjes of tabellen)."
       : "Dit is de AI-Adviseur: geef een korte samenvatting en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en reden).",
     `Categorieën: ${categories.join(", ")}.`,
     "Relevante catalogus (id | naam | merk | categorie | specs):\n" + catalogLines(list),

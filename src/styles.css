@@ -1993,6 +1993,110 @@ select {
     top: 124px;
   }
 }
+/* ---------- Assistent ---------- */
+.assistant-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--navy-900);
+  color: var(--on-ink);
+  font-weight: 600;
+  box-shadow:
+    0 0 0 2px var(--surface-0),
+    var(--shadow-lg);
+  cursor: pointer;
+}
+.assistant-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 84px;
+  z-index: 70;
+  width: min(380px, calc(100vw - 32px));
+  height: min(520px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-0);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.assistant-log {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+.bubble {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-lg);
+  font-size: 14px;
+  line-height: 21px;
+  max-width: 88%;
+  white-space: pre-wrap;
+}
+.bubble.assistant {
+  background: var(--surface-100);
+  justify-self: start;
+}
+.bubble.user {
+  background: var(--navy-900);
+  color: var(--on-ink);
+  justify-self: end;
+}
+.assistant-note {
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--navy-700);
+  border-top: 1px solid var(--border);
+}
+.assistant-note a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+.assistant-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+.assistant-form input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 12px;
+  outline: none;
+}
+.assistant-form input:focus {
+  border-color: var(--navy-900);
+}
+@media (max-width: 700px) {
+  .assistant-fab span {
+    display: none;
+  }
+  .assistant-fab {
+    width: 52px;
+    padding: 0;
+    justify-content: center;
+    bottom: 76px;
+  }
+  .assistant-panel {
+    bottom: 140px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

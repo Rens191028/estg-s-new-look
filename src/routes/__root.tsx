@@ -16,6 +16,7 @@ import { Header, Footer } from "@/components/estg/shell";
 import { StoreProvider } from "@/components/estg/store";
 import { CompareProvider } from "@/components/estg/compare";
 import { CompareBar } from "@/components/estg/compare-bar";
+import { AssistantWidget } from "@/components/estg/assistant-widget";
 
 function NotFoundComponent() {
   return (
@@ -130,6 +131,7 @@ function RootComponent() {
           </main>
           <Footer />
           <CompareBar />
+          <AssistantWidget />
         </CompareProvider>
       </StoreProvider>
     </QueryClientProvider>

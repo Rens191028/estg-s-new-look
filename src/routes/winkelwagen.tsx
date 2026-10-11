@@ -27,12 +27,11 @@ export const Route = createFileRoute("/winkelwagen")({
 });
 
 function Cart() {
-  const { items, update, projectName, setProjectName, count } = useStore();
+  const { items, update, projectName, setProjectName, count, subtotal } = useStore();
   const lines = projectLines(items);
   const groups = groupByCategory(lines);
   const warnings = projectWarnings(lines);
   const kwp = totalKwp(lines);
-  const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.quantity, 0);
   const co2 = kwp > 0 ? estimateCo2Savings(kwp) : null;
 
   const download = () => {

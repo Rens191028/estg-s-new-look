@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
@@ -11,12 +11,22 @@ import {
   ShieldCheck,
   ShoppingBag,
   Truck,
+  User,
   X,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { brandLogo, brands, categories } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
+import { formatEuro } from "@/lib/format";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { firstName, useAuth } from "./auth";
 import { useStore } from "./store";
 import { CategoryIcon } from "./ui-bits";
 
@@ -72,7 +82,9 @@ function BrandBar() {
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
-  const { count } = useStore();
+  const { count, subtotal } = useStore();
+  const { user, profile, loading, signOut } = useAuth();
+  const navigate = useNavigate();
   const close = () => {
     setMenuOpen(false);
     setMegaOpen(false);
@@ -92,13 +104,55 @@ export function Header() {
             </span>
             <Link
               to="/winkelwagen"
-              className="bag-link"
-              aria-label={`Winkelmand, ${count} producten`}
+              className={`bag-link ${count > 0 ? "bag-link--active" : ""}`}
+              aria-label={`Winkelmand, ${count} producten${count > 0 ? `, ${formatEuro(subtotal)} excl. btw` : ""}`}
               onClick={close}
             >
               <ShoppingBag size={22} />
-              {count > 0 && <span className="bag-count">{count}</span>}
+              {count > 0 && (
+                <span className="bag-count">
+                  {count} · {formatEuro(subtotal)}
+                </span>
+              )}
             </Link>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="header-link account-trigger" aria-label="Account">
+                  <User size={20} />
+                  <span>{firstName(profile)}</span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {(
+                    [
+                      ["favorieten", "Favorieten"],
+                      ["gegevens", "Gegevens"],
+                      ["bestellingen", "Bestellingen"],
+                    ] as const
+                  ).map(([tab, label]) => (
+                    <DropdownMenuItem
+                      key={tab}
+                      onSelect={() => navigate({ to: "/account", search: { tab } })}
+                    >
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onSelect={async () => {
+                      await signOut();
+                      navigate({ to: "/" });
+                    }}
+                  >
+                    Uitloggen
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/inloggen" className="header-link" onClick={close} aria-busy={loading}>
+                <User size={20} />
+                <span>Inloggen</span>
+              </Link>
+            )}
             <Button
               className="mobile-menu"
               variant="ghost"

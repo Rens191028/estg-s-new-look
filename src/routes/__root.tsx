@@ -16,6 +16,9 @@ import { Header, Footer, Logo } from "@/components/estg/shell";
 import { Button } from "@/components/ui/button";
 import { StoreProvider } from "@/components/estg/store";
 import { CompareProvider } from "@/components/estg/compare";
+import { AuthProvider } from "@/components/estg/auth";
+import { FavoritesProvider } from "@/components/estg/favorites";
+import { Toaster } from "@/components/ui/sonner";
 import { CompareBar } from "@/components/estg/compare-bar";
 import { AssistantWidget } from "@/components/estg/assistant-widget";
 
@@ -125,17 +128,22 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StoreProvider>
-        <CompareProvider>
-          <Header />
-          <main>
-            <Outlet />
-          </main>
-          <Footer />
-          <CompareBar />
-          <AssistantWidget />
-        </CompareProvider>
-      </StoreProvider>
+      <AuthProvider>
+        <FavoritesProvider>
+          <StoreProvider>
+            <CompareProvider>
+              <Header />
+              <main>
+                <Outlet />
+              </main>
+              <Footer />
+              <CompareBar />
+              <AssistantWidget />
+              <Toaster />
+            </CompareProvider>
+          </StoreProvider>
+        </FavoritesProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

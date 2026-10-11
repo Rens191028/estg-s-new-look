@@ -8,6 +8,7 @@ import { requestAdvice, type AdviceResult } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
 import { findProduct, pageHead } from "@/lib/catalog";
 import { formatEuro } from "@/lib/format";
+import { CategoryIcon } from "@/components/estg/ui-bits";
 
 export const Route = createFileRoute("/advisor")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -103,7 +104,7 @@ function Advisor() {
         )}
         {result?.ok && (
           <div style={{ marginTop: 32 }}>
-            <p style={{ fontSize: 17, lineHeight: "26px" }}>{result.reply}</p>
+            <p className="advice-summary">{result.reply}</p>
             {result.warnings.length > 0 && (
               <div className="compat-warn" role="status">
                 <AlertTriangle size={20} />
@@ -116,19 +117,22 @@ function Advisor() {
             )}
             {result.recommendations.length > 0 && (
               <>
-                <div className="cart-group">
+                <div className="advice-grid">
                   {result.recommendations.map((r) => {
                     const p = findProduct(r.productId);
                     if (!p) return null;
                     return (
-                      <div
-                        className="cart-row"
-                        key={r.productId}
-                        style={{ gridTemplateColumns: "1fr auto" }}
-                      >
+                      <article className="advice-card" key={r.productId}>
+                        <Link to="/producten/$id" params={{ id: p.id }} className="advice-thumb">
+                          {p.image ? (
+                            <img src={p.image} alt={p.name} width={96} height={96} />
+                          ) : (
+                            <CategoryIcon category={p.category} size={36} />
+                          )}
+                        </Link>
                         <div>
                           <Link to="/producten/$id" params={{ id: p.id }}>
-                            <h3 style={{ border: 0, padding: 0, color: "inherit" }}>
+                            <h3>
                               {r.quantity} × {p.name}
                             </h3>
                           </Link>
@@ -141,7 +145,7 @@ function Advisor() {
                           {formatEuro(p.price * r.quantity)}
                           <small>{formatEuro(p.price)} p/st</small>
                         </strong>
-                      </div>
+                      </article>
                     );
                   })}
                 </div>

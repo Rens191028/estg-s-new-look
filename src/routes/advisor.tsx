@@ -7,8 +7,12 @@ import { useStore } from "@/components/estg/store";
 import { requestAdvice, type AdviceResult } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
 import { findProduct, pageHead } from "@/lib/catalog";
+import { formatEuro } from "@/lib/format";
 
 export const Route = createFileRoute("/advisor")({
+  validateSearch: (s: Record<string, unknown>) => ({
+    vraag: typeof s["vraag"] === "string" ? s["vraag"].slice(0, MAX_MESSAGE_LENGTH) : "",
+  }),
   head: () =>
     pageHead(
       "AI-adviseur",
@@ -19,9 +23,15 @@ export const Route = createFileRoute("/advisor")({
 
 type Result = ({ ok: true } & AdviceResult) | { ok: false; message: string };
 
+// De prijs komt uit de catalogus, nooit van het taalmodel.
+function estimatedTotal(recs: { productId: string; quantity: number }[]) {
+  return recs.reduce((sum, r) => sum + (findProduct(r.productId)?.price ?? 0) * r.quantity, 0);
+}
+
 function Advisor() {
   const { add } = useStore();
-  const [message, setMessage] = useState("");
+  const { vraag } = Route.useSearch();
+  const [message, setMessage] = useState(vraag);
   const [requirements, setRequirements] = useState("");
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
@@ -127,10 +137,19 @@ function Advisor() {
                           </p>
                           <p>{r.reason}</p>
                         </div>
+                        <strong className="line-price">
+                          {formatEuro(p.price * r.quantity)}
+                          <small>{formatEuro(p.price)} p/st</small>
+                        </strong>
                       </div>
                     );
                   })}
                 </div>
+                <p className="advisor-total">
+                  Geschat totaal (excl. btw):{" "}
+                  <strong>{formatEuro(estimatedTotal(result.recommendations))}</strong>
+                  <small>Voorbeeldprijzen, definitieve prijs bevestigt ESTG.</small>
+                </p>
                 <Button
                   onClick={() => {
                     for (const r of result.recommendations) add(r.productId, r.quantity);
@@ -138,7 +157,7 @@ function Advisor() {
                   }}
                 >
                   {added ? <Check /> : null}
-                  {added ? "Toegevoegd aan Mijn Project" : "Alles toevoegen aan Mijn Project"}
+                  {added ? "Toegevoegd aan winkelmand" : "Alles toevoegen aan winkelmand"}
                 </Button>
               </>
             )}

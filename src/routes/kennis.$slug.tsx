@@ -33,7 +33,9 @@ function Article() {
           <ArrowLeft size={15} />
           Kennis & inspiratie
         </Link>
-        <img className="content-image" src={a.image} alt={a.title} width={816} height={816} />
+        {a.image && (
+          <img className="content-image" src={a.image} alt={a.title} width={816} height={816} />
+        )}
         {a.sections.map(([title, body]) => (
           <section key={title}>
             <h2>{title}</h2>

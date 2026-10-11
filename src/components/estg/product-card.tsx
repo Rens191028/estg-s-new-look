@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/catalog";
+import { formatEuro } from "@/lib/format";
 import { useCompare } from "./compare";
 import { useStore } from "./store";
 import { AvailabilityBadge, CategoryIcon } from "./ui-bits";
@@ -24,9 +25,10 @@ export function ProductCard({ product }: { product: Product }) {
             <CategoryIcon category={product.category} size={56} />
           </span>
         )}
-        {product.isNew && (
+        {(product.isNew || product.isBestseller) && (
           <span className="badge-slot">
-            <Badge tone="accent">Nieuw</Badge>
+            {product.isNew && <Badge tone="accent">Nieuw</Badge>}
+            {product.isBestseller && <Badge tone="info">Bestseller</Badge>}
           </span>
         )}
       </Link>
@@ -53,13 +55,13 @@ export function ProductCard({ product }: { product: Product }) {
           <AvailabilityBadge />
         </div>
         <div className="product-bottom">
-          <span className="muted" style={{ fontSize: 13 }}>
-            Prijs via ESTG
+          <span className="card-price">
+            {formatEuro(product.price)} <small>excl. btw</small>
           </span>
           <Button
             variant="default"
             size="sm"
-            aria-label={`${product.name} toevoegen aan Mijn Project`}
+            aria-label={`${product.name} toevoegen aan winkelmand`}
             onClick={() => {
               add(product.id);
               setAdded(true);

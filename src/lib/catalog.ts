@@ -20,6 +20,8 @@ export type Product = {
   category: Category;
   /** Illustratief artikelnummer, geen echt ESTG-SKU. */
   sku: string;
+  /** Illustratieve voorbeeldprijs in hele euro's, excl. btw. Geen echte ESTG-prijs. */
+  price: number;
   image?: string | undefined;
   note: string;
   /** Nominaal vermogen in Wp, alleen voor zonnepanelen. */
@@ -27,6 +29,7 @@ export type Product = {
   /** Illustratieve specificaties, ter indicatie. Worden bevestigd door ESTG. */
   specs: Spec[];
   isNew?: boolean;
+  isBestseller?: boolean;
 };
 export const products: Product[] = [
   {
@@ -35,6 +38,8 @@ export const products: Product[] = [
     brand: "JA Solar",
     category: "Zonnepanelen",
     sku: "DEMO-PV-001",
+    price: 139,
+    isBestseller: true,
     image: panel,
     note: "Een strak paneel voor residentiële projecten.",
     powerWp: 430,
@@ -52,6 +57,7 @@ export const products: Product[] = [
     brand: "Trina Solar",
     category: "Zonnepanelen",
     sku: "DEMO-PV-002",
+    price: 179,
     image: panel,
     note: "Zonnepanelen voor duurzame energieprojecten.",
     powerWp: 580,
@@ -67,6 +73,8 @@ export const products: Product[] = [
     brand: "Sungrow",
     category: "Omvormers",
     sku: "DEMO-INV-001",
+    price: 2450,
+    isBestseller: true,
     image: inverter,
     note: "Verbind zonne-energie met slimme energieopslag.",
     specs: [
@@ -82,6 +90,7 @@ export const products: Product[] = [
     brand: "Huawei",
     category: "Omvormers",
     sku: "DEMO-INV-002",
+    price: 1890,
     image: inverter,
     note: "De schakel tussen je zonnepanelen en de installatie.",
     specs: [
@@ -96,6 +105,8 @@ export const products: Product[] = [
     brand: "BYD",
     category: "Energieopslag",
     sku: "DEMO-BAT-001",
+    price: 4250,
+    isBestseller: true,
     image: battery,
     note: "Flexibele energieopslag voor thuis.",
     isNew: true,
@@ -111,6 +122,7 @@ export const products: Product[] = [
     brand: "Sungrow",
     category: "Energieopslag",
     sku: "DEMO-BAT-002",
+    price: 4950,
     image: battery,
     note: "Meer grip op opgewekte energie.",
     specs: [
@@ -124,6 +136,8 @@ export const products: Product[] = [
     brand: "Alfen",
     category: "EV-laders",
     sku: "DEMO-EV-001",
+    price: 799,
+    isBestseller: true,
     image: charger,
     note: "Laadoplossingen voor thuis en op de werkplek.",
     specs: [
@@ -138,6 +152,7 @@ export const products: Product[] = [
     brand: "Charge Amps",
     category: "EV-laders",
     sku: "DEMO-EV-002",
+    price: 1095,
     image: charger,
     note: "Slim laden voor dagelijkse mobiliteit.",
     specs: [
@@ -151,6 +166,8 @@ export const products: Product[] = [
     brand: "K2 Systems",
     category: "Montagemateriaal",
     sku: "DEMO-MNT-001",
+    price: 189,
+    isBestseller: true,
     image: rooftop,
     note: "Rails en dakhaken voor montage op een schuin dak.",
     specs: [
@@ -164,6 +181,8 @@ export const products: Product[] = [
     brand: "Daikin",
     category: "Klimaat",
     sku: "DEMO-CLI-001",
+    price: 3450,
+    isBestseller: true,
     note: "Verwarmen en koelen met een rendabele warmtepomp.",
     specs: [
       { label: "Type", value: "Lucht-water" },
@@ -177,6 +196,7 @@ export const products: Product[] = [
     brand: "JA Solar",
     category: "Zonnepanelen",
     sku: "DEMO-PV-003",
+    price: 129,
     image: panel,
     note: "Betrouwbaar paneel voor grootschalige dakprojecten.",
     powerWp: 405,
@@ -193,6 +213,7 @@ export const products: Product[] = [
     brand: "Trina Solar",
     category: "Zonnepanelen",
     sku: "DEMO-PV-004",
+    price: 219,
     image: panel,
     note: "Hoog rendement dankzij N-type TOPCon-celtechniek.",
     powerWp: 610,
@@ -209,6 +230,7 @@ export const products: Product[] = [
     brand: "AIKO",
     category: "Zonnepanelen",
     sku: "DEMO-PV-005",
+    price: 169,
     image: panel,
     note: "Geen zichtbare busbars voor een strak, uniform aanzien.",
     powerWp: 450,
@@ -226,6 +248,7 @@ export const products: Product[] = [
     brand: "Enphase",
     category: "Omvormers",
     sku: "DEMO-INV-003",
+    price: 139,
     image: inverter,
     note: "Per paneel omzetting, voor maximale opbrengst bij schaduw.",
     specs: [
@@ -240,6 +263,7 @@ export const products: Product[] = [
     brand: "SolarEdge",
     category: "Omvormers",
     sku: "DEMO-INV-004",
+    price: 2290,
     image: inverter,
     note: "Paneel-niveau optimalisatie gecombineerd met een centrale omvormer.",
     specs: [
@@ -254,6 +278,7 @@ export const products: Product[] = [
     brand: "SMA",
     category: "Omvormers",
     sku: "DEMO-INV-005",
+    price: 3650,
     image: inverter,
     note: "Robuuste 3-fase omvormer voor grotere installaties.",
     specs: [
@@ -268,6 +293,7 @@ export const products: Product[] = [
     brand: "Growatt",
     category: "Omvormers",
     sku: "DEMO-INV-006",
+    price: 1950,
     image: inverter,
     note: "Batterij-ready hybride omvormer voor woning en kleinzakelijk.",
     isNew: true,
@@ -284,6 +310,7 @@ export const products: Product[] = [
     brand: "Huawei",
     category: "Omvormers",
     sku: "DEMO-INV-007",
+    price: 1590,
     image: inverter,
     note: "Compacte hybride omvormer, uit te breiden met LUNA-batterijmodules.",
     specs: [
@@ -301,6 +328,7 @@ export const products: Product[] = [
     brand: "LG",
     category: "Energieopslag",
     sku: "DEMO-BAT-003",
+    price: 3890,
     image: battery,
     note: "Compacte wandmontage-batterij voor woninginstallaties.",
     specs: [
@@ -315,6 +343,7 @@ export const products: Product[] = [
     brand: "Sigenergy",
     category: "Energieopslag",
     sku: "DEMO-BAT-004",
+    price: 3590,
     image: battery,
     note: "Modulair batterijsysteem, uit te breiden in stappen.",
     isNew: true,
@@ -330,6 +359,7 @@ export const products: Product[] = [
     brand: "Growatt",
     category: "Energieopslag",
     sku: "DEMO-BAT-005",
+    price: 2190,
     image: battery,
     note: "Stapelbare batterijmodules voor flexibele capaciteit.",
     specs: [
@@ -344,6 +374,7 @@ export const products: Product[] = [
     brand: "BYD",
     category: "Energieopslag",
     sku: "DEMO-BAT-006",
+    price: 1190,
     image: battery,
     note: "Uitbreidingsmodule voor bestaande BYD-batterijsystemen.",
     specs: [
@@ -360,6 +391,7 @@ export const products: Product[] = [
     brand: "denim",
     category: "EV-laders",
     sku: "DEMO-EV-003",
+    price: 949,
     image: charger,
     note: "App-gestuurd laden met dynamische lastbalancering.",
     isNew: true,
@@ -375,6 +407,7 @@ export const products: Product[] = [
     brand: "Alfen",
     category: "EV-laders",
     sku: "DEMO-EV-004",
+    price: 695,
     image: charger,
     note: "Compact laadpunt voor thuisgebruik, 1- of 3-fase.",
     specs: [
@@ -389,6 +422,7 @@ export const products: Product[] = [
     brand: "Charge Amps",
     category: "EV-laders",
     sku: "DEMO-EV-005",
+    price: 1895,
     image: charger,
     note: "Twee laadpunten in één paal, ideaal voor bedrijfsparkeerplaatsen.",
     specs: [
@@ -405,6 +439,7 @@ export const products: Product[] = [
     brand: "Enstall",
     category: "Montagemateriaal",
     sku: "DEMO-MNT-002",
+    price: 219,
     image: rooftop,
     note: "Ballastsysteem voor montage op een plat dak, zonder doorboring.",
     specs: [
@@ -419,6 +454,7 @@ export const products: Product[] = [
     brand: "K2 Systems",
     category: "Montagemateriaal",
     sku: "DEMO-MNT-003",
+    price: 249,
     image: rooftop,
     note: "Ballastsysteem voor platte daken, instelbare hellingshoek.",
     specs: [
@@ -433,6 +469,7 @@ export const products: Product[] = [
     brand: "K2 Systems",
     category: "Montagemateriaal",
     sku: "DEMO-MNT-004",
+    price: 89,
     image: rooftop,
     note: "Universele dakhaken voor montage op een pannendak.",
     specs: [
@@ -448,6 +485,7 @@ export const products: Product[] = [
     brand: "Mitsubishi Heavy Industries",
     category: "Klimaat",
     sku: "DEMO-CLI-002",
+    price: 1650,
     note: "Split-unit voor verwarmen en koelen van een enkele ruimte.",
     specs: [
       { label: "Type", value: "Lucht-lucht (split)" },
@@ -460,6 +498,7 @@ export const products: Product[] = [
     brand: "Daikin",
     category: "Klimaat",
     sku: "DEMO-CLI-003",
+    price: 3950,
     note: "Combineert een lucht-water warmtepomp met de bestaande CV-ketel.",
     isNew: true,
     specs: [

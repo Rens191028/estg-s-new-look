@@ -31,14 +31,14 @@ export function projectWarnings(lines: ProjectLine[]): ProjectWarning[] {
   if (has("Zonnepanelen") && !has("Omvormers")) {
     warnings.push({
       id: "geen-omvormer",
-      text: "Je project bevat zonnepanelen maar nog geen omvormer.",
+      text: "Je winkelmand bevat zonnepanelen maar nog geen omvormer.",
       category: "Omvormers",
     });
   }
   if (has("Zonnepanelen") && !has("Montagemateriaal")) {
     warnings.push({
       id: "geen-montage",
-      text: "Je project bevat zonnepanelen maar nog geen montagemateriaal.",
+      text: "Je winkelmand bevat zonnepanelen maar nog geen montagemateriaal.",
       category: "Montagemateriaal",
     });
   }

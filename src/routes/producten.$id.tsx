@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronRight, Minus, Plus, Scale, ShoppingBag } from "lucide-react";
+import { Check, ChevronRight, Heart, Minus, Plus, Scale, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -12,6 +12,7 @@ import {
 import { ProductCard } from "@/components/estg/product-card";
 import { formatEuro } from "@/lib/format";
 import { useCompare } from "@/components/estg/compare";
+import { useFavorites } from "@/components/estg/favorites";
 import { useStore } from "@/components/estg/store";
 import { AvailabilityBadge, CategoryIcon, Reveal } from "@/components/estg/ui-bits";
 import {
@@ -41,6 +42,7 @@ function Product() {
   const buyRef = useRef<HTMLDivElement>(null);
   const { add } = useStore();
   const compare = useCompare();
+  const favorites = useFavorites();
 
   // Compacte balk zodra de hoofd-CTA uit beeld scrolt.
   useEffect(() => {
@@ -178,6 +180,17 @@ function Product() {
               >
                 <Scale /> {inCompare ? "In vergelijking" : "Vergelijk"}
               </Button>
+              <button
+                type="button"
+                className="fav-toggle fav-toggle--inline"
+                aria-pressed={favorites.has(p.id)}
+                aria-label={
+                  favorites.has(p.id) ? "Uit favorieten halen" : "Aan favorieten toevoegen"
+                }
+                onClick={() => void favorites.toggle(p.id)}
+              >
+                <Heart size={20} />
+              </button>
             </div>
             {added && (
               <Link className="text-link" to="/winkelwagen">

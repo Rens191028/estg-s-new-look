@@ -1,17 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import { Check, Plus } from "lucide-react";
+import { Check, Heart, Plus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/catalog";
 import { formatEuro } from "@/lib/format";
 import { useCompare } from "./compare";
+import { useFavorites } from "./favorites";
 import { useStore } from "./store";
 import { AvailabilityBadge, CategoryIcon } from "./ui-bits";
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useStore();
   const compare = useCompare();
+  const favorites = useFavorites();
   const [added, setAdded] = useState(false);
   const selected = compare.has(product.id);
   const blocked = !selected && compare.isFull;
@@ -45,6 +47,15 @@ export function ProductCard({ product }: { product: Product }) {
         />
         Vergelijk
       </label>
+      <button
+        type="button"
+        className="fav-toggle"
+        aria-pressed={favorites.has(product.id)}
+        aria-label={`${product.name} ${favorites.has(product.id) ? "uit favorieten halen" : "aan favorieten toevoegen"}`}
+        onClick={() => void favorites.toggle(product.id)}
+      >
+        <Heart size={17} />
+      </button>
       <div className="product-info">
         <span className="brand">{product.brand}</span>
         <Link to="/producten/$id" params={{ id: product.id }}>

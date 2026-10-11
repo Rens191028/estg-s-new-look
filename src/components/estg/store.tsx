@@ -1,4 +1,5 @@
 import type * as React from "react";
+import { findProduct } from "@/lib/catalog";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 type Item = { id: string; quantity: number };
@@ -6,6 +7,8 @@ type Store = {
   items: Item[];
   projectName: string;
   count: number;
+  /** Som van prijs × aantal, excl. btw (voorbeeldprijzen). */
+  subtotal: number;
   add: (id: string, quantity?: number) => void;
   update: (id: string, quantity: number) => void;
   setProjectName: (name: string) => void;
@@ -30,8 +33,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         : prev.map((x) => (x.id === id ? { ...x, quantity } : x)),
     );
   const count = items.reduce((a, x) => a + x.quantity, 0);
+  const subtotal = items.reduce((a, x) => a + (findProduct(x.id)?.price ?? 0) * x.quantity, 0);
   return (
-    <Context.Provider value={{ items, projectName, count, add, update, setProjectName }}>
+    <Context.Provider value={{ items, projectName, count, subtotal, add, update, setProjectName }}>
       {children}
     </Context.Provider>
   );

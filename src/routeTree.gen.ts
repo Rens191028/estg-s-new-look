@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvisorRouteImport } from './routes/advisor'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as InloggenRouteImport } from './routes/inloggen'
 import { Route as KennisRouteImport } from './routes/kennis'
 import { Route as MerkenRouteImport } from './routes/merken'
 import { Route as OverEstgRouteImport } from './routes/over-estg'
@@ -28,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdvisorRoute = AdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
@@ -36,6 +43,11 @@ const AdvisorRoute = AdvisorRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InloggenRoute = InloggenRouteImport.update({
+  id: '/inloggen',
+  path: '/inloggen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KennisRoute = KennisRouteImport.update({
@@ -91,8 +103,10 @@ const ProductenIdRoute = ProductenIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
+  '/inloggen': typeof InloggenRoute
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
@@ -106,8 +120,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
+  '/inloggen': typeof InloggenRoute
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
   '/vergelijken': typeof VergelijkenRoute
@@ -121,8 +137,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
+  '/inloggen': typeof InloggenRoute
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
@@ -138,8 +156,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/advisor'
     | '/contact'
+    | '/inloggen'
     | '/kennis'
     | '/merken'
     | '/over-estg'
@@ -153,8 +173,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/account'
     | '/advisor'
     | '/contact'
+    | '/inloggen'
     | '/merken'
     | '/over-estg'
     | '/vergelijken'
@@ -167,8 +189,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/advisor'
     | '/contact'
+    | '/inloggen'
     | '/kennis'
     | '/merken'
     | '/over-estg'
@@ -183,8 +207,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRoute
   AdvisorRoute: typeof AdvisorRoute
   ContactRoute: typeof ContactRoute
+  InloggenRoute: typeof InloggenRoute
   KennisRoute: typeof KennisRouteWithChildren
   MerkenRoute: typeof MerkenRoute
   OverEstgRoute: typeof OverEstgRoute
@@ -204,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/advisor': {
       id: '/advisor'
       path: '/advisor'
@@ -216,6 +249,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inloggen': {
+      id: '/inloggen'
+      path: '/inloggen'
+      fullPath: '/inloggen'
+      preLoaderRoute: typeof InloggenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kennis': {
@@ -306,8 +346,10 @@ const KennisRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRoute,
   AdvisorRoute: AdvisorRoute,
   ContactRoute: ContactRoute,
+  InloggenRoute: InloggenRoute,
   KennisRoute: KennisRouteWithChildren,
   MerkenRoute: MerkenRoute,
   OverEstgRoute: OverEstgRoute,

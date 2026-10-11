@@ -21,9 +21,21 @@ const input = z.object({
 });
 
 const adviceSchema = z.object({
-  summary: z.string().describe("Korte samenvatting in het Nederlands."),
+  summary: z
+    .string()
+    .describe(
+      "Korte conclusie in het Nederlands, maximaal 2 zinnen. Geen productdetails of onderbouwing hier: die staan per aanbeveling in 'reason'.",
+    ),
   recommendations: z.array(
-    z.object({ product_id: z.string(), quantity: z.number().int(), reason: z.string() }),
+    z.object({
+      product_id: z.string(),
+      quantity: z.number().int(),
+      reason: z
+        .string()
+        .describe(
+          "Maximaal 1-2 zinnen: waarom dit product, kort en concreet, geen herhaling van de conclusie.",
+        ),
+    }),
   ),
 });
 
@@ -38,8 +50,8 @@ function systemPrompt(source: "widget" | "advisor", knowledge: string[], message
     ...knowledge,
     "Regels: je mag prijzen noemen, maar uitsluitend de prijs die letterlijk bij het product in de catalogus hieronder staat (€ excl. btw, voorbeeldprijs) — verzin NOOIT een korting, staffelprijs of ander bedrag, en noem geen garantie-uitkomsten. Verzin NOOIT voorraad, levertijden of specificaties. Noem alleen producten uit de catalogus hieronder en verwijs naar ESTG (085 016 7800) als iets onbekend is. Deze website is een voorbeeldomgeving met een illustratief assortiment.",
     source === "widget"
-      ? "Dit is de chatwidget: houd antwoorden kort (maximaal ~150 woorden), platte tekst zonder markdown (geen sterretjes of tabellen)."
-      : "Dit is de AI-Adviseur: geef een korte samenvatting en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en reden).",
+      ? "Dit is de chatwidget: kort en puntig, maximaal 2-3 korte zinnen, geen opsomming van alle redenen achter elkaar in doorlopende tekst. Platte tekst zonder markdown (geen sterretjes of tabellen)."
+      : "Dit is de AI-Adviseur: geef een conclusie van maximaal 2 zinnen en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en een korte reden van 1-2 zinnen per product). Zet vervolgvragen niet in de conclusie.",
     `Categorieën: ${categories.join(", ")}.`,
     "Relevante catalogus (id | naam | merk | categorie | prijs | specs):\n" + catalogLines(list),
     "Door code vastgestelde compatibiliteitscontroles:\n" +

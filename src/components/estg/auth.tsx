@@ -35,12 +35,25 @@ type Auth = {
 const g = globalThis as unknown as { __estgAuthContext?: React.Context<Auth | null> };
 const Context = (g.__estgAuthContext ??= createContext<Auth | null>(null));
 
+// Vertaalt bekende Supabase-fouten. De echte melding gaat altijd naar de console, zodat onbekende
+// fouten niet stilletjes in een generieke tekst verdwijnen.
 const dutchError = (message: string) => {
+  console.error("[auth]", message);
   const m = message.toLowerCase();
   if (m.includes("invalid login")) return "E-mailadres of wachtwoord klopt niet.";
-  if (m.includes("already registered")) return "Er bestaat al een account met dit e-mailadres.";
+  if (m.includes("email not confirmed"))
+    return "Bevestig eerst je e-mailadres via de link in je mail.";
+  if (m.includes("already registered") || m.includes("already been registered"))
+    return "Er bestaat al een account met dit e-mailadres.";
+  if (m.includes("rate limit") || m.includes("too many"))
+    return "Te veel pogingen. Wacht even en probeer het opnieuw.";
+  if (m.includes("sending") && m.includes("email"))
+    return "De bevestigingsmail kon niet worden verzonden. Probeer het later opnieuw.";
+  if (m.includes("email address") && m.includes("invalid"))
+    return "Dit e-mailadres wordt niet geaccepteerd. Gebruik een zakelijk e-mailadres.";
   if (m.includes("password")) return "Kies een sterker wachtwoord (minimaal 8 tekens).";
-  if (m.includes("email")) return "Controleer je e-mailadres.";
+  if (m.includes("signups not allowed") || m.includes("signup is disabled"))
+    return "Registreren is momenteel niet mogelijk.";
   return "Er ging iets mis. Probeer het opnieuw.";
 };
 

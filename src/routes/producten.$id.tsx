@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronRight, Heart, Minus, Plus, Scale, ShoppingBag } from "lucide-react";
+import { Check, ChevronRight, Heart, Minus, Plus, Scale, ShoppingBag, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/accordion";
 import { ProductCard } from "@/components/estg/product-card";
 import { formatEuro } from "@/lib/format";
+import { googleRating } from "@/lib/reviews";
 import { useCompare } from "@/components/estg/compare";
 import { useFavorites } from "@/components/estg/favorites";
 import { useStore } from "@/components/estg/store";
-import { AvailabilityBadge, CategoryIcon, Reveal } from "@/components/estg/ui-bits";
+import { AvailabilityBadge, CategoryIcon, Reveal, Skeleton } from "@/components/estg/ui-bits";
 import {
   brandLogo,
   catalogDisclaimer,
@@ -30,8 +31,27 @@ export const Route = createFileRoute("/producten/$id")({
       findProduct(params.id)?.name || "Product niet gevonden",
       "Bekijk deze duurzame energieoplossing bij ESTG en voeg deze toe aan je winkelmand.",
     ),
+  pendingComponent: ProductSkeleton,
   component: Product,
 });
+
+function ProductSkeleton() {
+  return (
+    <div className="container" aria-busy="true">
+      <div className="detail-grid">
+        <Skeleton style={{ height: 520, borderRadius: 24 }} />
+        <div style={{ display: "grid", gap: 14, alignContent: "start" }}>
+          <Skeleton style={{ height: 20, width: "40%" }} />
+          <Skeleton style={{ height: 40, width: "80%" }} />
+          <Skeleton style={{ height: 16, width: "30%" }} />
+          <Skeleton style={{ height: 70 }} />
+          <Skeleton style={{ height: 96, borderRadius: 16 }} />
+          <Skeleton style={{ height: 48, width: "60%" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function Product() {
   const { id } = Route.useParams();
@@ -127,7 +147,7 @@ function Product() {
               )}
               {p.isNew && <Badge tone="accent">Nieuw</Badge>}
               {p.isBestseller && <Badge tone="info">Bestseller</Badge>}
-              <AvailabilityBadge />
+              <AvailabilityBadge productId={p.id} />
             </div>
             <h1>{p.name}</h1>
             <span className="sku">{p.sku}</span>
@@ -138,6 +158,13 @@ function Product() {
               </strong>
               <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
             </div>
+            <a className="rating-line" href={googleRating.url} target="_blank" rel="noreferrer">
+              <span className="stars" aria-hidden>
+                <Star size={15} fill="currentColor" />
+              </span>
+              <strong>{String(googleRating.average).replace(".", ",")} ★</strong> gebaseerd op{" "}
+              {googleRating.count} Google-reviews van ESTG
+            </a>
             <div className="detail-buy" ref={buyRef}>
               <div className="quantity">
                 <Button

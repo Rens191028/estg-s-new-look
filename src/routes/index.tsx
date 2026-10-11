@@ -1,5 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUpRight, BookOpen, Check, Sparkles, Star } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Headphones,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Truck,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Benefits } from "@/components/estg/shell";
 import { ProductCard } from "@/components/estg/product-card";
@@ -10,7 +20,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { articles } from "@/lib/articles";
 import { googleRating, reviews } from "@/lib/reviews";
 import { categories, findProduct, products, pageHead } from "@/lib/catalog";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
@@ -174,47 +183,53 @@ function FeaturedProject() {
   );
 }
 
-function Blog() {
-  const latest = articles.slice(-3);
+const WHY = [
+  {
+    icon: Truck,
+    title: "Europese distributie",
+    text: "Eén partner voor je hele project, met levering in heel Europa en een assortiment dat uit eigen voorraad en vaste leveranciers komt.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Toonaangevende A-merken",
+    text: "Panelen, omvormers, opslag en laadoplossingen van merken waar installateurs en eindklanten op vertrouwen.",
+  },
+  {
+    icon: Headphones,
+    title: "Expertise voor jouw project",
+    text: "Een team dat meedenkt over compatibiliteit en dimensionering, en dat je bereikbaar ondersteunt voor én na de levering.",
+  },
+  {
+    icon: Zap,
+    title: "Exclusief voor professionals",
+    text: "Zakelijke prijzen en service die zijn afgestemd op installateurs, niet op consumenten.",
+  },
+];
+
+function WhyEstg() {
   return (
     <section className="section alt-section">
       <div className="container">
         <Reveal>
           <div className="section-heading">
             <div>
-              <h2>Kennis die je verder brengt</h2>
-              <p>Praktische inzichten voor installateurs.</p>
+              <h2>Waarom ESTG</h2>
+              <p>Wat je van ons mag verwachten.</p>
             </div>
-            <Link className="text-link" to="/kennis">
-              Alle artikelen <ArrowRight size={16} />
+            <Link className="text-link" to="/over-estg">
+              Meer over ESTG <ArrowRight size={16} />
             </Link>
           </div>
         </Reveal>
-        <div className="article-grid">
-          {latest.map((a, i) => (
-            <Reveal key={a.slug} delay={i * 70}>
-              <article className="article-card">
-                <Link to="/kennis/$slug" params={{ slug: a.slug }}>
-                  {a.image ? (
-                    <img src={a.image} alt={a.title} width={816} height={816} loading="lazy" />
-                  ) : (
-                    <span className="article-placeholder">
-                      <BookOpen size={44} strokeWidth={1.4} aria-hidden />
-                    </span>
-                  )}
-                </Link>
-                <div>
-                  <span className="eyebrow muted">{a.category}</span>
-                  <h3>
-                    <Link to="/kennis/$slug" params={{ slug: a.slug }}>
-                      {a.title}
-                    </Link>
-                  </h3>
-                  <p>{a.intro}</p>
-                  <Link className="text-link" to="/kennis/$slug" params={{ slug: a.slug }}>
-                    Lees verder <ArrowRight size={15} />
-                  </Link>
-                </div>
+        <div className="why-grid">
+          {WHY.map((w, i) => (
+            <Reveal key={w.title} delay={i * 90}>
+              <article className="why-card">
+                <span className="icon-wrap">
+                  <w.icon size={24} strokeWidth={1.6} aria-hidden />
+                </span>
+                <h3>{w.title}</h3>
+                <p>{w.text}</p>
               </article>
             </Reveal>
           ))}
@@ -227,11 +242,11 @@ function Blog() {
 const FAQ = [
   {
     q: "Kan ik op deze website al bestellen?",
-    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en bespreek je aanvraag met ESTG.",
+    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en bespreek je selectie met ESTG.",
   },
   {
     q: "Zijn de getoonde prijzen definitief?",
-    a: "Nee, het zijn indicatieve voorbeeldprijzen excl. btw. ESTG bevestigt de definitieve prijs bij je aanvraag.",
+    a: "Nee, het zijn indicatieve voorbeeldprijzen excl. btw. ESTG bevestigt de definitieve prijs.",
   },
   {
     q: "Hoe bepaal ik de juiste batterijcapaciteit?",
@@ -372,7 +387,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="section container">
+      <section className="section container" id="bestsellers">
         <Reveal>
           <div className="section-heading">
             <div>
@@ -465,7 +480,7 @@ function Index() {
 
       <FeaturedProject />
       <Reviews />
-      <Blog />
+      <WhyEstg />
       <Faq />
 
       <section className="cta-dark">

@@ -63,7 +63,7 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
         <span className="sku">{product.sku}</span>
         <div>
-          <AvailabilityBadge />
+          <AvailabilityBadge productId={product.id} />
         </div>
         <div className="product-bottom">
           <span className="card-price">

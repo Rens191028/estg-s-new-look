@@ -94,3 +94,18 @@ describe("prijzen", () => {
       expect(products.filter((p) => p.category === c && p.isBestseller)).toHaveLength(1);
   });
 });
+
+describe("beschikbaarheid", () => {
+  it("is deterministisch per product en geeft een toon en tekst", async () => {
+    const { availabilityFor } = await import("./availability");
+    for (const p of products) {
+      const a = availabilityFor(p.id);
+      expect(availabilityFor(p.id)).toEqual(a);
+      expect(a.label.length).toBeGreaterThan(5);
+    }
+  });
+  it("gebruikt meer dan één variant over de catalogus", async () => {
+    const { availabilityFor } = await import("./availability");
+    expect(new Set(products.map((p) => availabilityFor(p.id).label)).size).toBeGreaterThan(1);
+  });
+});

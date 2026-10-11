@@ -4,7 +4,7 @@ import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageIntro } from "@/components/estg/page-intro";
 import { ProductCard } from "@/components/estg/product-card";
-import { Reveal } from "@/components/estg/ui-bits";
+import { Reveal, Skeleton } from "@/components/estg/ui-bits";
 import { catalogDisclaimer, categories, products, pageHead } from "@/lib/catalog";
 
 export const Route = createFileRoute("/webshop")({
@@ -18,8 +18,32 @@ export const Route = createFileRoute("/webshop")({
       "Webshop",
       "Ontdek het ESTG-assortiment voor professionals. Vind zonnepanelen, omvormers, batterijen en EV-laadoplossingen.",
     ),
+  pendingComponent: ShopSkeleton,
   component: Shop,
 });
+
+function ShopSkeleton() {
+  return (
+    <div className="container shop-layout" aria-busy="true">
+      <aside className="filters">
+        <Skeleton style={{ height: 20, width: "60%", marginBottom: 16 }} />
+        {Array.from({ length: 6 }, (_, i) => (
+          <Skeleton key={i} style={{ height: 16, marginBottom: 14 }} />
+        ))}
+      </aside>
+      <div className="product-grid">
+        {Array.from({ length: 6 }, (_, i) => (
+          <div className="skeleton-card" key={i}>
+            <Skeleton />
+            <Skeleton style={{ width: "40%" }} />
+            <Skeleton style={{ width: "80%" }} />
+            <Skeleton style={{ width: "30%" }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function Shop() {
   const search = Route.useSearch();

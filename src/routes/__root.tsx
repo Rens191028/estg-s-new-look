@@ -20,6 +20,7 @@ import { AuthProvider } from "@/components/estg/auth";
 import { FavoritesProvider } from "@/components/estg/favorites";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareBar } from "@/components/estg/compare-bar";
+import { ScrollTop } from "@/components/estg/scroll-top";
 import { AssistantWidget } from "@/components/estg/assistant-widget";
 
 function NotFoundComponent() {
@@ -89,14 +90,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "ESTG" },
+      { property: "og:locale", content: "nl_NL" },
+      { property: "og:title", content: "ESTG | Leading in positive energy" },
+      {
+        property: "og:description",
+        content:
+          "ESTG, jouw B2B-partner voor zonnepanelen, omvormers, energieopslag en EV-laders voor professionals.",
+      },
+      { property: "og:image", content: "/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "/og-image.png" },
+      { name: "theme-color", content: "#00183D" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/favicon-64.png", type: "image/png", sizes: "64x64" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=IBM+Plex+Mono:wght@500&display=swap",
@@ -139,6 +155,7 @@ function RootComponent() {
               <Footer />
               <CompareBar />
               <AssistantWidget />
+              <ScrollTop />
               <Toaster />
             </CompareProvider>
           </StoreProvider>

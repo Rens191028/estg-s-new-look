@@ -9,6 +9,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { availabilityFor } from "@/lib/availability";
 import type { Category } from "@/lib/catalog";
 
 // Tijdelijke iconen uit lucide totdat de eigen ESTG-iconenset per categorie bestaat.
@@ -27,11 +28,44 @@ export function CategoryIcon({ category, size = 24 }: { category: Category; size
 }
 
 /**
- * Voorraadstatus. Er is nog geen gekoppelde voorraadbron, dus tonen we geen gok maar een
- * neutrale badge. Zodra voorraad beschikbaar is komt hier success/warning/danger.
+ * Beschikbaarheidsindicatie. Er is nog geen voorraadbron: de tekst is een vast, fictief patroon per
+ * product (zie lib/availability.ts) en dus illustratief.
  */
-export function AvailabilityBadge() {
-  return <Badge tone="info">Beschikbaarheid via ESTG</Badge>;
+export function AvailabilityBadge({ productId }: { productId: string }) {
+  const a = availabilityFor(productId);
+  return (
+    <Badge
+      tone={a.tone}
+      title="Illustratieve beschikbaarheid; ESTG bevestigt de actuele levertijd."
+    >
+      {a.label}
+    </Badge>
+  );
+}
+
+/** Grijs blok in de vorm van de uiteindelijke content, voor rustig laden. */
+export function Skeleton({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return <div className={`skeleton ${className}`.trim()} style={style} aria-hidden />;
+}
+
+/** Roteert door statusregels zolang `active` waar is (bijv. tijdens een trage AI-aanroep). */
+export function useLoadingStep(active: boolean, steps: readonly string[], intervalMs = 3500) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (!active) {
+      setI(0);
+      return;
+    }
+    const t = setInterval(() => setI((n) => Math.min(n + 1, steps.length - 1)), intervalMs);
+    return () => clearInterval(t);
+  }, [active, steps.length, intervalMs]);
+  return steps[i] ?? steps[0] ?? "";
 }
 
 /** Laat inhoud zachtjes verschijnen zodra die in beeld komt. Zonder JavaScript blijft alles zichtbaar. */

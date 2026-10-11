@@ -8,7 +8,8 @@ import { requestAdvice, type AdviceResult } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
 import { findProduct, pageHead } from "@/lib/catalog";
 import { formatEuro } from "@/lib/format";
-import { CategoryIcon } from "@/components/estg/ui-bits";
+import { CategoryIcon, useLoadingStep } from "@/components/estg/ui-bits";
+import { ADVICE_STEPS } from "@/lib/availability";
 
 export const Route = createFileRoute("/advisor")({
   validateSearch: (s: Record<string, unknown>) => ({
@@ -35,6 +36,7 @@ function Advisor() {
   const [message, setMessage] = useState(vraag);
   const [requirements, setRequirements] = useState("");
   const [busy, setBusy] = useState(false);
+  const step = useLoadingStep(busy, ADVICE_STEPS, 3500);
   const [result, setResult] = useState<Result | null>(null);
   const [added, setAdded] = useState(false);
 
@@ -93,10 +95,20 @@ function Advisor() {
             />
           </div>
           <Button type="submit" variant="accent" size="lg" disabled={busy || !message.trim()}>
-            <Sparkles /> {busy ? "Even denken…" : "Vraag advies"}
+            <Sparkles /> {busy ? "Even geduld…" : "Vraag advies"}
           </Button>
         </form>
 
+        {busy && (
+          <div className="advice-loading" role="status" aria-live="polite">
+            <span className="loading-dots" aria-hidden>
+              <i />
+              <i />
+              <i />
+            </span>
+            {step}
+          </div>
+        )}
         {result && !result.ok && (
           <div className="confirmation" role="alert" style={{ marginTop: 24 }}>
             {result.message}

@@ -62,7 +62,7 @@ function Account() {
               <h2>Je hebt nog geen bestellingen</h2>
               <p>
                 Bestellen via deze voorbeeldwebsite is nog niet mogelijk. Gebruik je winkelmand om
-                je aanvraag met ESTG te bespreken.
+                je selectie met ESTG te bespreken.
               </p>
               <Button asChild>
                 <Link to="/winkelwagen">Naar winkelmand</Link>

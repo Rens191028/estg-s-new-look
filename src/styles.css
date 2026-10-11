@@ -229,6 +229,46 @@
 .brand-bar-set a:hover {
   opacity: 1;
 }
+.brand-bar-item {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 88px;
+  height: 20px;
+}
+.brand-bar-name,
+.brand-bar-logo {
+  grid-area: 1 / 1;
+  transition: opacity 0.18s ease-out;
+}
+.brand-bar-logo {
+  opacity: 0;
+  height: 20px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+  /* Op de donkere balk altijd wit, ongeacht de eigen logokleuren */
+  filter: brightness(0) invert(1);
+}
+.brand-bar-item:hover .brand-bar-name,
+.brand-bar-item:focus-visible .brand-bar-name {
+  opacity: 0;
+}
+.brand-bar-item:hover .brand-bar-logo,
+.brand-bar-item:focus-visible .brand-bar-logo {
+  opacity: 1;
+}
+.brand-card-logo {
+  max-height: 36px;
+  max-width: 70%;
+  object-fit: contain;
+}
+.brandline-logo {
+  height: 22px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+}
 @keyframes marquee {
   to {
     transform: translateX(-50%);

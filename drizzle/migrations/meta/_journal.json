@@ -8,6 +8,13 @@
       "when": 1791752993923,
       "tag": "0000_assistant_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791760201597,
+      "tag": "0001_profiles_favorites",
+      "breakpoints": true
     }
   ]
 }

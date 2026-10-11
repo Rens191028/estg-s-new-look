@@ -14,6 +14,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as KennisRouteImport } from './routes/kennis'
 import { Route as MerkenRouteImport } from './routes/merken'
 import { Route as OverEstgRouteImport } from './routes/over-estg'
+import { Route as VergelijkenRouteImport } from './routes/vergelijken'
 import { Route as WebshopRouteImport } from './routes/webshop'
 import { Route as WinkelwagenRouteImport } from './routes/winkelwagen'
 import { Route as KennisIndexRouteImport } from './routes/kennis.index'
@@ -43,6 +44,11 @@ const MerkenRoute = MerkenRouteImport.update({
 const OverEstgRoute = OverEstgRouteImport.update({
   id: '/over-estg',
   path: '/over-estg',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VergelijkenRoute = VergelijkenRouteImport.update({
+  id: '/vergelijken',
+  path: '/vergelijken',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WebshopRoute = WebshopRouteImport.update({
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
+  '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
   '/kennis/$slug': typeof KennisSlugRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
+  '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
   '/kennis/$slug': typeof KennisSlugRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
+  '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
   '/kennis/$slug': typeof KennisSlugRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/kennis'
     | '/merken'
     | '/over-estg'
+    | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
     | '/kennis/$slug'
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/merken'
     | '/over-estg'
+    | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
     | '/kennis/$slug'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/kennis'
     | '/merken'
     | '/over-estg'
+    | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
     | '/kennis/$slug'
@@ -151,6 +163,7 @@ export interface RootRouteChildren {
   KennisRoute: typeof KennisRouteWithChildren
   MerkenRoute: typeof MerkenRoute
   OverEstgRoute: typeof OverEstgRoute
+  VergelijkenRoute: typeof VergelijkenRoute
   WebshopRoute: typeof WebshopRoute
   WinkelwagenRoute: typeof WinkelwagenRoute
   ProductenIdRoute: typeof ProductenIdRoute
@@ -191,6 +204,13 @@ declare module '@tanstack/react-router' {
       path: '/over-estg'
       fullPath: '/over-estg'
       preLoaderRoute: typeof OverEstgRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vergelijken': {
+      id: '/vergelijken'
+      path: '/vergelijken'
+      fullPath: '/vergelijken'
+      preLoaderRoute: typeof VergelijkenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/webshop': {
@@ -250,6 +270,7 @@ const rootRouteChildren: RootRouteChildren = {
   KennisRoute: KennisRouteWithChildren,
   MerkenRoute: MerkenRoute,
   OverEstgRoute: OverEstgRoute,
+  VergelijkenRoute: VergelijkenRoute,
   WebshopRoute: WebshopRoute,
   WinkelwagenRoute: WinkelwagenRoute,
   ProductenIdRoute: ProductenIdRoute,

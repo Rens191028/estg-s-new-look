@@ -3,30 +3,30 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
+// Tonen volgen het ESTG-designsysteem. Een badge draagt altijd een woord of icoon, nooit alleen kleur.
 const badgeVariants = cva(
-  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] leading-4 font-semibold tracking-[0.02em]",
   {
     variants: {
-      variant: {
-        default: "border-transparent bg-primary text-primary-foreground shadow hover:bg-primary/80",
-        secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        destructive:
-          "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
-        outline: "text-foreground",
+      tone: {
+        success: "bg-success-100 text-success-700",
+        warning: "bg-warning-100 text-warning-700",
+        danger: "bg-danger-100 text-danger-700",
+        info: "bg-navy-100 text-navy-900",
+        accent: "bg-yellow-400 text-navy-900",
       },
     },
     defaultVariants: {
-      variant: "default",
+      tone: "info",
     },
   },
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+  extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
-  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
+function Badge({ className, tone, ...props }: BadgeProps) {
+  return <span className={cn(badgeVariants({ tone }), className)} {...props} />;
 }
 
 export { Badge, badgeVariants };

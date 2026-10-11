@@ -48,7 +48,7 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
   const parsed = input.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return fail(400, "invalid", "Je bericht kon niet worden verwerkt.");
   const data = parsed.data;
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) return fail(500, "not_configured", "De assistent is nog niet geconfigureerd.");
 
   const { supabaseAdmin: db } = await import("@/integrations/supabase/client.server");
@@ -125,7 +125,7 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
     (knowledge ?? []).map((k) => `${k.section.toUpperCase()}:\n${k.content}`),
     message,
   );
-  const cid = conversationId;
+  const cid: string = conversationId!;
   const save = async (content: string, tokens: number | undefined, productIds?: string[]) => {
     const { error } = await db.from("assistant_messages").insert({
       conversation_id: cid,

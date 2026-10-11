@@ -14,13 +14,159 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assistant_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          page_context: string | null
+          session_key: string | null
+          source: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_context?: string | null
+          session_key?: string | null
+          source: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_context?: string | null
+          session_key?: string | null
+          source?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      assistant_feedback: {
+        Row: {
+          id: string
+          message_id: string
+          note: string | null
+          rating: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          note?: string | null
+          rating: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          note?: string | null
+          rating?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_feedback_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assistant_knowledge: {
+        Row: {
+          active: boolean
+          content: string
+          id: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          content: string
+          id?: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          content?: string
+          id?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      assistant_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          recommended_product_ids: string[] | null
+          role: string
+          token_usage: number | null
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          recommended_product_ids?: string[] | null
+          role: string
+          token_usage?: number | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          recommended_product_ids?: string[] | null
+          role?: string
+          token_usage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compatibility_rules: {
+        Row: {
+          active: boolean
+          condition: Json
+          explanation: string | null
+          id: string
+          rule_type: string
+        }
+        Insert: {
+          active?: boolean
+          condition?: Json
+          explanation?: string | null
+          id?: string
+          rule_type: string
+        }
+        Update: {
+          active?: boolean
+          condition?: Json
+          explanation?: string | null
+          id?: string
+          rule_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      assistant_conversation_exists: {
+        Args: { _conv: string }
+        Returns: boolean
+      }
+      assistant_conversation_owner: { Args: { _conv: string }; Returns: string }
+      assistant_message_owner: { Args: { _msg: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

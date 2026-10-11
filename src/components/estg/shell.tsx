@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
@@ -16,7 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { brandLogo, brands, categories } from "@/lib/catalog";
+import { brandLogo, brands, categories, products } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
 import { formatEuro } from "@/lib/format";
 import {
@@ -85,6 +85,18 @@ export function Header() {
   const { count, subtotal } = useStore();
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [pop, setPop] = useState(false);
+  const previousCount = useRef(count);
+  // Korte "pop" op de pil zodra er iets aan de winkelmand is toegevoegd.
+  useEffect(() => {
+    const grew = count > previousCount.current;
+    previousCount.current = count;
+    if (!grew) return undefined;
+    setPop(true);
+    const t = setTimeout(() => setPop(false), 500);
+    return () => clearTimeout(t);
+  }, [count]);
+  const popular = products.filter((p) => p.isBestseller).slice(0, 4);
   const close = () => {
     setMenuOpen(false);
     setMegaOpen(false);
@@ -104,16 +116,14 @@ export function Header() {
             </span>
             <Link
               to="/winkelwagen"
-              className={`bag-link ${count > 0 ? "bag-link--active" : ""}`}
+              className={`bag-pill ${count > 0 ? "bag-pill--filled" : ""} ${pop ? "bag-pill--pop" : ""}`}
               aria-label={`Winkelmand, ${count} producten${count > 0 ? `, ${formatEuro(subtotal)} excl. btw` : ""}`}
               onClick={close}
             >
-              <ShoppingBag size={22} />
-              {count > 0 && (
-                <span className="bag-count">
-                  {count} · {formatEuro(subtotal)}
-                </span>
-              )}
+              <ShoppingBag size={20} />
+              <span className="bag-pill-label" aria-hidden={count === 0}>
+                {count} · {formatEuro(subtotal)}
+              </span>
             </Link>
             {user ? (
               <DropdownMenu>
@@ -179,16 +189,6 @@ export function Header() {
               </span>
               <ChevronDown size={14} />
             </button>
-            {categories.slice(0, 4).map((c) => (
-              <Link
-                key={c}
-                to="/webshop"
-                search={{ category: c, q: "", brand: "" }}
-                onClick={close}
-              >
-                {c}
-              </Link>
-            ))}
             <Link to="/merken" onClick={close}>
               Merken
             </Link>
@@ -205,20 +205,43 @@ export function Header() {
         </div>
         {megaOpen && (
           <div className="mega" id="mega-menu">
-            <div className="container mega-grid">
-              {categories.map((c) => (
-                <Link
-                  key={c}
-                  to="/webshop"
-                  search={{ category: c, q: "", brand: "" }}
-                  onClick={close}
-                >
-                  <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <CategoryIcon category={c} size={20} /> {c}
-                  </span>
-                  <ArrowUpRight size={15} />
-                </Link>
-              ))}
+            <div className="container mega-inner">
+              <div>
+                <h3 className="mega-title">Categorieën</h3>
+                <div className="mega-grid">
+                  {categories.map((c) => (
+                    <Link
+                      key={c}
+                      to="/webshop"
+                      search={{ category: c, q: "", brand: "" }}
+                      onClick={close}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <CategoryIcon category={c} size={20} /> {c}
+                      </span>
+                      <ArrowUpRight size={15} />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div className="mega-popular">
+                <h3 className="mega-title">Populair</h3>
+                {popular.map((p) => (
+                  <Link key={p.id} to="/producten/$id" params={{ id: p.id }} onClick={close}>
+                    {p.image ? (
+                      <img src={p.image} alt="" width={44} height={44} />
+                    ) : (
+                      <span className="mega-thumb">
+                        <CategoryIcon category={p.category} size={20} />
+                      </span>
+                    )}
+                    <span>
+                      {p.name}
+                      <small>{p.brand}</small>
+                    </span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         )}

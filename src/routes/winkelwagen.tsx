@@ -21,7 +21,7 @@ export const Route = createFileRoute("/winkelwagen")({
   head: () =>
     pageHead(
       "Winkelmand",
-      "Stel je selectie samen, controleer of de set compleet is en bereid je aanvraag voor ESTG voor.",
+      "Stel je selectie samen, controleer of de set compleet is en bespreek je selectie met ESTG.",
     ),
   component: Cart,
 });
@@ -36,7 +36,7 @@ function Cart() {
 
   const download = () => {
     const text =
-      `ESTG — Productaanvraag${projectName ? `: ${projectName}` : ""}\n\n` +
+      `ESTG — Selectie${projectName ? `: ${projectName}` : ""}\n\n` +
       lines
         .map(
           (l) =>
@@ -48,7 +48,7 @@ function Cart() {
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "ESTG-productaanvraag.txt";
+    a.download = "ESTG-selectie.txt";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -62,8 +62,8 @@ function Cart() {
             <div>
               <input
                 className="project-name"
-                aria-label="Referentie voor je aanvraag (optioneel)"
-                placeholder="Referentie voor je aanvraag (optioneel)"
+                aria-label="Referentie voor je selectie (optioneel)"
+                placeholder="Referentie voor je selectie (optioneel)"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
               />
@@ -187,11 +187,11 @@ function Cart() {
               </p>
               <Button asChild variant="accent" size="lg">
                 <Link to="/contact">
-                  Aanvraag bespreken <ArrowUpRight />
+                  Selectie bespreken met ESTG <ArrowUpRight />
                 </Link>
               </Button>
               <Button variant="outline" onClick={download}>
-                <Download /> Download aanvraag
+                <Download /> Download selectie
               </Button>
               <p className="co2-note">
                 Er is geen bestelling geplaatst. Je selectie blijft alleen tijdens dit bezoek
@@ -200,15 +200,27 @@ function Cart() {
             </aside>
           </div>
         ) : (
-          <div className="empty-state">
-            <ShoppingBag size={40} />
+          <div className="empty-state cart-empty">
+            <span className="cart-empty-icon">
+              <ShoppingBag size={44} strokeWidth={1.4} />
+            </span>
             <h2>Je winkelmand is nog leeg</h2>
-            <p>Voeg producten toe om een aanvraag samen te stellen.</p>
-            <Button asChild>
-              <Link to="/webshop" search={{ q: "", category: "", brand: "" }}>
-                Ontdek het assortiment <ArrowUpRight />
-              </Link>
-            </Button>
+            <p>
+              Voeg producten toe en bespreek je selectie met ESTG. Begin bijvoorbeeld bij onze
+              bestsellers.
+            </p>
+            <div className="hero-actions" style={{ justifyContent: "center" }}>
+              <Button asChild variant="accent">
+                <Link to="/" hash="bestsellers">
+                  Bekijk bestsellers <ArrowUpRight />
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/webshop" search={{ q: "", category: "", brand: "" }}>
+                  Naar het assortiment
+                </Link>
+              </Button>
+            </div>
           </div>
         )}
       </section>

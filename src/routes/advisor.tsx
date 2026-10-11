@@ -1,13 +1,11 @@
-import { useServerFn } from "@tanstack/react-start";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AlertTriangle, Check, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
-import { askAssistant } from "@/lib/assistant/chat.functions";
+import { requestAdvice, type AdviceResult } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
-import type { AssistantResult } from "@/lib/assistant/types";
 import { findProduct, pageHead } from "@/lib/catalog";
 
 export const Route = createFileRoute("/advisor")({
@@ -19,12 +17,14 @@ export const Route = createFileRoute("/advisor")({
   component: Advisor,
 });
 
+type Result = ({ ok: true } & AdviceResult) | { ok: false; message: string };
+
 function Advisor() {
-  const ask = useServerFn(askAssistant);
   const { add } = useStore();
   const [message, setMessage] = useState("");
+  const [requirements, setRequirements] = useState("");
   const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<AssistantResult | null>(null);
+  const [result, setResult] = useState<Result | null>(null);
   const [added, setAdded] = useState(false);
 
   const submit = async () => {
@@ -32,12 +32,14 @@ function Advisor() {
     setBusy(true);
     setAdded(false);
     try {
-      setResult(await ask({ data: { source: "advisor", message, history: [] } }));
-    } catch {
+      const full = requirements.trim()
+        ? `${message.trim()}\n\nInstallatie-eisen: ${requirements.trim()}`
+        : message.trim();
+      setResult({ ok: true, ...(await requestAdvice(full)) });
+    } catch (e) {
       setResult({
         ok: false,
-        code: "upstream",
-        message: "Er ging iets mis. Probeer het zo opnieuw.",
+        message: e instanceof Error ? e.message : "Er ging iets mis. Bel 085 016 7800.",
       });
     } finally {
       setBusy(false);
@@ -64,8 +66,19 @@ function Advisor() {
               rows={4}
               maxLength={MAX_MESSAGE_LENGTH}
               value={message}
-              placeholder="Bijv. 20 zonnepanelen op een schuin dak, 3-fase aansluiting, met batterij"
+              placeholder="Bijv. 20 zonnepanelen op een schuin dak, met batterij"
               onChange={(e) => setMessage(e.target.value)}
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="eisen">Installatie-eisen (optioneel)</label>
+            <textarea
+              id="eisen"
+              rows={2}
+              maxLength={500}
+              value={requirements}
+              placeholder="Bijv. 3-fase aansluiting, noodstroom gewenst, oost-west dak"
+              onChange={(e) => setRequirements(e.target.value)}
             />
           </div>
           <Button type="submit" variant="accent" size="lg" disabled={busy || !message.trim()}>

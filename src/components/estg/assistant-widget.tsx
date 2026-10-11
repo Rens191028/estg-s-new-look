@@ -1,13 +1,13 @@
-import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
 import { MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { askAssistant } from "@/lib/assistant/chat.functions";
+import { streamWidget } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
 import type { ChatTurn } from "@/lib/assistant/types";
 
 const STORAGE_KEY = "estg_assistant_chat";
+const CONV_KEY = "estg_assistant_conversation";
 const GREETING: ChatTurn = {
   role: "assistant",
   content:
@@ -24,41 +24,65 @@ function readStored(): ChatTurn[] {
 }
 
 export function AssistantWidget() {
-  const ask = useServerFn(askAssistant);
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<ChatTurn[]>([]);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
+  const [streaming, setStreaming] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const streamingRef = useRef(false);
 
   // Gesprek hervatten na verversen, pas na hydratie.
-  useEffect(() => setTurns(readStored()), []);
+  useEffect(() => {
+    setTurns(readStored());
+    setConversationId(localStorage.getItem(CONV_KEY));
+  }, []);
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(turns.slice(-20)));
+      if (!busy) localStorage.setItem(STORAGE_KEY, JSON.stringify(turns.slice(-20)));
     } catch {
       /* opslag niet beschikbaar */
     }
     endRef.current?.scrollIntoView({ block: "end" });
-  }, [turns, open]);
+  }, [turns, open, busy]);
 
   const send = async () => {
     const message = text.trim();
     if (!message || busy) return;
-    const history = turns.slice(-6);
-    setTurns([...turns, { role: "user", content: message }]);
+    setTurns((t) => [...t, { role: "user", content: message }]);
     setText("");
     setBusy(true);
+    setStreaming(false);
     try {
-      const res = await ask({ data: { source: "widget", message, history } });
-      setTurns((t) => [...t, { role: "assistant", content: res.ok ? res.reply : res.message }]);
-    } catch {
-      setTurns((t) => [
-        ...t,
-        { role: "assistant", content: "Er ging iets mis. Probeer het zo opnieuw." },
-      ]);
+      const res = await streamWidget(
+        { message, ...(conversationId ? { conversation_id: conversationId } : {}) },
+        (full) => {
+          const first = !streamingRef.current;
+          streamingRef.current = true;
+          setStreaming(true);
+          setTurns((t) =>
+            first
+              ? [...t, { role: "assistant", content: full }]
+              : [...t.slice(0, -1), { role: "assistant", content: full }],
+          );
+        },
+      );
+      if (res.conversationId) {
+        setConversationId(res.conversationId);
+        localStorage.setItem(CONV_KEY, res.conversationId);
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Er ging iets mis. Bel 085 016 7800.";
+      setTurns((t) =>
+        streamingRef.current
+          ? [...t.slice(0, -1), { role: "assistant", content: msg }]
+          : [...t, { role: "assistant", content: msg }],
+      );
     } finally {
+      streamingRef.current = false;
       setBusy(false);
+      setStreaming(false);
     }
   };
 
@@ -82,7 +106,7 @@ export function AssistantWidget() {
                 {t.content}
               </p>
             ))}
-            {busy && <p className="bubble assistant muted">Even denken…</p>}
+            {busy && !streaming && <p className="bubble assistant muted">Even denken…</p>}
             <div ref={endRef} />
           </div>
           <p className="assistant-note">

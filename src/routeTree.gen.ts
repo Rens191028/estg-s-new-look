@@ -18,6 +18,7 @@ import { Route as OverEstgRouteImport } from './routes/over-estg'
 import { Route as VergelijkenRouteImport } from './routes/vergelijken'
 import { Route as WebshopRouteImport } from './routes/webshop'
 import { Route as WinkelwagenRouteImport } from './routes/winkelwagen'
+import { Route as ApiAssistantChatRouteImport } from './routes/api/assistant-chat'
 import { Route as KennisIndexRouteImport } from './routes/kennis.index'
 import { Route as KennisSlugRouteImport } from './routes/kennis.$slug'
 import { Route as ProductenIdRouteImport } from './routes/producten.$id'
@@ -67,6 +68,11 @@ const WinkelwagenRoute = WinkelwagenRouteImport.update({
   path: '/winkelwagen',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAssistantChatRoute = ApiAssistantChatRouteImport.update({
+  id: '/api/assistant-chat',
+  path: '/api/assistant-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KennisIndexRoute = KennisIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
+  '/api/assistant-chat': typeof ApiAssistantChatRoute
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis/': typeof KennisIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
+  '/api/assistant-chat': typeof ApiAssistantChatRoute
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis': typeof KennisIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/vergelijken': typeof VergelijkenRoute
   '/webshop': typeof WebshopRoute
   '/winkelwagen': typeof WinkelwagenRoute
+  '/api/assistant-chat': typeof ApiAssistantChatRoute
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis/': typeof KennisIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
+    | '/api/assistant-chat'
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis/'
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
+    | '/api/assistant-chat'
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis'
@@ -164,6 +175,7 @@ export interface FileRouteTypes {
     | '/vergelijken'
     | '/webshop'
     | '/winkelwagen'
+    | '/api/assistant-chat'
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis/'
@@ -179,6 +191,7 @@ export interface RootRouteChildren {
   VergelijkenRoute: typeof VergelijkenRoute
   WebshopRoute: typeof WebshopRoute
   WinkelwagenRoute: typeof WinkelwagenRoute
+  ApiAssistantChatRoute: typeof ApiAssistantChatRoute
   ProductenIdRoute: typeof ProductenIdRoute
 }
 
@@ -247,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WinkelwagenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/assistant-chat': {
+      id: '/api/assistant-chat'
+      path: '/api/assistant-chat'
+      fullPath: '/api/assistant-chat'
+      preLoaderRoute: typeof ApiAssistantChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kennis/': {
       id: '/kennis/'
       path: '/'
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   VergelijkenRoute: VergelijkenRoute,
   WebshopRoute: WebshopRoute,
   WinkelwagenRoute: WinkelwagenRoute,
+  ApiAssistantChatRoute: ApiAssistantChatRoute,
   ProductenIdRoute: ProductenIdRoute,
 }
 export const routeTree = rootRouteImport

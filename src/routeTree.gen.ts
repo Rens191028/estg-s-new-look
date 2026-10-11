@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdvisorRouteImport } from './routes/advisor'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as KennisRouteImport } from './routes/kennis'
 import { Route as MerkenRouteImport } from './routes/merken'
@@ -24,6 +25,11 @@ import { Route as ProductenIdRouteImport } from './routes/producten.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdvisorRoute = AdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -79,6 +85,7 @@ const ProductenIdRoute = ProductenIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
   '/merken': typeof MerkenRoute
   '/over-estg': typeof OverEstgRoute
@@ -105,6 +113,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/advisor': typeof AdvisorRoute
   '/contact': typeof ContactRoute
   '/kennis': typeof KennisRouteWithChildren
   '/merken': typeof MerkenRoute
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/advisor'
     | '/contact'
     | '/kennis'
     | '/merken'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/advisor'
     | '/contact'
     | '/merken'
     | '/over-estg'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/advisor'
     | '/contact'
     | '/kennis'
     | '/merken'
@@ -159,6 +171,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdvisorRoute: typeof AdvisorRoute
   ContactRoute: typeof ContactRoute
   KennisRoute: typeof KennisRouteWithChildren
   MerkenRoute: typeof MerkenRoute
@@ -176,6 +189,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/advisor': {
+      id: '/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AdvisorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -266,6 +286,7 @@ const KennisRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdvisorRoute: AdvisorRoute,
   ContactRoute: ContactRoute,
   KennisRoute: KennisRouteWithChildren,
   MerkenRoute: MerkenRoute,

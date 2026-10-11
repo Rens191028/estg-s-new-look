@@ -146,6 +146,9 @@ export function Header() {
             <Link to="/merken" onClick={close}>
               Merken
             </Link>
+            <Link to="/advisor" onClick={close}>
+              AI-adviseur
+            </Link>
             <Link to="/kennis" onClick={close}>
               Kennis & inspiratie
             </Link>

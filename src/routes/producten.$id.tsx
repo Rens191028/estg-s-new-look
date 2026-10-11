@@ -14,6 +14,7 @@ import { useCompare } from "@/components/estg/compare";
 import { useStore } from "@/components/estg/store";
 import { AvailabilityBadge, CategoryIcon, Reveal } from "@/components/estg/ui-bits";
 import {
+  brandLogo,
   catalogDisclaimer,
   compatibleProducts,
   findProduct,
@@ -63,6 +64,7 @@ function Product() {
       </div>
     );
 
+  const logo = brandLogo(p.brand);
   const compatible = compatibleProducts(p);
   const similar = similarProducts(p);
   const onAdd = () => {
@@ -113,9 +115,13 @@ function Product() {
           </div>
           <div className="detail-info">
             <div className="brandline">
-              <span className="muted" style={{ fontWeight: 600 }}>
-                {p.brand}
-              </span>
+              {logo ? (
+                <img src={logo} alt={p.brand} className="brandline-logo" />
+              ) : (
+                <span className="muted" style={{ fontWeight: 600 }}>
+                  {p.brand}
+                </span>
+              )}
               {p.isNew && <Badge tone="accent">Nieuw</Badge>}
               <AvailabilityBadge />
             </div>

@@ -222,3 +222,40 @@ export function pageHead(title: string, description: string) {
     ],
   };
 }
+
+const brandLogoSlug: Record<string, string> = {
+  "JA Solar": "ja-solar",
+  "Trina Solar": "trina-solar",
+  Sungrow: "sungrow",
+  Huawei: "huawei",
+  SolarEdge: "solaredge",
+  Enphase: "enphase",
+  SMA: "sma",
+  Growatt: "growatt",
+  BYD: "byd",
+  Alfen: "alfen",
+  "Charge Amps": "charge-amps",
+  Daikin: "daikin",
+  "K2 Systems": "k2-systems",
+  Sigenergy: "sigenergy",
+  AIKO: "aiko",
+  Enstall: "enstall",
+};
+
+// Eager glob: een ontbrekend bestand geeft geen buildfout, alleen geen entry.
+const brandLogoFiles = import.meta.glob<string>("/src/assets/brands/*.{svg,png}", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
+
+/** Pad naar het merklogo, of null als er (nog) geen bestand is. */
+export function brandLogo(brand: string): string | null {
+  const slug = brandLogoSlug[brand];
+  if (!slug) return null;
+  return (
+    brandLogoFiles[`/src/assets/brands/${slug}.svg`] ??
+    brandLogoFiles[`/src/assets/brands/${slug}.png`] ??
+    null
+  );
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findProduct, products } from "./catalog";
+import { brandLogo, brands, findProduct, products } from "./catalog";
 import { addToCompare, MAX_COMPARE, specLabels, specValue } from "./compare";
 import { CO2_FACTOR, estimateCo2Savings } from "./co2";
 import { groupByCategory, projectLines, projectWarnings, totalKwp } from "./project";
@@ -60,5 +60,12 @@ describe("Mijn Project", () => {
       { id: "montagesysteem-schuin-dak", quantity: 1 },
     ];
     expect(projectWarnings(projectLines(complete))).toEqual([]);
+  });
+});
+
+describe("merklogo's", () => {
+  it("geeft null voor een merk zonder logobestand of onbekend merk", () => {
+    expect(brandLogo("Onbekend merk")).toBeNull();
+    for (const b of brands) expect(["string", "object"]).toContain(typeof brandLogo(b));
   });
 });

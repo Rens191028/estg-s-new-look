@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { PageIntro } from "@/components/estg/page-intro";
-import { brands, pageHead } from "@/lib/catalog";
+import { brandLogo, brands, pageHead } from "@/lib/catalog";
 export const Route = createFileRoute("/merken")({
   head: () =>
     pageHead(
@@ -19,17 +19,25 @@ function Brands() {
       />
       <section className="container section">
         <div className="brand-grid">
-          {brands.map((b) => (
-            <Link
-              to="/webshop"
-              search={{ brand: b, q: "", category: "" }}
-              key={b}
-              className="brand-card"
-            >
-              {b}
-              <ArrowUpRight size={17} />
-            </Link>
-          ))}
+          {brands.map((b) => {
+            const logo = brandLogo(b);
+            return (
+              <Link
+                to="/webshop"
+                search={{ brand: b, q: "", category: "" }}
+                key={b}
+                className="brand-card"
+                aria-label={b}
+              >
+                {logo ? (
+                  <img src={logo} alt="" className="brand-card-logo" loading="lazy" />
+                ) : (
+                  <span>{b}</span>
+                )}
+                <ArrowUpRight size={17} />
+              </Link>
+            );
+          })}
         </div>
         <p className="sample-note">
           Deze selectie laat een deel van de merken bij ESTG zien. Niet alle merken zijn opgenomen

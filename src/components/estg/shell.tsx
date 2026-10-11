@@ -15,7 +15,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { brands, categories } from "@/lib/catalog";
+import { brandLogo, brands, categories } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
 import { useStore } from "./store";
 import { CategoryIcon } from "./ui-bits";
@@ -33,18 +33,29 @@ export function Logo() {
   );
 }
 
+function BrandLink({ brand, hidden }: { brand: string; hidden: boolean }) {
+  const logo = brandLogo(brand);
+  return (
+    <Link
+      to="/webshop"
+      search={{ q: "", category: "", brand }}
+      tabIndex={hidden ? -1 : undefined}
+      className="brand-bar-item"
+      aria-label={brand}
+    >
+      <span className="brand-bar-name">{brand}</span>
+      {logo && (
+        <img className="brand-bar-logo" src={logo} alt="" width={88} height={20} loading="lazy" />
+      )}
+    </Link>
+  );
+}
+
 function BrandBar() {
   const set = (hidden: boolean) => (
     <div className="brand-bar-set" aria-hidden={hidden || undefined}>
       {brands.map((b) => (
-        <Link
-          key={b}
-          to="/webshop"
-          search={{ q: "", category: "", brand: b }}
-          tabIndex={hidden ? -1 : undefined}
-        >
-          {b}
-        </Link>
+        <BrandLink key={b} brand={b} hidden={hidden} />
       ))}
     </div>
   );

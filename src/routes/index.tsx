@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Benefits } from "@/components/estg/shell";
 import { ProductCard } from "@/components/estg/product-card";
 import { CategoryIcon, Reveal } from "@/components/estg/ui-bits";
-import { categories, products, pageHead } from "@/lib/catalog";
+import { brands, categories, products, pageHead } from "@/lib/catalog";
+import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
+import { formatInt } from "@/lib/format";
 import rooftop from "@/assets/solar-rooftop.jpg";
 import inverter from "@/assets/inverter.jpg";
 import battery from "@/assets/battery.jpg";
@@ -20,6 +22,35 @@ export const Route = createFileRoute("/")({
 });
 
 const allProducts = { q: "", category: "", brand: "" };
+
+// Alleen cijfers die uit de catalogus of een berekening komen; echte bedrijfscijfers zijn nog niet aangeleverd.
+function Stats() {
+  const example = estimateCo2Savings(10);
+  return (
+    <section className="stats" aria-label="ESTG in cijfers">
+      <div className="container stats-grid">
+        <div className="stat">
+          <strong>{brands.length}+</strong>
+          <span>A-merken in het assortiment</span>
+        </div>
+        <div className="stat">
+          <strong>{categories.length}</strong>
+          <span>productcategorieën, van opwekken tot opslaan</span>
+        </div>
+        <div className="stat">
+          <strong>~{formatInt(Math.round(example.kgCo2PerYear / 100) * 100)} kg</strong>
+          <span>CO₂-besparing per jaar bij een systeem van 10 kWp</span>
+          <small>
+            Indicatie, op basis van{" "}
+            <a href={CO2_FACTOR.source} target="_blank" rel="noreferrer">
+              CO2emissiefactoren.nl
+            </a>
+          </small>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function Index() {
   const featured = [...products].sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew)).slice(0, 4);
@@ -66,6 +97,7 @@ function Index() {
         </div>
       </section>
       <Benefits />
+      <Stats />
 
       <section className="section container">
         <Reveal>

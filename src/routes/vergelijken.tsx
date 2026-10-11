@@ -7,6 +7,7 @@ import { useStore } from "@/components/estg/store";
 import { CategoryIcon } from "@/components/estg/ui-bits";
 import { catalogDisclaimer, findProduct, pageHead, type Product } from "@/lib/catalog";
 import { specLabels, specValue } from "@/lib/compare";
+import { formatEuro } from "@/lib/format";
 
 export const Route = createFileRoute("/vergelijken")({
   head: () =>
@@ -60,6 +61,12 @@ function Compare() {
                   </tr>
                 </thead>
                 <tbody>
+                  <tr>
+                    <th scope="row">Prijs (excl. btw)</th>
+                    {selected.map((p) => (
+                      <td key={p.id}>{formatEuro(p.price)}</td>
+                    ))}
+                  </tr>
                   <tr>
                     <th scope="row">Artikelnummer</th>
                     {selected.map((p) => (

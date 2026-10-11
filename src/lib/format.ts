@@ -3,3 +3,6 @@ const nl = (options: Intl.NumberFormatOptions) => new Intl.NumberFormat("nl-NL",
 export const formatInt = (n: number) => nl({ maximumFractionDigits: 0 }).format(n);
 export const formatKwp = (kwp: number) => `${nl({ maximumFractionDigits: 2 }).format(kwp)} kWp`;
 export const formatKg = (kg: number) => `${formatInt(Math.round(kg))} kg`;
+
+export const formatEuro = (n: number) =>
+  nl({ style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);

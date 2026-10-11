@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { PageIntro } from "@/components/estg/page-intro";
 import { articles } from "@/lib/articles";
 import { pageHead } from "@/lib/catalog";
@@ -23,7 +23,13 @@ function Knowledge() {
           {articles.map((a) => (
             <article className="article-card" key={a.slug}>
               <Link to="/kennis/$slug" params={{ slug: a.slug }}>
-                <img src={a.image} alt={a.title} width={816} height={816} loading="lazy" />
+                {a.image ? (
+                  <img src={a.image} alt={a.title} width={816} height={816} loading="lazy" />
+                ) : (
+                  <span className="article-placeholder">
+                    <BookOpen size={44} strokeWidth={1.4} aria-hidden />
+                  </span>
+                )}
               </Link>
               <div>
                 <span className="eyebrow muted">{a.category}</span>

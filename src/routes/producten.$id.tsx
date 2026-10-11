@@ -10,6 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ProductCard } from "@/components/estg/product-card";
+import { formatEuro } from "@/lib/format";
 import { useCompare } from "@/components/estg/compare";
 import { useStore } from "@/components/estg/store";
 import { AvailabilityBadge, CategoryIcon, Reveal } from "@/components/estg/ui-bits";
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/producten/$id")({
   head: ({ params }) =>
     pageHead(
       findProduct(params.id)?.name || "Product niet gevonden",
-      "Bekijk deze duurzame energieoplossing bij ESTG en voeg deze toe aan Mijn Project.",
+      "Bekijk deze duurzame energieoplossing bij ESTG en voeg deze toe aan je winkelmand.",
     ),
   component: Product,
 });
@@ -81,7 +82,7 @@ function Product() {
           <strong>{p.name}</strong>
           <Button variant="accent" size="sm" tabIndex={sticky ? 0 : -1} onClick={onAdd}>
             {added ? <Check /> : <ShoppingBag />}
-            {added ? "Toegevoegd" : "Toevoegen aan project"}
+            {added ? "Toegevoegd" : "Toevoegen aan winkelmand"}
           </Button>
         </div>
       </div>
@@ -123,14 +124,17 @@ function Product() {
                 </span>
               )}
               {p.isNew && <Badge tone="accent">Nieuw</Badge>}
+              {p.isBestseller && <Badge tone="info">Bestseller</Badge>}
               <AvailabilityBadge />
             </div>
             <h1>{p.name}</h1>
             <span className="sku">{p.sku}</span>
             <p>{p.note}</p>
             <div className="price-box">
-              <strong>Prijs via ESTG</strong>
-              <span>Prijzen en staffels bevestigt ESTG bij je aanvraag.</span>
+              <strong className="price">
+                {formatEuro(p.price)} <small>excl. btw</small>
+              </strong>
+              <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
             </div>
             <div className="detail-buy" ref={buyRef}>
               <div className="quantity">
@@ -163,7 +167,7 @@ function Product() {
               </div>
               <Button variant="accent" size="lg" onClick={onAdd}>
                 {added ? <Check /> : <ShoppingBag />}
-                {added ? "Toegevoegd aan project" : "Toevoegen aan project"}
+                {added ? "Toegevoegd aan winkelmand" : "Toevoegen aan winkelmand"}
               </Button>
               <Button
                 variant="outline"
@@ -177,7 +181,7 @@ function Product() {
             </div>
             {added && (
               <Link className="text-link" to="/winkelwagen">
-                Bekijk Mijn Project →
+                Bekijk winkelmand →
               </Link>
             )}
             <p className="sample-note" style={{ padding: 0 }}>

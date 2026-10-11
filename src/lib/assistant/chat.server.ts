@@ -12,7 +12,10 @@ const FALLBACK = "Bel ons gerust op 085 016 7800 (ma-vr 8:30-17:30).";
 const input = z.object({
   conversation_id: z.string().uuid().optional(),
   session_key: z.string().min(16).max(100),
-  message: z.string().min(1).max(MAX_MESSAGE_LENGTH * 2),
+  message: z
+    .string()
+    .min(1)
+    .max(MAX_MESSAGE_LENGTH * 2),
   source: z.enum(["widget", "advisor"]),
   page_context: z.string().max(300).optional(),
 });
@@ -33,12 +36,12 @@ function systemPrompt(source: "widget" | "advisor", knowledge: string[], message
   return [
     "Je bent de ESTG-assistent: een proactieve, technische B2B-adviseur voor installateurs. Antwoord in het Nederlands, zakelijk en concreet; vraag door als technische gegevens ontbreken.",
     ...knowledge,
-    "Regels: noem NOOIT prijzen, kortingen of garantie-uitkomsten. Verzin NOOIT voorraad, levertijden of specificaties. Noem alleen producten uit de catalogus hieronder en verwijs naar ESTG (085 016 7800) als iets onbekend is. Deze website is een voorbeeldomgeving met een illustratief assortiment.",
+    "Regels: je mag prijzen noemen, maar uitsluitend de prijs die letterlijk bij het product in de catalogus hieronder staat (€ excl. btw, voorbeeldprijs) — verzin NOOIT een korting, staffelprijs of ander bedrag, en noem geen garantie-uitkomsten. Verzin NOOIT voorraad, levertijden of specificaties. Noem alleen producten uit de catalogus hieronder en verwijs naar ESTG (085 016 7800) als iets onbekend is. Deze website is een voorbeeldomgeving met een illustratief assortiment.",
     source === "widget"
       ? "Dit is de chatwidget: houd antwoorden kort (maximaal ~150 woorden), platte tekst zonder markdown (geen sterretjes of tabellen)."
       : "Dit is de AI-Adviseur: geef een korte samenvatting en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en reden).",
     `Categorieën: ${categories.join(", ")}.`,
-    "Relevante catalogus (id | naam | merk | categorie | specs):\n" + catalogLines(list),
+    "Relevante catalogus (id | naam | merk | categorie | prijs | specs):\n" + catalogLines(list),
     "Door code vastgestelde compatibiliteitscontroles:\n" +
       (facts.length ? facts.join("\n") : "- Geen controles voor deze selectie."),
   ].join("\n\n");
@@ -79,13 +82,21 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
       .eq("role", "user")
       .gte("created_at", since);
     if ((count ?? 0) >= RATE_LIMIT)
-      return fail(429, "rate_limited", "Je hebt het maximum van 20 vragen per uur bereikt. Probeer het later opnieuw.");
+      return fail(
+        429,
+        "rate_limited",
+        "Je hebt het maximum van 20 vragen per uur bereikt. Probeer het later opnieuw.",
+      );
   }
 
   if (!conversationId) {
     const { data: conv, error } = await db
       .from("assistant_conversations")
-      .insert({ source: data.source, page_context: data.page_context ?? null, session_key: data.session_key })
+      .insert({
+        source: data.source,
+        page_context: data.page_context ?? null,
+        session_key: data.session_key,
+      })
       .select("id")
       .single();
     if (error || !conv) {
@@ -96,7 +107,11 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
   }
 
   const [{ data: knowledge }, { data: history }] = await Promise.all([
-    db.from("assistant_knowledge").select("section, content").eq("active", true).order("section", { ascending: false }),
+    db
+      .from("assistant_knowledge")
+      .select("section, content")
+      .eq("active", true)
+      .order("section", { ascending: false }),
     db
       .from("assistant_messages")
       .select("role, content")
@@ -112,7 +127,9 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
   if (userErr) console.error("[assistant] user message insert", userErr);
 
   const messages: ModelMessage[] = [
-    ...(history ?? []).reverse().map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
+    ...(history ?? [])
+      .reverse()
+      .map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
     { role: "user", content: message },
   ];
   const anthropic = createAnthropic({
@@ -151,14 +168,32 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
       const usage = await result.totalUsage;
       const recommendations = out.recommendations.flatMap((r) =>
         findProduct(r.product_id)
-          ? [{ productId: r.product_id, quantity: Math.min(999, Math.max(1, Math.round(r.quantity || 1))), reason: r.reason }]
+          ? [
+              {
+                productId: r.product_id,
+                quantity: Math.min(999, Math.max(1, Math.round(r.quantity || 1))),
+                reason: r.reason,
+              },
+            ]
           : [],
       );
-      const warnings = evaluateSet(recommendations.map((r) => ({ id: r.productId, quantity: r.quantity })))
+      const warnings = evaluateSet(
+        recommendations.map((r) => ({ id: r.productId, quantity: r.quantity })),
+      )
         .filter((r) => r.status === "niet-compatibel")
         .map((r) => r.reason);
-      await save(out.summary, usage.totalTokens, recommendations.map((r) => r.productId));
-      return Response.json({ ok: true, conversation_id: cid, reply: out.summary, recommendations, warnings });
+      await save(
+        out.summary,
+        usage.totalTokens,
+        recommendations.map((r) => r.productId),
+      );
+      return Response.json({
+        ok: true,
+        conversation_id: cid,
+        reply: out.summary,
+        recommendations,
+        warnings,
+      });
     } catch (error) {
       console.error("[assistant] advisor error", error);
       return fail(502, "upstream", "De AI-adviseur is tijdelijk niet beschikbaar.");

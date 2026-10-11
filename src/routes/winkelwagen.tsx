@@ -15,13 +15,13 @@ import { CategoryIcon } from "@/components/estg/ui-bits";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
 import { pageHead } from "@/lib/catalog";
 import { groupByCategory, projectLines, projectWarnings, totalKwp } from "@/lib/project";
-import { formatInt, formatKg, formatKwp } from "@/lib/format";
+import { formatEuro, formatInt, formatKg, formatKwp } from "@/lib/format";
 
 export const Route = createFileRoute("/winkelwagen")({
   head: () =>
     pageHead(
-      "Mijn Project",
-      "Stel je project samen, controleer of de set compleet is en bereid je aanvraag voor ESTG voor.",
+      "Winkelmand",
+      "Stel je selectie samen, controleer of de set compleet is en bereid je aanvraag voor ESTG voor.",
     ),
   component: Cart,
 });
@@ -32,13 +32,20 @@ function Cart() {
   const groups = groupByCategory(lines);
   const warnings = projectWarnings(lines);
   const kwp = totalKwp(lines);
+  const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.quantity, 0);
   const co2 = kwp > 0 ? estimateCo2Savings(kwp) : null;
 
   const download = () => {
     const text =
-      `ESTG — Productaanvraag: ${projectName}\n\n` +
-      lines.map((l) => `${l.quantity} × ${l.product.name} (${l.product.brand})`).join("\n") +
-      "\n\nVoorbeeldassortiment. Prijzen, specificaties en beschikbaarheid te bevestigen door ESTG. Geen bestelling geplaatst.";
+      `ESTG — Productaanvraag${projectName ? `: ${projectName}` : ""}\n\n` +
+      lines
+        .map(
+          (l) =>
+            `${l.quantity} × ${l.product.name} (${l.product.brand}) — ${formatEuro(l.product.price)} p/st, ${formatEuro(l.product.price * l.quantity)}`,
+        )
+        .join("\n") +
+      `\n\nSubtotaal (excl. btw): ${formatEuro(subtotal)}` +
+      "\n\nVoorbeeldprijzen, excl. btw. Definitieve prijs, specificaties en beschikbaarheid bevestigt ESTG. Geen bestelling geplaatst.";
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
@@ -49,17 +56,15 @@ function Cart() {
 
   return (
     <>
-      <PageIntro
-        title="Mijn Project"
-        description="Alle geselecteerde oplossingen voor jouw project op een rij."
-      />
+      <PageIntro title="Winkelmand" description="Alle geselecteerde oplossingen op een rij." />
       <section className="container section" style={{ paddingBlock: 0 }}>
         {lines.length ? (
           <div className="project-layout">
             <div>
               <input
                 className="project-name"
-                aria-label="Projectnaam"
+                aria-label="Referentie voor je aanvraag (optioneel)"
+                placeholder="Referentie voor je aanvraag (optioneel)"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
               />
@@ -157,6 +162,10 @@ function Cart() {
                   <dt>Regels</dt>
                   <dd>{formatInt(lines.length)}</dd>
                 </div>
+                <div>
+                  <dt>Subtotaal (excl. btw)</dt>
+                  <dd>{formatEuro(subtotal)}</dd>
+                </div>
                 {kwp > 0 && (
                   <div>
                     <dt>Paneelvermogen</dt>
@@ -174,7 +183,9 @@ function Cart() {
                   , {CO2_FACTOR.year}).
                 </p>
               )}
-              <p className="co2-note">Prijzen en beschikbaarheid bevestigt ESTG bij je aanvraag.</p>
+              <p className="co2-note">
+                Voorbeeldprijzen, excl. btw. Definitieve prijs en verzendkosten bevestigt ESTG.
+              </p>
               <Button asChild variant="accent" size="lg">
                 <Link to="/contact">
                   Aanvraag bespreken <ArrowUpRight />
@@ -192,8 +203,8 @@ function Cart() {
         ) : (
           <div className="empty-state">
             <ShoppingBag size={40} />
-            <h2>Je project is nog leeg</h2>
-            <p>Voeg producten toe om een project samen te stellen.</p>
+            <h2>Je winkelmand is nog leeg</h2>
+            <p>Voeg producten toe om een aanvraag samen te stellen.</p>
             <Button asChild>
               <Link to="/webshop" search={{ q: "", category: "", brand: "" }}>
                 Ontdek het assortiment <ArrowUpRight />

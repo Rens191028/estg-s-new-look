@@ -20,14 +20,16 @@ import { HeaderSearch } from "./search";
 import { useStore } from "./store";
 import { CategoryIcon } from "./ui-bits";
 
-// Het officiële logobestand (assets/estg-logo.png) is nog niet aangeleverd. Tot die tijd tonen
-// we een tijdelijke weergave; vervang deze component door het logobestand zodra het er is.
+// Het officiële logo is volledig gekleurd en heeft geen inverse variant: alleen op lichte vlakken plaatsen.
 export function Logo() {
   return (
-    <span className="logo">
-      estg<span className="logo-dot">.</span>
-      <Zap className="logo-bolt" fill="currentColor" />
-    </span>
+    <img
+      className="logo"
+      src="/brand/estg-logo.png"
+      alt="ESTG, Leading in Positive Energy"
+      width={187}
+      height={52}
+    />
   );
 }
 
@@ -217,10 +219,10 @@ export function Footer() {
     <footer className="site-footer">
       <div className="container footer-grid">
         <div className="footer-col footer-brand">
-          <Link to="/" aria-label="ESTG home">
+          <Link to="/" aria-label="ESTG home" className="footer-logo">
             <Logo />
           </Link>
-          <p>Leading in positive energy. Jouw partner in de energietransitie.</p>
+          <p>Jouw partner in de energietransitie.</p>
           <div className="footer-contact">
             <a href="tel:+31850167800">
               <Phone size={16} /> +31 (0)85 016 7800

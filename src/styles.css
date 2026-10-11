@@ -250,25 +250,19 @@
   gap: 40px;
 }
 .logo {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--navy-900);
+  display: block;
+  height: 52px;
+  width: auto;
 }
-.logo-dot,
-.logo-bolt {
-  color: var(--yellow-400);
+.footer-col a.footer-logo {
+  display: inline-block;
+  margin-top: 0;
+  background: var(--surface-0);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
 }
-.logo-bolt {
-  width: 19px;
-  height: 28px;
-  margin-left: 4px;
-}
-.site-footer .logo {
-  color: var(--on-ink);
+.footer-logo .logo {
+  height: 40px;
 }
 .search {
   position: relative;
@@ -1698,7 +1692,7 @@ select {
     padding-block: 12px;
   }
   .logo {
-    font-size: 34px;
+    height: 36px;
   }
   .search {
     order: 3;

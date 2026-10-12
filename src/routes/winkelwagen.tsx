@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useAuth } from "@/components/estg/auth";
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -23,13 +24,19 @@ export const Route = createFileRoute("/winkelwagen")({
   head: () =>
     pageHead(
       "Winkelmand",
-      "Stel je selectie samen, controleer of de set compleet is en bespreek je selectie met ESTG.",
+      "Stel je selectie samen, controleer of de set compleet is en bestel direct bij ESTG.",
     ),
   component: Cart,
 });
 
 function Cart() {
   const { items, update, projectName, setProjectName, count, subtotal } = useStore();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const order = () =>
+    user
+      ? navigate({ to: "/bestellen" })
+      : navigate({ to: "/inloggen", search: { reason: "bestellen", returnTo: "/bestellen" } });
   const [printedAt, setPrintedAt] = useState("");
   const lines = projectLines(items);
   const groups = groupByCategory(lines);
@@ -188,10 +195,8 @@ function Cart() {
               <p className="co2-note">
                 Voorbeeldprijzen, excl. btw. Definitieve prijs en verzendkosten bevestigt ESTG.
               </p>
-              <Button asChild variant="accent" size="lg">
-                <Link to="/contact">
-                  Selectie bespreken met ESTG <ArrowUpRight />
-                </Link>
+              <Button variant="accent" size="lg" onClick={order}>
+                Bestellen <ArrowUpRight />
               </Button>
               <Button variant="outline" onClick={download}>
                 <Download /> Download selectie
@@ -206,8 +211,8 @@ function Cart() {
                 <Printer /> Print overzicht
               </Button>
               <p className="co2-note">
-                Er is geen bestelling geplaatst. Je selectie blijft alleen tijdens dit bezoek
-                bewaard.
+                Bestellen vraagt om een account. Er wordt geen echte betaling verwerkt; je
+                selectie blijft alleen tijdens dit bezoek bewaard.
               </p>
             </aside>
           </div>
@@ -218,7 +223,7 @@ function Cart() {
             </span>
             <h2>Je winkelmand is nog leeg</h2>
             <p>
-              Voeg producten toe en bespreek je selectie met ESTG. Begin bijvoorbeeld bij onze
+              Voeg producten toe en bestel ze direct bij ESTG. Begin bijvoorbeeld bij onze
               bestsellers.
             </p>
             <div className="hero-actions" style={{ justifyContent: "center" }}>

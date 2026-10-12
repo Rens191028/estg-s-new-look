@@ -281,7 +281,7 @@ function WhyEstg() {
 const FAQ = [
   {
     q: "Kan ik op deze website al bestellen?",
-    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en bespreek je selectie met ESTG.",
+    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en klik op \"Bestellen\" om je bestelling met een gewenste verzenddatum door te geven. Er wordt geen echte betaling verwerkt: ESTG neemt contact met je op om betaling en levering af te ronden.",
   },
   {
     q: "Zijn de getoonde prijzen definitief?",
@@ -517,8 +517,8 @@ function Index() {
             <div>
               <h2>Stel je selectie samen</h2>
               <p>
-                Verzamel producten in je winkelmand, controleer of de set compleet is en download je
-                selectie om met ESTG te bespreken.
+                Verzamel producten in je winkelmand, controleer of de set compleet is en bestel direct
+                of download je selectie om met ESTG te bespreken.
               </p>
               <Button asChild>
                 <Link to="/winkelwagen">

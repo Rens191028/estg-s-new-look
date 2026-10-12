@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AanbiedingenRouteImport } from './routes/aanbiedingen'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvisorRouteImport } from './routes/advisor'
+import { Route as BestellenRouteImport } from './routes/bestellen'
 import { Route as ConfiguratorRouteImport } from './routes/configurator'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as InloggenRouteImport } from './routes/inloggen'
@@ -46,6 +47,11 @@ const AccountRoute = AccountRouteImport.update({
 const AdvisorRoute = AdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BestellenRoute = BestellenRouteImport.update({
+  id: '/bestellen',
+  path: '/bestellen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiguratorRoute = ConfiguratorRouteImport.update({
@@ -125,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/bestellen': typeof BestellenRoute
   '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/bestellen': typeof BestellenRoute
   '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/bestellen': typeof BestellenRoute
   '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/aanbiedingen'
     | '/account'
     | '/advisor'
+    | '/bestellen'
     | '/configurator'
     | '/contact'
     | '/inloggen'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/aanbiedingen'
     | '/account'
     | '/advisor'
+    | '/bestellen'
     | '/configurator'
     | '/contact'
     | '/inloggen'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/aanbiedingen'
     | '/account'
     | '/advisor'
+    | '/bestellen'
     | '/configurator'
     | '/contact'
     | '/inloggen'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   AanbiedingenRoute: typeof AanbiedingenRoute
   AccountRoute: typeof AccountRoute
   AdvisorRoute: typeof AdvisorRoute
+  BestellenRoute: typeof BestellenRoute
   ConfiguratorRoute: typeof ConfiguratorRoute
   ContactRoute: typeof ContactRoute
   InloggenRoute: typeof InloggenRoute
@@ -289,6 +302,13 @@ declare module '@tanstack/react-router' {
       path: '/advisor'
       fullPath: '/advisor'
       preLoaderRoute: typeof AdvisorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bestellen': {
+      id: '/bestellen'
+      path: '/bestellen'
+      fullPath: '/bestellen'
+      preLoaderRoute: typeof BestellenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/configurator': {
@@ -410,6 +430,7 @@ const rootRouteChildren: RootRouteChildren = {
   AanbiedingenRoute: AanbiedingenRoute,
   AccountRoute: AccountRoute,
   AdvisorRoute: AdvisorRoute,
+  BestellenRoute: BestellenRoute,
   ConfiguratorRoute: ConfiguratorRoute,
   ContactRoute: ContactRoute,
   InloggenRoute: InloggenRoute,

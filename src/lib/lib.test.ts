@@ -169,3 +169,28 @@ describe("aanbiedingen", () => {
     expect(catalogLines([findProduct("laadstation")!])).not.toContain("was €");
   });
 });
+
+describe("prijsstaffels en certificeringen", () => {
+  it("past de staffel toe op basis van het aantal", async () => {
+    const { findProduct, unitPrice } = await import("./catalog");
+    const p = findProduct("all-black-zonnepaneel")!;
+    expect(p.priceTiers).toHaveLength(2);
+    expect(unitPrice(p, 1)).toBe(p.price);
+    expect(unitPrice(p, 9)).toBe(p.price);
+    expect(unitPrice(p, 10)).toBe(p.priceTiers![0]!.price);
+    expect(unitPrice(p, 25)).toBe(p.priceTiers![1]!.price);
+    expect(p.priceTiers![1]!.price).toBeLessThan(p.priceTiers![0]!.price);
+  });
+  it("geeft geen staffel aan producten die niet in bulk worden gekocht", async () => {
+    const { products, unitPrice } = await import("./catalog");
+    const hp = products.find((x) => x.category === "Klimaat")!;
+    expect(hp.priceTiers).toBeUndefined();
+    expect(unitPrice(hp, 50)).toBe(hp.price);
+  });
+  it("vult certificeringen voor een deel van de producten", async () => {
+    const { products } = await import("./catalog");
+    const withCert = products.filter((x) => x.certifications?.length);
+    expect(withCert.length).toBeGreaterThan(0);
+    expect(withCert.length).toBeLessThan(products.length);
+  });
+});

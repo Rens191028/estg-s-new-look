@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
 import { useAuth } from "@/components/estg/auth";
-import { pageHead } from "@/lib/catalog";
+import { pageHead, unitPrice } from "@/lib/catalog";
 import { groupByCategory, projectLines } from "@/lib/project";
 import { formatEuro } from "@/lib/format";
 
@@ -45,7 +45,7 @@ function Order() {
   const [minDate] = useState(earliestDate);
   const [date, setDate] = useState<Date | undefined>();
   const [dateError, setDateError] = useState(false);
-  const [done, setDone] = useState<null | typeof form & { date: Date; subtotal: number }>(null);
+  const [done, setDone] = useState<null | typeof form & { date: Date; subtotal: number; reference: string }>(null);
 
   useEffect(() => {
     if (!loading && !user)
@@ -77,6 +77,7 @@ function Order() {
             <CheckCircle2 size={36} />
             <h3>Bestelling doorgegeven</h3>
             <dl>
+              {done.reference && <div><dt>Projectnaam / klantreferentie</dt><dd>{done.reference}</dd></div>}
               <div><dt>Gewenste verzenddatum</dt><dd>{formatDate(done.date)}</dd></div>
               <div><dt>Subtotaal (excl. btw)</dt><dd>{formatEuro(done.subtotal)}</dd></div>
               <div><dt>Naam</dt><dd>{done.name}</dd></div>
@@ -121,7 +122,7 @@ function Order() {
           onSubmit={(e) => {
             e.preventDefault();
             if (!date) return setDateError(true);
-            setDone({ ...form, date, subtotal });
+            setDone({ ...form, date, subtotal, reference: projectName });
             window.scrollTo({ top: 0 });
           }}
         >
@@ -134,9 +135,9 @@ function Order() {
                   <div className="cart-row" key={p.id} style={{ gridTemplateColumns: "1fr auto" }}>
                     <div>
                       <h3 style={{ borderBottom: 0, padding: 0 }}>{quantity} × {p.name}</h3>
-                      <p>{p.brand} · <span className="sku">{p.sku}</span></p>
+                      <p>{p.brand} · <span className="sku">{p.sku}</span> · {formatEuro(unitPrice(p, quantity))} p/st{unitPrice(p, quantity) < p.price ? " (staffelprijs)" : ""}</p>
                     </div>
-                    <strong>{formatEuro(p.price * quantity)}</strong>
+                    <strong>{formatEuro(unitPrice(p, quantity) * quantity)}</strong>
                   </div>
                 ))}
               </div>
@@ -177,6 +178,7 @@ function Order() {
           <aside className="summary-card" aria-label="Samenvatting">
             <h3>Samenvatting</h3>
             <dl>
+              {projectName && <div><dt>Referentie</dt><dd>{projectName}</dd></div>}
               <div><dt>Subtotaal (excl. btw)</dt><dd>{formatEuro(subtotal)}</dd></div>
               <div><dt>Verzenddatum</dt><dd>{date ? date.toLocaleDateString("nl-NL") : "—"}</dd></div>
             </dl>

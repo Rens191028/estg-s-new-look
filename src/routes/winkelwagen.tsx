@@ -16,7 +16,8 @@ import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
 import { CategoryIcon } from "@/components/estg/ui-bits";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
-import { pageHead } from "@/lib/catalog";
+import { pageHead, unitPrice } from "@/lib/catalog";
+import { COMPANY, COMPANY_ADDRESS } from "@/lib/company";
 import { groupByCategory, projectLines, projectWarnings, totalKwp } from "@/lib/project";
 import { formatEuro, formatInt, formatKg, formatKwp } from "@/lib/format";
 
@@ -46,11 +47,11 @@ function Cart() {
 
   const download = () => {
     const text =
-      `ESTG — Selectie${projectName ? `: ${projectName}` : ""}\n\n` +
+      `ESTG — Selectie\n${COMPANY_ADDRESS} · ${COMPANY.phone}\n${new Date().toLocaleDateString("nl-NL")}\n${projectName ? `Project/klantreferentie: ${projectName}\n` : ""}\n` +
       lines
         .map(
           (l) =>
-            `${l.quantity} × ${l.product.name} (${l.product.brand}) — ${formatEuro(l.product.price)} p/st, ${formatEuro(l.product.price * l.quantity)}`,
+            `${l.quantity} × ${l.product.name} (${l.product.brand}, ${l.product.sku}) — ${formatEuro(unitPrice(l.product, l.quantity))} p/st, ${formatEuro(unitPrice(l.product, l.quantity) * l.quantity)}`,
         )
         .join("\n") +
       `\n\nSubtotaal (excl. btw): ${formatEuro(subtotal)}` +
@@ -72,8 +73,8 @@ function Cart() {
             <div>
               <input
                 className="project-name"
-                aria-label="Referentie voor je selectie (optioneel)"
-                placeholder="Referentie voor je selectie (optioneel)"
+                aria-label="Projectnaam / klantreferentie (optioneel)"
+                placeholder="Projectnaam / klantreferentie, bijv. Project Jansen – Dakrenovatie"
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
               />
@@ -117,6 +118,13 @@ function Cart() {
                         </Link>
                         <p>
                           {p.brand} · <span className="sku">{p.sku}</span>
+                        </p>
+                        <p className="cart-price">
+                          {formatEuro(unitPrice(p, quantity))} p/st ·{" "}
+                          <strong>{formatEuro(unitPrice(p, quantity) * quantity)}</strong>
+                          {unitPrice(p, quantity) < p.price && (
+                            <span className="tier-badge">staffelprijs</span>
+                          )}
                         </p>
                       </div>
                       <div className="quantity">
@@ -211,8 +219,8 @@ function Cart() {
                 <Printer /> Print overzicht
               </Button>
               <p className="co2-note">
-                Bestellen vraagt om een account. Er wordt geen echte betaling verwerkt; je
-                selectie blijft alleen tijdens dit bezoek bewaard.
+                Bestellen vraagt om een account. Er wordt geen echte betaling verwerkt; je selectie
+                blijft alleen tijdens dit bezoek bewaard.
               </p>
             </aside>
           </div>
@@ -243,40 +251,70 @@ function Cart() {
       </section>
       {lines.length > 0 && (
         <div className="print-sheet" aria-hidden>
-          <img className="print-logo" src="/brand/estg-logo.png" alt="ESTG" />
-          <h1 style={{ fontSize: 22, lineHeight: "28px" }}>
-            Selectie{projectName ? `: ${projectName}` : ""}
-          </h1>
-          <p>{printedAt}</p>
+          <header className="print-head">
+            <img className="print-logo" src="/brand/estg-logo.png" alt="ESTG" />
+            <address>
+              <strong>ESTG · European Sustainable Technology Group</strong>
+              {COMPANY.street}, {COMPANY.city}
+              <br />
+              {COMPANY.phone}
+            </address>
+          </header>
+          <div className="print-title">
+            <div>
+              <h1>Selectie</h1>
+              <p>Datum: {printedAt}</p>
+            </div>
+            {projectName && (
+              <div className="print-ref">
+                <span>Project / klantreferentie</span>
+                <strong>{projectName}</strong>
+              </div>
+            )}
+          </div>
           <table>
             <thead>
               <tr>
                 <th>Product</th>
+                <th>Merk</th>
                 <th>Artikelnr.</th>
                 <th className="num">Aantal</th>
                 <th className="num">Prijs p/st</th>
-                <th className="num">Totaal</th>
+                <th className="num">Subtotaal</th>
               </tr>
             </thead>
             <tbody>
-              {lines.map(({ product: p, quantity }) => (
-                <tr key={p.id}>
-                  <td>
-                    {p.name} ({p.brand})
-                  </td>
-                  <td>{p.sku}</td>
-                  <td className="num">{quantity}</td>
-                  <td className="num">{formatEuro(p.price)}</td>
-                  <td className="num">{formatEuro(p.price * quantity)}</td>
-                </tr>
-              ))}
+              {lines.map(({ product: p, quantity }) => {
+                const unit = unitPrice(p, quantity);
+                return (
+                  <tr key={p.id}>
+                    <td>{p.name}</td>
+                    <td>{p.brand}</td>
+                    <td>{p.sku}</td>
+                    <td className="num">{quantity}</td>
+                    <td className="num">
+                      {unit < p.price && <s>{formatEuro(p.price)}</s>} {formatEuro(unit)}
+                      {unit < p.price && <small> staffel</small>}
+                    </td>
+                    <td className="num">{formatEuro(unit * quantity)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-          <p className="print-total">Subtotaal (excl. btw): {formatEuro(subtotal)}</p>
-          <p className="print-note">
-            Voorbeeldprijzen, excl. btw. Definitieve prijs, specificaties en beschikbaarheid
-            bevestigt ESTG. Er is geen bestelling geplaatst.
+          <p className="print-total">
+            Totaal (excl. btw): <strong>{formatEuro(subtotal)}</strong>
           </p>
+          <footer className="print-foot">
+            <p>
+              Voorbeeldassortiment: prijzen (incl. eventuele staffelprijzen), specificaties en
+              beschikbaarheid zijn illustratief en worden bevestigd door ESTG. Er is geen bestelling
+              geplaatst.
+            </p>
+            <p>
+              Vragen? ESTG · {COMPANY.street}, {COMPANY.city} · {COMPANY.phone} · {COMPANY.hours}
+            </p>
+          </footer>
         </div>
       )}
     </>

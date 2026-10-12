@@ -30,7 +30,9 @@ import { useStore } from "@/components/estg/store";
 import {
   AvailabilityBadge,
   CategoryIcon,
+  Certifications,
   Price,
+  PriceTiers,
   Reveal,
   Skeleton,
 } from "@/components/estg/ui-bits";
@@ -190,6 +192,7 @@ function Product() {
               </strong>
               <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
             </div>
+            <PriceTiers product={p} quantity={quantity} />
             <a className="rating-line" href={googleRating.url} target="_blank" rel="noreferrer">
               <span className="stars" aria-hidden>
                 <Star size={15} fill="currentColor" />
@@ -288,6 +291,7 @@ function Product() {
                     ))}
                   </tbody>
                 </table>
+                <Certifications items={p.certifications} />
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="docs">

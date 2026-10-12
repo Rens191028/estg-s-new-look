@@ -25,6 +25,7 @@ import { Route as ApiAssistantChatRouteImport } from './routes/api/assistant-cha
 import { Route as KennisIndexRouteImport } from './routes/kennis.index'
 import { Route as KennisSlugRouteImport } from './routes/kennis.$slug'
 import { Route as ProductenIdRouteImport } from './routes/producten.$id'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -106,6 +107,12 @@ const ProductenIdRoute = ProductenIdRouteImport.update({
   path: '/producten/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByFullPath {
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis/': typeof KennisIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -141,6 +149,7 @@ export interface FileRoutesByTo {
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis': typeof KennisIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -160,6 +169,7 @@ export interface FileRoutesById {
   '/kennis/$slug': typeof KennisSlugRoute
   '/producten/$id': typeof ProductenIdRoute
   '/kennis/': typeof KennisIndexRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis/'
+    | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis'
+    | '/lovable/email/transactional/preview'
   id:
     | '__root__'
     | '/'
@@ -215,6 +227,7 @@ export interface FileRouteTypes {
     | '/kennis/$slug'
     | '/producten/$id'
     | '/kennis/'
+    | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -232,6 +245,7 @@ export interface RootRouteChildren {
   WinkelwagenRoute: typeof WinkelwagenRoute
   ApiAssistantChatRoute: typeof ApiAssistantChatRoute
   ProductenIdRoute: typeof ProductenIdRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -348,6 +362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductenIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -379,6 +400,7 @@ const rootRouteChildren: RootRouteChildren = {
   WinkelwagenRoute: WinkelwagenRoute,
   ApiAssistantChatRoute: ApiAssistantChatRoute,
   ProductenIdRoute: ProductenIdRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -506,6 +506,104 @@ export const products: Product[] = [
       { label: "Toepassing", value: "Verwarmen, in combinatie met CV-ketel" },
     ],
   },
+  {
+    id: "pv-warmwaterregelaar",
+    name: "PV-warmwaterregelaar",
+    brand: "My-PV",
+    category: "Klimaat",
+    sku: "DEMO-CLI-004",
+    price: 890,
+    note: "Zet overschot aan zonnestroom om in warm water via de bestaande boiler.",
+    specs: [
+      { label: "Type", value: "PV-warmwaterregelaar" },
+      { label: "Vermogen", value: "3 kW" },
+      { label: "Toepassing", value: "Boileraansturing" },
+    ],
+  },
+  {
+    id: "lucht-lucht-warmtepomp-mitsubishi-electric",
+    name: "Lucht-lucht warmtepomp",
+    brand: "Mitsubishi Electric",
+    category: "Klimaat",
+    sku: "DEMO-CLI-005",
+    price: 1590,
+    note: "Split-unit voor verwarmen en koelen van een enkele ruimte.",
+    specs: [
+      { label: "Type", value: "Lucht-lucht (split)" },
+      { label: "Toepassing", value: "Verwarmen en koelen" },
+    ],
+  },
+  {
+    id: "string-omvormer-abb",
+    name: "String omvormer",
+    brand: "ABB",
+    category: "Omvormers",
+    sku: "DEMO-INV-008",
+    price: 2690,
+    note: "Robuuste 3-fase omvormer voor middelgrote installaties.",
+    specs: [
+      { label: "Type", value: "String" },
+      { label: "Fasen", value: "3-fase" },
+      { label: "Vermogen", value: "12 kW" },
+    ],
+  },
+  {
+    id: "microomvormer-duo-apsystems",
+    name: "Microomvormer duo",
+    brand: "APsystems",
+    category: "Omvormers",
+    sku: "DEMO-INV-009",
+    price: 159,
+    isNew: true,
+    note: "Eén micro-omvormer, aansturing voor twee panelen tegelijk.",
+    specs: [
+      { label: "Type", value: "Micro-omvormer" },
+      { label: "Koppeling", value: "AC, per 2 panelen" },
+      { label: "Max. ingangsvermogen", value: "880 W" },
+    ],
+  },
+  {
+    id: "hybride-warmtepomp-daikin-compact",
+    name: "Hybride warmtepomp compact",
+    brand: "Daikin",
+    category: "Klimaat",
+    sku: "DEMO-CLI-006",
+    price: 3290,
+    note: "Compacte uitvoering voor combinatie met een bestaande CV-ketel.",
+    specs: [
+      { label: "Type", value: "Lucht-water, hybride" },
+      { label: "Toepassing", value: "Verwarmen, in combinatie met CV-ketel" },
+    ],
+  },
+  {
+    id: "microomvormer-multi-hoymiles",
+    name: "Microomvormer multi-paneel",
+    brand: "Hoymiles",
+    category: "Omvormers",
+    sku: "DEMO-INV-010",
+    price: 219,
+    isNew: true,
+    note: "Eén micro-omvormer voor tot vier panelen, voor compacte installaties.",
+    specs: [
+      { label: "Type", value: "Micro-omvormer" },
+      { label: "Koppeling", value: "AC, per 4 panelen" },
+      { label: "Max. ingangsvermogen", value: "1.600 W" },
+    ],
+  },
+  {
+    id: "compacte-laadpaal-wallbox",
+    name: "Compacte laadpaal",
+    brand: "Wallbox",
+    category: "EV-laders",
+    sku: "DEMO-EV-006",
+    price: 749,
+    note: "Compacte laadpaal met app-bediening, voor thuis en kleinzakelijk gebruik.",
+    specs: [
+      { label: "Vermogen", value: "22 kW" },
+      { label: "Fasen", value: "3-fase" },
+      { label: "Bediening", value: "App" },
+    ],
+  },
 ];
 export const catalogDisclaimer =
   "Voorbeeldassortiment. Afbeeldingen, artikelnummers en specificaties zijn illustratief; prijzen en beschikbaarheid bevestigt ESTG.";
@@ -548,6 +646,12 @@ export const brands = [
   "Mitsubishi Heavy Industries",
   "denim",
   "LG",
+  "My-PV",
+  "Mitsubishi Electric",
+  "ABB",
+  "APsystems",
+  "Hoymiles",
+  "Wallbox",
 ];
 export function pageHead(title: string, description: string) {
   return {
@@ -582,6 +686,12 @@ const brandLogoSlug: Record<string, string> = {
   "Mitsubishi Heavy Industries": "mitsubishi-heavy-industries",
   denim: "denim",
   LG: "lg",
+  "My-PV": "my-pv",
+  "Mitsubishi Electric": "mitsubishi-electric",
+  ABB: "abb",
+  APsystems: "apsystems",
+  Hoymiles: "hoymiles",
+  Wallbox: "wallbox",
 };
 
 // Eager glob: een ontbrekend bestand geeft geen buildfout, alleen geen entry.
@@ -601,3 +711,6 @@ export function brandLogo(brand: string): string | null {
     null
   );
 }
+
+/** Logo's met een gevuld vlak (bijv. SMA): als wit silhouet worden dat blokken, dus tonen we ze op een lichte tegel. */
+export const solidBrandLogos = new Set(["SMA"]);

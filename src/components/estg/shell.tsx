@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { brandLogo, brands, categories, products } from "@/lib/catalog";
+import { brandLogo, brands, categories, products, solidBrandLogos } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
 import { formatEuro } from "@/lib/format";
 import { COMPANY, COMPANY_ADDRESS, MAP_LINK_URL } from "@/lib/company";
@@ -61,9 +61,17 @@ function BrandLink({ brand, hidden }: { brand: string; hidden: boolean }) {
       className="brand-bar-item"
       aria-label={brand}
     >
-      <span className="brand-bar-name">{brand}</span>
-      {logo && (
-        <img className="brand-bar-logo" src={logo} alt="" width={88} height={20} loading="lazy" />
+      {logo ? (
+        <img
+          className={`brand-bar-logo ${solidBrandLogos.has(brand) ? "brand-bar-logo--solid" : ""}`}
+          src={logo}
+          alt=""
+          width={88}
+          height={20}
+        />
+      ) : (
+        // Merken zonder logobestand blijven als tekst staan, zodat ze niet uit de balk verdwijnen.
+        <span className="brand-bar-name">{brand}</span>
       )}
     </Link>
   );

@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { findProduct } from "../catalog";
-import {
-  checkPanelMounting,
-  checkInverterBattery,
-  checkPanelInverterSizing,
-  checkPhase,
-  evaluateSet,
-} from "./compat";
+import { checkPanelMounting, checkInverterBattery, checkPanelInverterSizing, checkPhase, evaluateSet } from "./compat";
 import { buildSystemPrompt, relevantProducts } from "./context";
 import { clampMessage, createRateLimiter, MAX_MESSAGE_LENGTH } from "./guards";
 
@@ -38,12 +32,9 @@ describe("compatibiliteitsregels", () => {
     expect(r.status).toBe("compatibel");
     expect(r.reason).toContain("3 sets");
     expect(
-      checkPanelMounting(p("all-black-zonnepaneel"), 10, p("montagesysteem-schuin-dak"), "plat")
-        .status,
+      checkPanelMounting(p("all-black-zonnepaneel"), 10, p("montagesysteem-schuin-dak"), "plat").status,
     ).toBe("niet-compatibel");
-    expect(
-      checkPanelMounting(p("all-black-zonnepaneel"), 10, p("dakhaken-set"), "schuin").reason,
-    ).toContain("1 set");
+    expect(checkPanelMounting(p("all-black-zonnepaneel"), 10, p("dakhaken-set"), "schuin").reason).toContain("1 set");
   });
   it("evalueert een complete set", () => {
     const results = evaluateSet([

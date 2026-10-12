@@ -4,6 +4,7 @@ import { ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { PageIntro } from "@/components/estg/page-intro";
+import { PriceBreakdown, shippingNote } from "@/components/estg/ui-bits";
 import { useStore } from "@/components/estg/store";
 import { useAuth } from "@/components/estg/auth";
 import { pageHead } from "@/lib/catalog";
@@ -79,11 +80,11 @@ function Order() {
             <dl>
               {done.reference && <div><dt>Projectnaam / klantreferentie</dt><dd>{done.reference}</dd></div>}
               <div><dt>Gewenste verzenddatum</dt><dd>{formatDate(done.date)}</dd></div>
-              <div><dt>Subtotaal (excl. btw)</dt><dd>{formatEuro(done.subtotal)}</dd></div>
               <div><dt>Naam</dt><dd>{done.name}</dd></div>
               <div><dt>Bedrijfsnaam</dt><dd>{done.company}</dd></div>
               <div><dt>E-mailadres</dt><dd>{done.email}</dd></div>
             </dl>
+            <PriceBreakdown subtotal={done.subtotal} />
             <p className="sample-note" style={{ padding: 0 }}>
               Dit is een voorbeeldomgeving — er wordt geen echte betaling verwerkt. ESTG neemt
               contact met je op om de betaling en levering verder af te ronden.
@@ -177,12 +178,12 @@ function Order() {
           </div>
           <aside className="summary-card" aria-label="Samenvatting">
             <h3>Samenvatting</h3>
-            <dl>
+            <PriceBreakdown subtotal={subtotal} />
+            <dl className="project-facts">
               {projectName && <div><dt>Referentie</dt><dd>{projectName}</dd></div>}
-              <div><dt>Subtotaal (excl. btw)</dt><dd>{formatEuro(subtotal)}</dd></div>
               <div><dt>Verzenddatum</dt><dd>{date ? date.toLocaleDateString("nl-NL") : "—"}</dd></div>
             </dl>
-            <p className="co2-note">Voorbeeldprijzen, excl. btw. Er wordt geen echte betaling verwerkt.</p>
+            <p className="co2-note">{shippingNote} Er wordt geen echte betaling verwerkt.</p>
             <Button type="submit" variant="accent" size="lg">
               Doorgaan naar betaling <ArrowUpRight />
             </Button>

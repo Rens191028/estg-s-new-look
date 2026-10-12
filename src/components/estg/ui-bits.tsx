@@ -11,7 +11,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { availabilityFor } from "@/lib/availability";
 import { discountPercent, isDeal, type Category, type Product } from "@/lib/catalog";
-import { formatEuro } from "@/lib/format";
+import { formatEuro, formatEuroExact } from "@/lib/format";
+import { orderTotals, SHIPPING_EX_VAT, VAT_RATE } from "@/lib/pricing";
 
 // Tijdelijke iconen uit lucide totdat de eigen ESTG-iconenset per categorie bestaat.
 const categoryIcons: Record<Category, LucideIcon> = {
@@ -208,3 +209,30 @@ export function Certifications({ items }: { items: string[] | undefined }) {
     </div>
   );
 }
+
+/** Gegroepeerde prijsopbouw: subtotaal → verzending → btw → totaal (fictieve voorbeeldwaarden). */
+export function PriceBreakdown({ subtotal }: { subtotal: number }) {
+  const t = orderTotals(subtotal);
+  return (
+    <dl className="price-breakdown">
+      <div>
+        <dt>Subtotaal (excl. btw)</dt>
+        <dd>{formatEuroExact(t.subtotal)}</dd>
+      </div>
+      <div>
+        <dt>Verzending (excl. btw)</dt>
+        <dd>{formatEuroExact(t.shipping)}</dd>
+      </div>
+      <div>
+        <dt>Btw ({Math.round(VAT_RATE * 100)}%)</dt>
+        <dd>{formatEuroExact(t.vat)}</dd>
+      </div>
+      <div className="total">
+        <dt>Totaal (incl. btw en verzending)</dt>
+        <dd>{formatEuroExact(t.total)}</dd>
+      </div>
+    </dl>
+  );
+}
+
+export const shippingNote = `Voorbeeldprijzen. Verzending is een vast fictief bedrag van ${formatEuro(SHIPPING_EX_VAT)} excl. btw; definitieve verzendkosten bevestigt ESTG.`;

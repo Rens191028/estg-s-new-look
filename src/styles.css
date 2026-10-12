@@ -4631,11 +4631,11 @@ select {
 /* Leesvoortgang: dunne horizontale balk direct onder de sticky header, volle breedte */
 .reading-progress {
   position: fixed;
-  top: var(--header-h, 0px);
   left: 0;
   right: 0;
-  height: 3px;
-  z-index: 41;
+  height: 4px;
+  /* Buiten de pagina-animatie, boven content maar onder de header/menu's (40). */
+  z-index: 39;
   background: var(--navy-100);
   pointer-events: none;
 }
@@ -4645,4 +4645,9 @@ select {
   background: var(--yellow-400);
   transform-origin: left;
   transition: transform 0.1s linear;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reading-progress span {
+    transition: none;
+  }
 }

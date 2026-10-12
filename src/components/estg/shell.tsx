@@ -5,6 +5,7 @@ import {
   ChevronDown,
   Headphones,
   Mail,
+  MapPin,
   Menu,
   Phone,
   Scale,
@@ -19,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { brandLogo, brands, categories, products } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
 import { formatEuro } from "@/lib/format";
+import { COMPANY, COMPANY_ADDRESS, MAP_LINK_URL } from "@/lib/company";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -297,6 +299,36 @@ function FooterCol({
   );
 }
 
+function NewsletterRow() {
+  const [done, setDone] = useState(false);
+  return (
+    <div className="container newsletter">
+      <div>
+        <h4>Blijf op de hoogte</h4>
+        <p>Nieuws over assortiment en kennis voor installateurs.</p>
+      </div>
+      {done ? (
+        <p role="status" className="newsletter-done">
+          Bedankt! Dit is een voorbeeld: er is niets verzonden of opgeslagen.
+        </p>
+      ) : (
+        <form
+          className="newsletter-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDone(true);
+          }}
+        >
+          <input type="email" required aria-label="E-mailadres" placeholder="naam@bedrijf.nl" />
+          <Button type="submit" variant="accent">
+            Aanmelden
+          </Button>
+        </form>
+      )}
+    </div>
+  );
+}
+
 export function Footer() {
   return (
     <footer className="site-footer">
@@ -307,8 +339,11 @@ export function Footer() {
           </Link>
           <p>Jouw partner in de energietransitie.</p>
           <div className="footer-contact">
-            <a href="tel:+31850167800">
-              <Phone size={16} /> +31 (0)85 016 7800
+            <a href={COMPANY.phoneHref}>
+              <Phone size={16} /> {COMPANY.phone}
+            </a>
+            <a href={MAP_LINK_URL} target="_blank" rel="noreferrer">
+              <MapPin size={16} /> {COMPANY_ADDRESS}
             </a>
             <Link to="/contact">
               <Mail size={16} /> Contact opnemen
@@ -336,6 +371,7 @@ export function Footer() {
           </a>
         </FooterCol>
       </div>
+      <NewsletterRow />
       <div className="container footer-bottom">
         <span>© {new Date().getFullYear()} ESTG · European Sustainable Technology Group</span>
         <span style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>

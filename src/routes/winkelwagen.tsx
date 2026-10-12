@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   AlertTriangle,
   ArrowUpRight,
   Download,
+  Printer,
   Minus,
   Plus,
   ShoppingBag,
@@ -28,6 +30,7 @@ export const Route = createFileRoute("/winkelwagen")({
 
 function Cart() {
   const { items, update, projectName, setProjectName, count, subtotal } = useStore();
+  const [printedAt, setPrintedAt] = useState("");
   const lines = projectLines(items);
   const groups = groupByCategory(lines);
   const warnings = projectWarnings(lines);
@@ -193,6 +196,15 @@ function Cart() {
               <Button variant="outline" onClick={download}>
                 <Download /> Download selectie
               </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setPrintedAt(new Date().toLocaleDateString("nl-NL"));
+                  setTimeout(() => window.print(), 80);
+                }}
+              >
+                <Printer /> Print overzicht
+              </Button>
               <p className="co2-note">
                 Er is geen bestelling geplaatst. Je selectie blijft alleen tijdens dit bezoek
                 bewaard.
@@ -224,6 +236,44 @@ function Cart() {
           </div>
         )}
       </section>
+      {lines.length > 0 && (
+        <div className="print-sheet" aria-hidden>
+          <img className="print-logo" src="/brand/estg-logo.png" alt="ESTG" />
+          <h1 style={{ fontSize: 22, lineHeight: "28px" }}>
+            Selectie{projectName ? `: ${projectName}` : ""}
+          </h1>
+          <p>{printedAt}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Artikelnr.</th>
+                <th className="num">Aantal</th>
+                <th className="num">Prijs p/st</th>
+                <th className="num">Totaal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lines.map(({ product: p, quantity }) => (
+                <tr key={p.id}>
+                  <td>
+                    {p.name} ({p.brand})
+                  </td>
+                  <td>{p.sku}</td>
+                  <td className="num">{quantity}</td>
+                  <td className="num">{formatEuro(p.price)}</td>
+                  <td className="num">{formatEuro(p.price * quantity)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="print-total">Subtotaal (excl. btw): {formatEuro(subtotal)}</p>
+          <p className="print-note">
+            Voorbeeldprijzen, excl. btw. Definitieve prijs, specificaties en beschikbaarheid
+            bevestigt ESTG. Er is geen bestelling geplaatst.
+          </p>
+        </div>
+      )}
     </>
   );
 }

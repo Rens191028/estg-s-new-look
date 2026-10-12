@@ -32,7 +32,6 @@ import {
   CategoryIcon,
   Certifications,
   Price,
-  PriceTiers,
   Reveal,
   Skeleton,
 } from "@/components/estg/ui-bits";
@@ -201,7 +200,6 @@ function Product() {
                 {googleRating.count} Google-reviews van ESTG
               </a>
             </div>
-            <PriceTiers product={p} quantity={quantity} />
             <div className="detail-buy" ref={buyRef}>
               <div className="quantity">
                 <Button

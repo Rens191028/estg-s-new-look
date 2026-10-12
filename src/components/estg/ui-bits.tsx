@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { availabilityFor } from "@/lib/availability";
-import { discountPercent, isDeal, unitPrice, type Category, type Product } from "@/lib/catalog";
+import { discountPercent, isDeal, type Category, type Product } from "@/lib/catalog";
 import { formatEuro } from "@/lib/format";
 
 // Tijdelijke iconen uit lucide totdat de eigen ESTG-iconenset per categorie bestaat.
@@ -190,44 +190,6 @@ export function Price({ product, size = "card" }: { product: Product; size?: "ca
   );
 }
 
-/** Illustratieve bulkstaffel; de actieve schijf volgt het gekozen aantal en het totaal beweegt live mee. */
-export function PriceTiers({ product, quantity }: { product: Product; quantity: number }) {
-  const tiers = product.priceTiers;
-  if (!tiers?.length) return null;
-  const rows = [{ minQty: 1, price: product.price }, ...tiers];
-  const active = unitPrice(product, quantity);
-  return (
-    <div className="tier-box">
-      <table className="tier-table">
-        <caption>Prijsstaffel (excl. btw)</caption>
-        <tbody>
-          {rows.map((r, i) => {
-            const next = rows[i + 1];
-            const isActive =
-              r.price === active && quantity >= r.minQty && (!next || quantity < next.minQty);
-            return (
-              <tr key={r.minQty} className={isActive ? "is-active" : ""}>
-                <th scope="row">
-                  {next ? `${r.minQty}–${next.minQty - 1} stuks` : `Vanaf ${r.minQty} stuks`}
-                </th>
-                <td>{formatEuro(r.price)} per stuk</td>
-                <td>{i > 0 ? `−${Math.round((1 - r.price / product.price) * 100)}%` : ""}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <p className="tier-live" aria-live="polite">
-        <strong>
-          {quantity} × {formatEuro(active)}
-        </strong>{" "}
-        = <strong>{formatEuro(active * quantity)}</strong> excl. btw
-      </p>
-      <p className="tier-note">Voorbeeldprijzen; definitieve staffelprijzen bevestigt ESTG.</p>
-    </div>
-  );
-}
-
 /** Certificeringen als chips, met een duidelijke disclaimer dat dit illustratieve voorbeelddata is. */
 export function Certifications({ items }: { items: string[] | undefined }) {
   if (!items?.length) return null;
@@ -239,7 +201,7 @@ export function Certifications({ items }: { items: string[] | undefined }) {
           <li key={c}>{c}</li>
         ))}
       </ul>
-      <p className="tier-note">
+      <p className="cert-note">
         Illustratieve voorbeelddata, geen geverifieerde claim. De daadwerkelijke certificering per
         product bevestigt ESTG.
       </p>

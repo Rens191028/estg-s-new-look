@@ -4183,51 +4183,7 @@ select {
   cursor: not-allowed;
 }
 
-/* ---------- Ronde 11: staffels, certificeringen, referentie ---------- */
-.tier-box {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 14px 16px;
-  background: var(--surface-0);
-}
-.tier-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-.tier-table caption {
-  text-align: left;
-  font-weight: 600;
-  padding-bottom: 6px;
-}
-.tier-table th,
-.tier-table td {
-  padding: 7px 10px;
-  text-align: left;
-  font-weight: 500;
-}
-.tier-table td:last-child {
-  text-align: right;
-  color: var(--success-700, #15803d);
-  font-weight: 600;
-}
-.tier-table tr.is-active {
-  background: var(--yellow-100);
-  box-shadow: inset 3px 0 0 var(--yellow-400);
-}
-.tier-table tr.is-active th,
-.tier-table tr.is-active td {
-  font-weight: 700;
-}
-.tier-live {
-  margin: 10px 0 0;
-  font-size: 14px;
-}
-.tier-note {
-  margin: 6px 0 0;
-  font-size: 12px;
-  color: var(--navy-700);
-}
+/* ---------- Ronde 11: certificeringen, referentie ---------- */
 .cert-box {
   margin-top: 20px;
 }
@@ -4254,22 +4210,7 @@ select {
 .cart-price {
   font-size: 13px;
 }
-.tier-badge {
-  margin-left: 8px;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-  background: var(--yellow-100);
-  font-size: 11px;
-  font-weight: 600;
-}
-.detail-info .tier-live {
-  margin: 10px 0 0;
-  font-size: 14px;
-  line-height: 20px;
-  color: var(--navy-900);
-}
-.detail-info .tier-note,
-.cert-box .tier-note {
+.cert-box .cert-note {
   margin: 6px 0 0;
   font-size: 12px;
   line-height: 18px;

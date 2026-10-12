@@ -92,6 +92,7 @@ export const products: Product[] = [
       { label: "Type", value: "Hybride" },
       { label: "Fasen", value: "3-fase" },
       { label: "Vermogen", value: "10 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "15 kWp" },
       { label: "Batterijaansluiting", value: "Ja" },
     ],
   },
@@ -109,6 +110,7 @@ export const products: Product[] = [
       { label: "Type", value: "String" },
       { label: "Fasen", value: "3-fase" },
       { label: "Vermogen", value: "8 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "12 kWp" },
     ],
   },
   {
@@ -188,6 +190,7 @@ export const products: Product[] = [
     specs: [
       { label: "Daktype", value: "Schuin" },
       { label: "Materiaal", value: "Aluminium" },
+      { label: "Panelen per set", value: "4" },
     ],
   },
   {
@@ -287,6 +290,7 @@ export const products: Product[] = [
       { label: "Type", value: "String + optimizer" },
       { label: "Fasen", value: "1-fase" },
       { label: "Vermogen", value: "10 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "15 kWp" },
     ],
   },
   {
@@ -302,6 +306,7 @@ export const products: Product[] = [
       { label: "Type", value: "String" },
       { label: "Fasen", value: "3-fase" },
       { label: "Vermogen", value: "15 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "22,5 kWp" },
     ],
   },
   {
@@ -318,6 +323,7 @@ export const products: Product[] = [
       { label: "Type", value: "Hybride" },
       { label: "Fasen", value: "1-fase" },
       { label: "Vermogen", value: "8 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "12 kWp" },
       { label: "Batterijaansluiting", value: "Ja" },
     ],
   },
@@ -334,6 +340,7 @@ export const products: Product[] = [
       { label: "Type", value: "Hybride" },
       { label: "Fasen", value: "1-fase" },
       { label: "Vermogen", value: "6 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "9 kWp" },
       { label: "Batterijaansluiting", value: "Ja" },
     ],
   },
@@ -463,6 +470,7 @@ export const products: Product[] = [
       { label: "Daktype", value: "Plat" },
       { label: "Materiaal", value: "Aluminium" },
       { label: "Bevestiging", value: "Ballast, geen doorboring" },
+      { label: "Panelen per set", value: "6" },
     ],
   },
   {
@@ -478,6 +486,7 @@ export const products: Product[] = [
       { label: "Daktype", value: "Plat" },
       { label: "Materiaal", value: "Aluminium" },
       { label: "Hellingshoek", value: "Instelbaar" },
+      { label: "Panelen per set", value: "8" },
     ],
   },
   {
@@ -492,6 +501,8 @@ export const products: Product[] = [
     specs: [
       { label: "Daktype", value: "Schuin (pannen)" },
       { label: "Materiaal", value: "RVS" },
+      { label: "Dakhaken per set", value: "20" },
+      { label: "Panelen per set", value: "ca. 10 panelen (2 haken per paneel)" },
     ],
   },
 
@@ -567,6 +578,7 @@ export const products: Product[] = [
       { label: "Type", value: "String" },
       { label: "Fasen", value: "3-fase" },
       { label: "Vermogen", value: "12 kW" },
+      { label: "Max. DC-ingangsvermogen", value: "18 kWp" },
     ],
   },
   {

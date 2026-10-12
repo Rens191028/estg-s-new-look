@@ -1,5 +1,5 @@
 import { categories, products, type Category, type Product, isDeal } from "../catalog";
-import { evaluateSet } from "./compat";
+import { evaluateSet, panelsPerSet, roofKind } from "./compat";
 import { KNOWLEDGE_FACTS, KNOWLEDGE_RULES } from "./knowledge";
 
 const categoryWords: Record<Category, string[]> = {
@@ -44,10 +44,23 @@ export function catalogLines(list: Product[]) {
 
 /** Vaststaande compatibiliteitsuitkomsten voor de producten in de context (door code berekend). */
 export function compatFacts(list: Product[]) {
+  // Dimensionering en montage hangen af van het aantal panelen; met aantal 1 zouden die uitkomsten
+  // misleiden. Daarom filteren we ze uit de setcontrole en geven we voor montage de vaste rekenregel
+  // per systeem mee (daktype + panelen per set), zodat de assistent het aantal sets kan uitrekenen.
   const items = list.map((p) => ({ id: p.id, quantity: 1 }));
-  return evaluateSet(items)
-    .filter((r) => r.rule !== "dimensionering")
+  const set = evaluateSet(items)
+    .filter((r) => r.rule !== "dimensionering" && r.rule !== "montage")
     .map((r) => `- ${r.rule}: ${r.status}. ${r.reason}`);
+  const mounting = list.flatMap((p) => {
+    const per = panelsPerSet(p);
+    const kind = roofKind(p.specs.find((s) => s.label === "Daktype")?.value);
+    return p.category === "Montagemateriaal" && per && kind
+      ? [
+          `- montage: ${p.id} is voor een ${kind} dak; ${per} panelen per set. Benodigde sets = aantal panelen / ${per}, naar boven afgerond. Niet combineren met een ${kind === "plat" ? "schuin" : "plat"} dak.`,
+        ]
+      : [];
+  });
+  return [...set, ...mounting];
 }
 
 export function buildSystemPrompt({

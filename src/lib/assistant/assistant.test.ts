@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { findProduct } from "../catalog";
-import { checkInverterBattery, checkPanelInverterSizing, checkPhase, evaluateSet } from "./compat";
+import { checkPanelMounting, checkInverterBattery, checkPanelInverterSizing, checkPhase, evaluateSet } from "./compat";
 import { buildSystemPrompt, relevantProducts } from "./context";
 import { clampMessage, createRateLimiter, MAX_MESSAGE_LENGTH } from "./guards";
 
@@ -26,6 +26,15 @@ describe("compatibiliteitsregels", () => {
   it("vergelijkt fasen en meldt onbekend bij ontbrekende data", () => {
     expect(checkPhase(p("hybride-omvormer"), p("slimme-ev-lader")).status).toBe("compatibel");
     expect(checkPhase(p("hybride-omvormer"), p("modulaire-thuisbatterij")).status).toBe("onbekend");
+  });
+  it("berekent montagesets en controleert daktype", () => {
+    const r = checkPanelMounting(p("all-black-zonnepaneel"), 10, p("montagesysteem-schuin-dak"));
+    expect(r.status).toBe("compatibel");
+    expect(r.reason).toContain("3 sets");
+    expect(
+      checkPanelMounting(p("all-black-zonnepaneel"), 10, p("montagesysteem-schuin-dak"), "plat").status,
+    ).toBe("niet-compatibel");
+    expect(checkPanelMounting(p("all-black-zonnepaneel"), 10, p("dakhaken-set"), "schuin").reason).toContain("1 set");
   });
   it("evalueert een complete set", () => {
     const results = evaluateSet([

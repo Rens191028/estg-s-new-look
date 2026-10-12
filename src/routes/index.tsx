@@ -98,7 +98,7 @@ function AdvisorBand() {
             </Link>
           ))}
         </div>
-        <Button asChild variant="outline">
+        <Button asChild variant="accent">
           <Link to="/configurator">Liever klikken? Stel een systeem samen</Link>
         </Button>
       </div>

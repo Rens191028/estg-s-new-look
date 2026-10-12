@@ -71,10 +71,10 @@ describe("merklogo's", () => {
 });
 
 describe("demo-catalogus", () => {
-  it("heeft 30 producten met unieke id's en artikelnummers", () => {
-    expect(products).toHaveLength(30);
-    expect(new Set(products.map((p) => p.id)).size).toBe(30);
-    expect(new Set(products.map((p) => p.sku)).size).toBe(30);
+  it("heeft 37 producten met unieke id's en artikelnummers", () => {
+    expect(products).toHaveLength(37);
+    expect(new Set(products.map((p) => p.id)).size).toBe(37);
+    expect(new Set(products.map((p) => p.sku)).size).toBe(37);
   });
   it("heeft minstens drie producten per categorie", () => {
     for (const c of categories)

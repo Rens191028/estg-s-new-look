@@ -237,13 +237,11 @@
   min-width: 88px;
   height: 20px;
 }
-.brand-bar-name,
-.brand-bar-logo {
+.brand-bar-name {
   grid-area: 1 / 1;
-  transition: opacity 0.18s ease-out;
 }
 .brand-bar-logo {
-  opacity: 0;
+  grid-area: 1 / 1;
   height: 20px;
   width: auto;
   max-width: 100px;
@@ -251,13 +249,13 @@
   /* Op de donkere balk altijd wit, ongeacht de eigen logokleuren */
   filter: brightness(0) invert(1);
 }
-.brand-bar-item:hover .brand-bar-name,
-.brand-bar-item:focus-visible .brand-bar-name {
-  opacity: 0;
-}
-.brand-bar-item:hover .brand-bar-logo,
-.brand-bar-item:focus-visible .brand-bar-logo {
-  opacity: 1;
+.brand-bar-logo--solid {
+  filter: none;
+  background: var(--surface-0);
+  padding: 2px 4px;
+  border-radius: 3px;
+  height: 20px;
+  box-sizing: border-box;
 }
 .brand-card-logo {
   max-height: 36px;

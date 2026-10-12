@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { MessageCircle, Send, X } from "lucide-react";
+import { ArrowUp, MessageCircle, Sparkles, X, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { streamWidget } from "@/lib/assistant/client";
 import { MAX_MESSAGE_LENGTH } from "@/lib/assistant/guards";
 import { ADVICE_STEPS } from "@/lib/availability";
@@ -28,6 +27,14 @@ function readStored(): ChatTurn[] {
   } catch {
     return [];
   }
+}
+
+function Avatar() {
+  return (
+    <span className="assistant-avatar" aria-hidden>
+      <Zap size={14} fill="currentColor" />
+    </span>
+  );
 }
 
 export function AssistantWidget() {
@@ -109,32 +116,46 @@ export function AssistantWidget() {
       </button>
       {open && (
         <section className="assistant-panel" aria-label="ESTG-assistent">
+          <header className="assistant-head">
+            <Avatar />
+            <div>
+              <strong>ESTG-assistent</strong>
+              <small>
+                <i aria-hidden /> Beantwoordt vragen over assortiment en techniek
+              </small>
+            </div>
+          </header>
           <div className="assistant-log" aria-live="polite">
             {[GREETING, ...turns].map((t, i) => (
-              <p key={i} className={`bubble ${t.role}`}>
-                {t.content}
-              </p>
+              <div key={i} className={`bubble-row ${t.role}`}>
+                {t.role === "assistant" && <Avatar />}
+                <p className={`bubble ${t.role}`}>{t.content}</p>
+              </div>
             ))}
             {turns.length === 0 && !busy && (
-              <div className="chip-row" aria-label="Voorbeeldvragen">
+              <div className="assistant-chips" aria-label="Voorbeeldvragen">
                 {WIDGET_QUESTIONS.map((q) => (
                   <button key={q} type="button" onClick={() => void send(q)}>
+                    <Sparkles size={14} aria-hidden />
                     {q}
                   </button>
                 ))}
               </div>
             )}
             {busy && !streaming && (
-              <p className="bubble assistant muted">
-                <span className="loading-status">
-                  {step}
-                  <span className="loading-dots" aria-hidden>
-                    <i />
-                    <i />
-                    <i />
+              <div className="bubble-row assistant">
+                <Avatar />
+                <p className="bubble assistant muted">
+                  <span className="loading-status">
+                    {step}
+                    <span className="loading-dots" aria-hidden>
+                      <i />
+                      <i />
+                      <i />
+                    </span>
                   </span>
-                </span>
-              </p>
+                </p>
+              </div>
             )}
             <div ref={endRef} />
           </div>
@@ -158,9 +179,14 @@ export function AssistantWidget() {
               placeholder="Stel een vraag…"
               onChange={(e) => setText(e.target.value)}
             />
-            <Button type="submit" size="icon" disabled={busy || !text.trim()} aria-label="Verstuur">
-              <Send />
-            </Button>
+            <button
+              type="submit"
+              className="assistant-send"
+              disabled={busy || !text.trim()}
+              aria-label="Verstuur"
+            >
+              <ArrowUp size={18} />
+            </button>
           </form>
         </section>
       )}

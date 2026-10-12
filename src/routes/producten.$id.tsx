@@ -25,7 +25,6 @@ import { ProductCard } from "@/components/estg/product-card";
 import { formatEuro } from "@/lib/format";
 import { googleRating } from "@/lib/reviews";
 import { useCompare } from "@/components/estg/compare";
-import { useRecentlyViewed } from "@/components/estg/recent";
 import { useFavorites } from "@/components/estg/favorites";
 import { useStore } from "@/components/estg/store";
 import {
@@ -75,7 +74,6 @@ function ProductSkeleton() {
 function Product() {
   const { id } = Route.useParams();
   const p = findProduct(id);
-  const recentIds = useRecentlyViewed(p?.id);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [sticky, setSticky] = useState(false);
@@ -110,7 +108,6 @@ function Product() {
   const logo = brandLogo(p.brand);
   const compatible = compatibleProducts(p);
   const similar = similarProducts(p);
-  const recent = recentIds.flatMap((id) => findProduct(id) ?? []).slice(0, 4);
   const onAdd = (e?: React.MouseEvent<HTMLElement>) => {
     flyToCart(e?.currentTarget);
     add(p.id, quantity);
@@ -324,16 +321,6 @@ function Product() {
                 <Reveal key={c.id} delay={i * 70}>
                   <ProductCard product={c} />
                 </Reveal>
-              ))}
-            </div>
-          </section>
-        )}
-        {recent.length > 0 && (
-          <section style={{ paddingBottom: 56 }}>
-            <h2 style={{ marginBottom: 24 }}>Recent bekeken</h2>
-            <div className="product-grid">
-              {recent.map((c) => (
-                <ProductCard key={c.id} product={c} />
               ))}
             </div>
           </section>

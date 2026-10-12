@@ -152,15 +152,6 @@ describe("configurator", () => {
   });
 });
 
-describe("recent bekeken", () => {
-  it("zet het nieuwste vooraan, zonder dubbelen en begrensd", async () => {
-    const { pushRecent, MAX_RECENT } = await import("./recent");
-    expect(pushRecent(["a", "b", "c"], "b")).toEqual(["b", "a", "c"]);
-    const many = Array.from({ length: 12 }, (_, i) => `p${i}`);
-    expect(pushRecent(many, "x")).toHaveLength(MAX_RECENT);
-  });
-});
-
 describe("aanbiedingen", () => {
   it("heeft zes producten met een was-prijs boven de huidige prijs, grootste korting eerst", async () => {
     const { dealProducts, discountPercent, isDeal } = await import("./catalog");

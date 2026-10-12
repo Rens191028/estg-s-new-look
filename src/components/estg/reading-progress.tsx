@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-/** Dunne balk bovenaan die meegroeit met de leespositie in het artikel. */
+/** Verticale voortgangsbalk langs de zijkant van het artikel die meevult met de leespositie. */
 export function ReadingProgress({ targetSelector }: { targetSelector: string }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -20,6 +20,7 @@ export function ReadingProgress({ targetSelector }: { targetSelector: string }) 
       window.removeEventListener("resize", update);
     };
   }, [targetSelector]);
+  const pct = Math.round(progress * 100);
   return (
     <div
       className="reading-progress"
@@ -27,9 +28,12 @@ export function ReadingProgress({ targetSelector }: { targetSelector: string }) 
       aria-label="Leesvoortgang"
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-valuenow={Math.round(progress * 100)}
+      aria-valuenow={pct}
     >
-      <span style={{ transform: `scaleX(${progress})` }} />
+      <div className="reading-progress-track">
+        <span style={{ transform: `scaleY(${progress})` }} />
+      </div>
+      <small aria-hidden>{pct}%</small>
     </div>
   );
 }

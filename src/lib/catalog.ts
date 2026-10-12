@@ -3,6 +3,14 @@ import inverter from "@/assets/inverter.jpg";
 import battery from "@/assets/battery.jpg";
 import charger from "@/assets/charger.jpg";
 import rooftop from "@/assets/solar-rooftop.jpg";
+import hpOutdoor from "@/assets/products/heatpump-outdoor.svg";
+import hpIndoor from "@/assets/products/heatpump-indoor.svg";
+import hpHybrid from "@/assets/products/heatpump-hybrid.svg";
+import pvController from "@/assets/products/pv-controller.svg";
+import stringInverter from "@/assets/products/string-inverter.svg";
+import microDuo from "@/assets/products/microinverter-duo.svg";
+import microMulti from "@/assets/products/microinverter-multi.svg";
+import wallbox from "@/assets/products/wallbox.svg";
 export const categories = [
   "Zonnepanelen",
   "Omvormers",
@@ -188,6 +196,7 @@ export const products: Product[] = [
     brand: "Daikin",
     category: "Klimaat",
     sku: "DEMO-CLI-001",
+    image: hpOutdoor,
     price: 3450,
     isBestseller: true,
     note: "Verwarmen en koelen met een rendabele warmtepomp.",
@@ -493,6 +502,7 @@ export const products: Product[] = [
     brand: "Mitsubishi Heavy Industries",
     category: "Klimaat",
     sku: "DEMO-CLI-002",
+    image: hpIndoor,
     price: 1650,
     note: "Split-unit voor verwarmen en koelen van een enkele ruimte.",
     specs: [
@@ -506,6 +516,7 @@ export const products: Product[] = [
     brand: "Daikin",
     category: "Klimaat",
     sku: "DEMO-CLI-003",
+    image: hpHybrid,
     price: 3950,
     note: "Combineert een lucht-water warmtepomp met de bestaande CV-ketel.",
     isNew: true,
@@ -520,6 +531,7 @@ export const products: Product[] = [
     brand: "My-PV",
     category: "Klimaat",
     sku: "DEMO-CLI-004",
+    image: pvController,
     price: 890,
     note: "Zet overschot aan zonnestroom om in warm water via de bestaande boiler.",
     specs: [
@@ -534,6 +546,7 @@ export const products: Product[] = [
     brand: "Mitsubishi Electric",
     category: "Klimaat",
     sku: "DEMO-CLI-005",
+    image: hpOutdoor,
     price: 1590,
     note: "Split-unit voor verwarmen en koelen van een enkele ruimte.",
     specs: [
@@ -547,6 +560,7 @@ export const products: Product[] = [
     brand: "ABB",
     category: "Omvormers",
     sku: "DEMO-INV-008",
+    image: stringInverter,
     price: 2690,
     note: "Robuuste 3-fase omvormer voor middelgrote installaties.",
     specs: [
@@ -561,6 +575,7 @@ export const products: Product[] = [
     brand: "APsystems",
     category: "Omvormers",
     sku: "DEMO-INV-009",
+    image: microDuo,
     price: 159,
     isNew: true,
     note: "Eén micro-omvormer, aansturing voor twee panelen tegelijk.",
@@ -576,6 +591,7 @@ export const products: Product[] = [
     brand: "Daikin",
     category: "Klimaat",
     sku: "DEMO-CLI-006",
+    image: hpHybrid,
     price: 3290,
     note: "Compacte uitvoering voor combinatie met een bestaande CV-ketel.",
     specs: [
@@ -589,6 +605,7 @@ export const products: Product[] = [
     brand: "Hoymiles",
     category: "Omvormers",
     sku: "DEMO-INV-010",
+    image: microMulti,
     price: 219,
     isNew: true,
     note: "Eén micro-omvormer voor tot vier panelen, voor compacte installaties.",
@@ -604,6 +621,7 @@ export const products: Product[] = [
     brand: "Wallbox",
     category: "EV-laders",
     sku: "DEMO-EV-006",
+    image: wallbox,
     price: 749,
     note: "Compacte laadpaal met app-bediening, voor thuis en kleinzakelijk gebruik.",
     specs: [

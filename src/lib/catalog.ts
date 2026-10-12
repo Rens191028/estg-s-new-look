@@ -40,12 +40,9 @@ export type Product = {
   specs: Spec[];
   isNew?: boolean;
   isBestseller?: boolean;
-  /** Illustratieve prijsstaffel (stuksprijs vanaf `minQty`). Geen echte ESTG-staffelprijzen. */
-  priceTiers?: PriceTier[];
   /** Illustratieve certificeringen; de daadwerkelijke certificering bevestigt ESTG. */
   certifications?: string[];
 };
-export type PriceTier = { minQty: number; price: number };
 const baseProducts: Product[] = [
   {
     id: "all-black-zonnepaneel",
@@ -654,9 +651,6 @@ function hash(id: string) {
   return [...id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
 }
 
-/** Categorieën waarvoor een (illustratieve) bulkstaffel wordt getoond. */
-const tierCategories: Category[] = ["Zonnepanelen", "Montagemateriaal", "EV-laders"];
-
 const certificationsByCategory: Record<Category, string[]> = {
   Zonnepanelen: ["IEC 61215", "IEC 61730", "CE"],
   Omvormers: ["VDE-AR-N 4105", "CE"],
@@ -666,18 +660,10 @@ const certificationsByCategory: Record<Category, string[]> = {
   Montagemateriaal: ["CE", "DIN EN 1991 (windbelasting)"],
 };
 
-/** Vult de illustratieve staffel en certificeringen aan; niet elk product krijgt ze. */
+/** Vult illustratieve certificeringen aan; niet elk product krijgt ze. */
 function enrich(p: Product): Product {
   const h = hash(p.id);
   const out: Product = { ...p };
-  if (tierCategories.includes(p.category)) {
-    const d1 = 5 + (h % 4); // 5–8% vanaf 10 stuks
-    const d2 = 10 + ((h >>> 3) % 6); // 10–15% vanaf 25 stuks
-    out.priceTiers = [
-      { minQty: 10, price: Math.round(p.price * (1 - d1 / 100)) },
-      { minQty: 25, price: Math.round(p.price * (1 - d2 / 100)) },
-    ];
-  }
   // Ongeveer een op de vier producten toont (nog) geen certificeringen.
   if (h % 4 !== 3) {
     const pool = certificationsByCategory[p.category];
@@ -688,11 +674,6 @@ function enrich(p: Product): Product {
 
 export const products: Product[] = baseProducts.map(enrich);
 
-/** Stuksprijs bij een gegeven aantal, rekening houdend met de staffel (excl. btw). */
-export function unitPrice(p: Product, quantity: number) {
-  const tier = [...(p.priceTiers ?? [])].reverse().find((t) => quantity >= t.minQty);
-  return tier ? tier.price : p.price;
-}
 export const catalogDisclaimer =
   "Voorbeeldassortiment. Afbeeldingen, artikelnummers en specificaties zijn illustratief; prijzen en beschikbaarheid bevestigt ESTG.";
 export function findProduct(id: string) {

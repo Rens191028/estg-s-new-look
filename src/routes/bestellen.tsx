@@ -6,7 +6,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
 import { useAuth } from "@/components/estg/auth";
-import { pageHead, unitPrice } from "@/lib/catalog";
+import { pageHead } from "@/lib/catalog";
 import { groupByCategory, projectLines } from "@/lib/project";
 import { formatEuro } from "@/lib/format";
 
@@ -135,9 +135,9 @@ function Order() {
                   <div className="cart-row" key={p.id} style={{ gridTemplateColumns: "1fr auto" }}>
                     <div>
                       <h3 style={{ borderBottom: 0, padding: 0 }}>{quantity} × {p.name}</h3>
-                      <p>{p.brand} · <span className="sku">{p.sku}</span> · {formatEuro(unitPrice(p, quantity))} p/st{unitPrice(p, quantity) < p.price ? " (staffelprijs)" : ""}</p>
+                      <p>{p.brand} · <span className="sku">{p.sku}</span> · {formatEuro(p.price)} p/st</p>
                     </div>
-                    <strong>{formatEuro(unitPrice(p, quantity) * quantity)}</strong>
+                    <strong>{formatEuro(p.price * quantity)}</strong>
                   </div>
                 ))}
               </div>

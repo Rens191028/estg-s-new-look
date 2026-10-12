@@ -16,7 +16,7 @@ import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
 import { CategoryIcon } from "@/components/estg/ui-bits";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
-import { pageHead, unitPrice } from "@/lib/catalog";
+import { pageHead } from "@/lib/catalog";
 import { COMPANY, COMPANY_ADDRESS } from "@/lib/company";
 import { groupByCategory, projectLines, projectWarnings, totalKwp } from "@/lib/project";
 import { formatEuro, formatInt, formatKg, formatKwp } from "@/lib/format";
@@ -51,7 +51,7 @@ function Cart() {
       lines
         .map(
           (l) =>
-            `${l.quantity} × ${l.product.name} (${l.product.brand}, ${l.product.sku}) — ${formatEuro(unitPrice(l.product, l.quantity))} p/st, ${formatEuro(unitPrice(l.product, l.quantity) * l.quantity)}`,
+            `${l.quantity} × ${l.product.name} (${l.product.brand}, ${l.product.sku}) — ${formatEuro(l.product.price)} p/st, ${formatEuro(l.product.price * l.quantity)}`,
         )
         .join("\n") +
       `\n\nSubtotaal (excl. btw): ${formatEuro(subtotal)}` +
@@ -120,11 +120,8 @@ function Cart() {
                           {p.brand} · <span className="sku">{p.sku}</span>
                         </p>
                         <p className="cart-price">
-                          {formatEuro(unitPrice(p, quantity))} p/st ·{" "}
-                          <strong>{formatEuro(unitPrice(p, quantity) * quantity)}</strong>
-                          {unitPrice(p, quantity) < p.price && (
-                            <span className="tier-badge">staffelprijs</span>
-                          )}
+                          {formatEuro(p.price)} p/st ·{" "}
+                          <strong>{formatEuro(p.price * quantity)}</strong>
                         </p>
                       </div>
                       <div className="quantity">
@@ -284,22 +281,16 @@ function Cart() {
               </tr>
             </thead>
             <tbody>
-              {lines.map(({ product: p, quantity }) => {
-                const unit = unitPrice(p, quantity);
-                return (
-                  <tr key={p.id}>
-                    <td>{p.name}</td>
-                    <td>{p.brand}</td>
-                    <td>{p.sku}</td>
-                    <td className="num">{quantity}</td>
-                    <td className="num">
-                      {unit < p.price && <s>{formatEuro(p.price)}</s>} {formatEuro(unit)}
-                      {unit < p.price && <small> staffel</small>}
-                    </td>
-                    <td className="num">{formatEuro(unit * quantity)}</td>
-                  </tr>
-                );
-              })}
+              {lines.map(({ product: p, quantity }) => (
+                <tr key={p.id}>
+                  <td>{p.name}</td>
+                  <td>{p.brand}</td>
+                  <td>{p.sku}</td>
+                  <td className="num">{quantity}</td>
+                  <td className="num">{formatEuro(p.price)}</td>
+                  <td className="num">{formatEuro(p.price * quantity)}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <p className="print-total">
@@ -307,9 +298,8 @@ function Cart() {
           </p>
           <footer className="print-foot">
             <p>
-              Voorbeeldassortiment: prijzen (incl. eventuele staffelprijzen), specificaties en
-              beschikbaarheid zijn illustratief en worden bevestigd door ESTG. Er is geen bestelling
-              geplaatst.
+              Voorbeeldassortiment: prijzen, specificaties en beschikbaarheid zijn illustratief en
+              worden bevestigd door ESTG. Er is geen bestelling geplaatst.
             </p>
             <p>
               Vragen? ESTG · {COMPANY.street}, {COMPANY.city} · {COMPANY.phone} · {COMPANY.hours}

@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Search as SearchIcon } from "lucide-react";
 import { Fragment, useEffect, useId, useMemo, useRef, useState } from "react";
 import { brands, categories, products } from "@/lib/catalog";
+import { OPEN_PALETTE_EVENT } from "./command-palette";
 import { CategoryIcon } from "./ui-bits";
 
 type Suggestion =
@@ -125,6 +126,14 @@ export function HeaderSearch() {
             }
           }}
         />
+        <button
+          type="button"
+          className="palette-hint"
+          aria-label="Open zoek- en navigatievenster (Ctrl K)"
+          onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
+        >
+          Ctrl K
+        </button>
       </form>
       {panelOpen && (
         <div className="search-panel" id={listId} role="listbox">

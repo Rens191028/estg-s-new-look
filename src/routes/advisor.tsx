@@ -180,6 +180,13 @@ function Advisor() {
           </div>
         )}
         <p className="sample-note">
+          Liever klikken dan typen?{" "}
+          <Link to="/configurator" style={{ textDecoration: "underline" }}>
+            Stel een systeem samen in drie stappen
+          </Link>
+          .
+        </p>
+        <p className="sample-note" style={{ paddingTop: 0 }}>
           Het advies is indicatief en komt uit het voorbeeldassortiment. Prijzen, beschikbaarheid en
           exacte compatibiliteit bevestigt ESTG.
         </p>

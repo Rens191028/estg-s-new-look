@@ -98,6 +98,45 @@ function AdvisorBand() {
             </Link>
           ))}
         </div>
+        <Button asChild variant="outline">
+          <Link to="/configurator">Liever klikken? Stel een systeem samen</Link>
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+function Impact() {
+  // Rekenvoorbeeld, geen gerealiseerd resultaat: 1 MWp aan zonnepanelen met dezelfde formule als lib/co2.ts.
+  const example = estimateCo2Savings(1000);
+  const panels = Math.round(1_000_000 / (findProduct("all-black-zonnepaneel")?.powerWp ?? 430));
+  return (
+    <section className="impact">
+      <div className="container impact-inner">
+        <Reveal>
+          <div>
+            <h2>Wat zonne-energie samen oplevert</h2>
+            <p>
+              Een rekenvoorbeeld: <strong>1 MWp</strong> aan zonnepanelen (ongeveer{" "}
+              {formatInt(panels)} panelen van 430 Wp) bespaart elk jaar:
+            </p>
+          </div>
+        </Reveal>
+        <Reveal delay={90}>
+          <div className="impact-figure">
+            <strong>
+              <CountUp to={Math.round(example.kgCo2PerYear / 1000)} prefix="~" suffix=" ton" />
+            </strong>
+            <span>CO₂ per jaar (indicatie)</span>
+            <small>
+              Rekenvoorbeeld, geen gerealiseerd ESTG-resultaat. Op basis van{" "}
+              <a href={CO2_FACTOR.source} target="_blank" rel="noreferrer">
+                CO2emissiefactoren.nl
+              </a>
+              .
+            </small>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -480,6 +519,7 @@ function Index() {
 
       <FeaturedProject />
       <Reviews />
+      <Impact />
       <WhyEstg />
       <Faq />
 

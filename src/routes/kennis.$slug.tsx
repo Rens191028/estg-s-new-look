@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { articles } from "@/lib/articles";
 import { pageHead } from "@/lib/catalog";
 import { PageIntro } from "@/components/estg/page-intro";
+import { ReadingProgress } from "@/components/estg/reading-progress";
 export const Route = createFileRoute("/kennis/$slug")({
   head: ({ params }) => {
     const a = articles.find((x) => x.slug === params.slug);
@@ -28,6 +29,7 @@ function Article() {
   return (
     <>
       <PageIntro title={a.title} description={a.intro} />
+      <ReadingProgress targetSelector=".article-page" />
       <article className="container article-page">
         <Link to="/kennis" className="text-link mb-7">
           <ArrowLeft size={15} />

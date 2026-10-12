@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvisorRouteImport } from './routes/advisor'
+import { Route as ConfiguratorRouteImport } from './routes/configurator'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as InloggenRouteImport } from './routes/inloggen'
 import { Route as KennisRouteImport } from './routes/kennis'
@@ -38,6 +39,11 @@ const AccountRoute = AccountRouteImport.update({
 const AdvisorRoute = AdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguratorRoute = ConfiguratorRouteImport.update({
+  id: '/configurator',
+  path: '/configurator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
   '/kennis': typeof KennisRouteWithChildren
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
   '/merken': typeof MerkenRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
+  '/configurator': typeof ConfiguratorRoute
   '/contact': typeof ContactRoute
   '/inloggen': typeof InloggenRoute
   '/kennis': typeof KennisRouteWithChildren
@@ -158,6 +167,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advisor'
+    | '/configurator'
     | '/contact'
     | '/inloggen'
     | '/kennis'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advisor'
+    | '/configurator'
     | '/contact'
     | '/inloggen'
     | '/merken'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/advisor'
+    | '/configurator'
     | '/contact'
     | '/inloggen'
     | '/kennis'
@@ -209,6 +221,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
   AdvisorRoute: typeof AdvisorRoute
+  ConfiguratorRoute: typeof ConfiguratorRoute
   ContactRoute: typeof ContactRoute
   InloggenRoute: typeof InloggenRoute
   KennisRoute: typeof KennisRouteWithChildren
@@ -242,6 +255,13 @@ declare module '@tanstack/react-router' {
       path: '/advisor'
       fullPath: '/advisor'
       preLoaderRoute: typeof AdvisorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/configurator': {
+      id: '/configurator'
+      path: '/configurator'
+      fullPath: '/configurator'
+      preLoaderRoute: typeof ConfiguratorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -348,6 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
   AdvisorRoute: AdvisorRoute,
+  ConfiguratorRoute: ConfiguratorRoute,
   ContactRoute: ContactRoute,
   InloggenRoute: InloggenRoute,
   KennisRoute: KennisRouteWithChildren,

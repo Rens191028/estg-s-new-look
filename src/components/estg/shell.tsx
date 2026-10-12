@@ -1,9 +1,14 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
   ChevronDown,
+  BookOpen,
   Headphones,
+  Info,
+  LogOut,
+  Sparkles,
+  Tag,
   Mail,
   MapPin,
   Menu,
@@ -17,6 +22,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { brandLogo, brands, categories, products } from "@/lib/catalog";
 import { HeaderSearch } from "./search";
 import { formatEuro } from "@/lib/format";
@@ -81,6 +87,94 @@ function BrandBar() {
   );
 }
 
+function MobileMenu({
+  open,
+  onOpenChange,
+  count,
+  subtotal,
+  loggedIn,
+  onSignOut,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  count: number;
+  subtotal: number;
+  loggedIn: boolean;
+  onSignOut: () => void;
+}) {
+  const close = () => onOpenChange(false);
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetTrigger asChild>
+        <Button className="mobile-menu" variant="ghost" size="icon" aria-label="Menu">
+          <Menu />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="mobile-sheet">
+        <SheetTitle className="sr-only">Menu</SheetTitle>
+        <nav aria-label="Mobiel menu" className="mobile-nav">
+          <Link to="/webshop" search={{ q: "", category: "", brand: "" }} onClick={close}>
+            <Menu size={20} /> Alle producten
+          </Link>
+          <div className="mobile-sub">
+            {categories.map((c) => (
+              <Link
+                key={c}
+                to="/webshop"
+                search={{ category: c, q: "", brand: "" }}
+                onClick={close}
+              >
+                <CategoryIcon category={c} size={16} /> {c}
+              </Link>
+            ))}
+          </div>
+          <Link to="/merken" onClick={close}>
+            <Tag size={20} /> Merken
+          </Link>
+          <Link to="/advisor" search={{ vraag: "" }} onClick={close}>
+            <Sparkles size={20} /> AI-adviseur
+          </Link>
+          <Link to="/kennis" onClick={close}>
+            <BookOpen size={20} /> Kennis & inspiratie
+          </Link>
+          <Link to="/over-estg" onClick={close}>
+            <Info size={20} /> Over ESTG
+          </Link>
+          <div className="mobile-divider" />
+          {loggedIn ? (
+            <>
+              <Link to="/account" search={{ tab: "favorieten" }} onClick={close}>
+                <User size={20} /> Mijn account
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  close();
+                  onSignOut();
+                }}
+              >
+                <LogOut size={20} /> Uitloggen
+              </button>
+            </>
+          ) : (
+            <Link to="/inloggen" onClick={close}>
+              <User size={20} /> Inloggen
+            </Link>
+          )}
+          <Link to="/winkelwagen" onClick={close}>
+            <ShoppingBag size={20} /> Winkelmand
+            {count > 0 && (
+              <span className="mobile-count">
+                {count} · {formatEuro(subtotal)}
+              </span>
+            )}
+          </Link>
+        </nav>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
@@ -98,6 +192,10 @@ export function Header() {
     const t = setTimeout(() => setPop(false), 500);
     return () => clearTimeout(t);
   }, [count]);
+  const pathname = useLocation({ select: (l) => l.pathname });
+  const isActive = (prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
+  const cls = (prefix: string) => (isActive(prefix) ? "is-active" : "");
+  const onShop = isActive("/webshop") || isActive("/producten");
   const popular = products.filter((p) => p.isBestseller).slice(0, 4);
   const close = () => {
     setMenuOpen(false);
@@ -165,25 +263,27 @@ export function Header() {
                 <span>Inloggen</span>
               </Link>
             )}
-            <Button
-              className="mobile-menu"
-              variant="ghost"
-              size="icon"
-              aria-label="Menu"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              {menuOpen ? <X /> : <Menu />}
-            </Button>
+            <MobileMenu
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              count={count}
+              subtotal={subtotal}
+              loggedIn={!!user}
+              onSignOut={async () => {
+                await signOut();
+                navigate({ to: "/" });
+              }}
+            />
           </div>
         </div>
-        <div className={`main-nav-wrap ${menuOpen ? "open" : ""}`}>
+        <div className="main-nav-wrap">
           <nav className="container main-nav" aria-label="Hoofdnavigatie">
             <button
               type="button"
-              className="nav-trigger"
+              className={`nav-trigger ${onShop ? "is-active" : ""}`}
               aria-expanded={megaOpen}
               aria-controls="mega-menu"
+              aria-current={onShop ? "page" : undefined}
               onClick={() => setMegaOpen(!megaOpen)}
             >
               <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -191,16 +291,37 @@ export function Header() {
               </span>
               <ChevronDown size={14} />
             </button>
-            <Link to="/merken" onClick={close}>
+            <Link
+              to="/merken"
+              onClick={close}
+              className={cls("/merken")}
+              aria-current={isActive("/merken") ? "page" : undefined}
+            >
               Merken
             </Link>
-            <Link to="/advisor" search={{ vraag: "" }} onClick={close}>
+            <Link
+              to="/advisor"
+              search={{ vraag: "" }}
+              onClick={close}
+              className={cls("/advisor")}
+              aria-current={isActive("/advisor") ? "page" : undefined}
+            >
               AI-adviseur
             </Link>
-            <Link to="/kennis" onClick={close}>
+            <Link
+              to="/kennis"
+              onClick={close}
+              className={cls("/kennis")}
+              aria-current={isActive("/kennis") ? "page" : undefined}
+            >
               Kennis & inspiratie
             </Link>
-            <Link to="/over-estg" className="about-nav" onClick={close}>
+            <Link
+              to="/over-estg"
+              onClick={close}
+              className={`about-nav ${cls("/over-estg")}`}
+              aria-current={isActive("/over-estg") ? "page" : undefined}
+            >
               Over ESTG <ArrowUpRight size={14} />
             </Link>
           </nav>

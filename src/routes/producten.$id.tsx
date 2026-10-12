@@ -1,3 +1,4 @@
+import { bump, flyToCart } from "@/components/estg/fly-to-cart";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -110,7 +111,8 @@ function Product() {
   const compatible = compatibleProducts(p);
   const similar = similarProducts(p);
   const recent = recentIds.flatMap((id) => findProduct(id) ?? []).slice(0, 4);
-  const onAdd = () => {
+  const onAdd = (e?: React.MouseEvent<HTMLElement>) => {
+    flyToCart(e?.currentTarget);
     add(p.id, quantity);
     setAdded(true);
     setTimeout(() => setAdded(false), 2200);
@@ -152,7 +154,7 @@ function Product() {
               <Dialog>
                 <DialogTrigger asChild>
                   <button type="button" className="gallery-zoom" aria-label={`${p.name} vergroten`}>
-                    <img src={p.image} alt={p.name} width={816} height={816} />
+                    <img key={p.id} src={p.image} alt={p.name} width={816} height={816} />
                     <span className="gallery-zoom-icon" aria-hidden>
                       <ZoomIn size={18} />
                     </span>
@@ -247,7 +249,10 @@ function Product() {
                 aria-label={
                   favorites.has(p.id) ? "Uit favorieten halen" : "Aan favorieten toevoegen"
                 }
-                onClick={() => void favorites.toggle(p.id)}
+                onClick={(e) => {
+                  bump(e.currentTarget);
+                  void favorites.toggle(p.id);
+                }}
               >
                 <Heart size={20} />
               </button>

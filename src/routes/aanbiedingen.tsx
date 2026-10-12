@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/estg/product-card";
+import { flyToCart } from "@/components/estg/fly-to-cart";
 import { useStore } from "@/components/estg/store";
 import { CategoryIcon, CountUp, Price, Reveal } from "@/components/estg/ui-bits";
 import { dealProducts, discountPercent, pageHead } from "@/lib/catalog";
@@ -60,7 +61,14 @@ function Deals() {
                 <p className="muted">{top.note}</p>
                 <Price product={top} size="detail" />
                 <div className="hero-actions">
-                  <Button variant="accent" size="lg" onClick={() => add(top.id)}>
+                  <Button
+                    variant="accent"
+                    size="lg"
+                    onClick={(e) => {
+                      flyToCart(e.currentTarget);
+                      add(top.id);
+                    }}
+                  >
                     Toevoegen aan winkelmand
                   </Button>
                   <Button asChild variant="outline" size="lg">

@@ -5,14 +5,14 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold cursor-pointer transition-[color,background-color,box-shadow,transform] duration-150 ease-out active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold cursor-pointer transition-[color,background-color,box-shadow,transform] duration-150 ease-out active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-navy-700 hover:-translate-y-px hover:shadow-md",
+          "relative overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:content-[''] after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent hover:after:translate-x-full after:transition-transform after:duration-700 bg-primary text-primary-foreground hover:bg-navy-700 hover:-translate-y-px hover:shadow-md",
         accent:
-          "bg-yellow-400 text-navy-900 hover:brightness-95 hover:-translate-y-px hover:shadow-md",
+          "relative overflow-hidden after:pointer-events-none after:absolute after:inset-0 after:content-[''] after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent hover:after:translate-x-full after:transition-transform after:duration-700 bg-yellow-400 text-navy-900 hover:brightness-95 hover:-translate-y-px hover:shadow-md",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline: "border border-input bg-transparent text-foreground hover:bg-navy-100",
         secondary: "bg-surface-100 text-secondary-foreground hover:bg-navy-100",

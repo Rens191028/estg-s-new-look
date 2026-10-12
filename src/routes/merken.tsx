@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import { Reveal } from "@/components/estg/ui-bits";
 import { PageIntro } from "@/components/estg/page-intro";
 import { brandLogo, brands, pageHead } from "@/lib/catalog";
 export const Route = createFileRoute("/merken")({
@@ -19,23 +20,24 @@ function Brands() {
       />
       <section className="container section">
         <div className="brand-grid">
-          {brands.map((b) => {
+          {brands.map((b, i) => {
             const logo = brandLogo(b);
             return (
-              <Link
-                to="/webshop"
-                search={{ brand: b, q: "", category: "" }}
-                key={b}
-                className="brand-card"
-                aria-label={b}
-              >
-                {logo ? (
-                  <img src={logo} alt="" className="brand-card-logo" loading="lazy" />
-                ) : (
-                  <span>{b}</span>
-                )}
-                <ArrowUpRight size={17} />
-              </Link>
+              <Reveal key={b} delay={(i % 6) * 60} className="brand-reveal">
+                <Link
+                  to="/webshop"
+                  search={{ brand: b, q: "", category: "" }}
+                  className="brand-card"
+                  aria-label={b}
+                >
+                  {logo ? (
+                    <img src={logo} alt="" className="brand-card-logo" loading="lazy" />
+                  ) : (
+                    <span>{b}</span>
+                  )}
+                  <ArrowUpRight size={17} />
+                </Link>
+              </Reveal>
             );
           })}
         </div>

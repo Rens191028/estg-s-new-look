@@ -3257,38 +3257,113 @@ select {
     left: 0;
     top: 0;
     width: 100%;
-    color: #000;
+    color: #00183d;
     background: #fff;
+    font-family: var(--font-sans, Inter, sans-serif);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    padding-bottom: 16px;
+    border-bottom: 4px solid #f3ce11;
   }
   .print-sheet img.print-logo {
-    height: 48px;
-    margin-bottom: 16px;
+    height: 52px;
+  }
+  .print-head address {
+    font-style: normal;
+    font-size: 11px;
+    line-height: 17px;
+    text-align: right;
+    color: #3b4a68;
+  }
+  .print-head address strong {
+    display: block;
+    color: #00183d;
+  }
+  .print-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin: 20px 0 8px;
+  }
+  .print-title h1 {
+    margin: 0;
+    font-size: 26px;
+    line-height: 32px;
+  }
+  .print-title p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #3b4a68;
+  }
+  .print-ref {
+    background: #fdf3b9;
+    border-left: 4px solid #f3ce11;
+    padding: 8px 14px;
+    font-size: 11px;
+    max-width: 55%;
+  }
+  .print-ref span {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #3b4a68;
+  }
+  .print-ref strong {
+    font-size: 14px;
   }
   .print-sheet table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 16px;
+    margin-top: 12px;
     font-size: 12px;
   }
-  .print-sheet th,
-  .print-sheet td {
-    border-bottom: 1px solid #ccc;
-    padding: 6px 8px;
+  .print-sheet thead th {
+    background: #00183d;
+    color: #fff;
+    font-weight: 600;
+    padding: 8px;
     text-align: left;
+  }
+  .print-sheet td {
+    border-bottom: 1px solid #d5dae3;
+    padding: 8px;
+    text-align: left;
+  }
+  .print-sheet tbody tr:nth-child(even) td {
+    background: #f4f6fa;
   }
   .print-sheet td.num,
   .print-sheet th.num {
     text-align: right;
   }
+  .print-sheet td s {
+    color: #7b869c;
+    margin-right: 4px;
+  }
   .print-sheet .print-total {
     text-align: right;
-    font-weight: 700;
-    margin-top: 12px;
+    font-size: 15px;
+    margin: 14px 0 0;
+    padding-top: 10px;
+    border-top: 2px solid #00183d;
   }
-  .print-sheet .print-note {
-    margin-top: 24px;
-    font-size: 11px;
-    color: #444;
+  .print-foot {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid #d5dae3;
+    font-size: 10.5px;
+    line-height: 16px;
+    color: #3b4a68;
+  }
+  .print-foot p {
+    margin: 0 0 4px;
   }
 }
 
@@ -4090,4 +4165,97 @@ select {
 .assistant-send:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+/* ---------- Ronde 11: staffels, certificeringen, referentie ---------- */
+.tier-box {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  background: var(--surface-0);
+}
+.tier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.tier-table caption {
+  text-align: left;
+  font-weight: 600;
+  padding-bottom: 6px;
+}
+.tier-table th,
+.tier-table td {
+  padding: 7px 10px;
+  text-align: left;
+  font-weight: 500;
+}
+.tier-table td:last-child {
+  text-align: right;
+  color: var(--success-700, #15803d);
+  font-weight: 600;
+}
+.tier-table tr.is-active {
+  background: var(--yellow-100);
+  box-shadow: inset 3px 0 0 var(--yellow-400);
+}
+.tier-table tr.is-active th,
+.tier-table tr.is-active td {
+  font-weight: 700;
+}
+.tier-live {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+.tier-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--navy-700);
+}
+.cert-box {
+  margin-top: 20px;
+}
+.cert-box h3 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+.cert-box ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+}
+.cert-box li {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  background: var(--navy-100);
+  color: var(--navy-900);
+  font-size: 13px;
+  font-weight: 600;
+}
+.cart-price {
+  font-size: 13px;
+}
+.tier-badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--yellow-100);
+  font-size: 11px;
+  font-weight: 600;
+}
+.detail-info .tier-live {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--navy-900);
+}
+.detail-info .tier-note,
+.cert-box .tier-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--navy-700);
 }

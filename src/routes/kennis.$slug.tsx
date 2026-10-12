@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Link as LinkIcon, Linkedin, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { articles } from "@/lib/articles";
 import { pageHead } from "@/lib/catalog";
 import { PageIntro } from "@/components/estg/page-intro";
@@ -14,6 +17,42 @@ export const Route = createFileRoute("/kennis/$slug")({
   },
   component: Article,
 });
+function ShareRow({ title }: { title: string }) {
+  const [url, setUrl] = useState("");
+  useEffect(() => setUrl(window.location.href), []);
+  const enc = encodeURIComponent;
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Link gekopieerd");
+    } catch {
+      toast.error("Kopiëren is niet gelukt");
+    }
+  };
+  return (
+    <div className="share-row">
+      <span>Deel dit artikel:</span>
+      <Button asChild variant="outline" size="sm">
+        <a
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Linkedin /> LinkedIn
+        </a>
+      </Button>
+      <Button asChild variant="outline" size="sm">
+        <a href={`mailto:?subject=${enc(title)}&body=${enc(`${title}\n${url}`)}`}>
+          <Mail /> E-mail
+        </a>
+      </Button>
+      <Button variant="outline" size="sm" onClick={() => void copy()}>
+        <LinkIcon /> Kopieer link
+      </Button>
+    </div>
+  );
+}
+
 function Article() {
   const { slug } = Route.useParams();
   const a = articles.find((x) => x.slug === slug);
@@ -35,6 +74,7 @@ function Article() {
           <ArrowLeft size={15} />
           Kennis & inspiratie
         </Link>
+        <ShareRow title={a.title} />
         {a.image && (
           <img className="content-image" src={a.image} alt={a.title} width={816} height={816} />
         )}

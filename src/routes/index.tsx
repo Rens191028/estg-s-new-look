@@ -363,9 +363,16 @@ function Index() {
                   Bekijk assortiment <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/contact">Persoonlijk advies</Link>
-              </Button>
+              <span className="hero-ai">
+                <span className="new-pill">
+                  <i aria-hidden /> Nieuw
+                </span>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/advisor" search={{ vraag: "" }}>
+                    AI-adviseur
+                  </Link>
+                </Button>
+              </span>
             </div>
           </div>
           <div className="bento" aria-hidden="false">
@@ -495,7 +502,14 @@ function Index() {
                 </Link>
               </Button>
             </div>
-            <img src={battery} alt="Thuisbatterij" width={816} height={816} loading="lazy" />
+            <img
+              className="contain"
+              src={battery}
+              alt="Thuisbatterij"
+              width={816}
+              height={816}
+              loading="lazy"
+            />
           </div>
         </Reveal>
         <Reveal>
@@ -512,7 +526,14 @@ function Index() {
                 </Link>
               </Button>
             </div>
-            <img src={charger} alt="Laadoplossing" width={816} height={816} loading="lazy" />
+            <img
+              className="contain"
+              src={charger}
+              alt="Laadoplossing"
+              width={816}
+              height={816}
+              loading="lazy"
+            />
           </div>
         </Reveal>
       </section>

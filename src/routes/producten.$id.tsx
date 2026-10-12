@@ -27,7 +27,13 @@ import { useCompare } from "@/components/estg/compare";
 import { useRecentlyViewed } from "@/components/estg/recent";
 import { useFavorites } from "@/components/estg/favorites";
 import { useStore } from "@/components/estg/store";
-import { AvailabilityBadge, CategoryIcon, Reveal, Skeleton } from "@/components/estg/ui-bits";
+import {
+  AvailabilityBadge,
+  CategoryIcon,
+  Price,
+  Reveal,
+  Skeleton,
+} from "@/components/estg/ui-bits";
 import {
   brandLogo,
   catalogDisclaimer,
@@ -181,7 +187,7 @@ function Product() {
             <p>{p.note}</p>
             <div className="price-box">
               <strong className="price">
-                {formatEuro(p.price)} <small>excl. btw</small>
+                <Price product={p} size="detail" />
               </strong>
               <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
             </div>

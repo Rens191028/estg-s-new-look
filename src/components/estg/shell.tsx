@@ -6,6 +6,7 @@ import {
   BookOpen,
   Headphones,
   Info,
+  Percent,
   LogOut,
   Sparkles,
   Tag,
@@ -136,6 +137,9 @@ function MobileMenu({
               </Link>
             ))}
           </div>
+          <Link to="/aanbiedingen" onClick={close}>
+            <Percent size={20} /> Aanbiedingen
+          </Link>
           <Link to="/merken" onClick={close}>
             <Tag size={20} /> Merken
           </Link>
@@ -299,6 +303,14 @@ export function Header() {
               </span>
               <ChevronDown size={14} />
             </button>
+            <Link
+              to="/aanbiedingen"
+              onClick={close}
+              className={`nav-deals ${cls("/aanbiedingen")}`}
+              aria-current={isActive("/aanbiedingen") ? "page" : undefined}
+            >
+              Aanbiedingen
+            </Link>
             <Link
               to="/merken"
               onClick={close}

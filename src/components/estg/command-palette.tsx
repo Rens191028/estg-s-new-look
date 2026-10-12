@@ -14,6 +14,7 @@ import { CategoryIcon } from "./ui-bits";
 
 const PAGES = [
   { label: "Webshop", to: "/webshop" },
+  { label: "Aanbiedingen", to: "/aanbiedingen" },
   { label: "Producten vergelijken", to: "/vergelijken" },
   { label: "Winkelmand", to: "/winkelwagen" },
   { label: "AI-adviseur", to: "/advisor" },

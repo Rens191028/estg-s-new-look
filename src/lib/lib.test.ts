@@ -160,3 +160,21 @@ describe("recent bekeken", () => {
     expect(pushRecent(many, "x")).toHaveLength(MAX_RECENT);
   });
 });
+
+describe("aanbiedingen", () => {
+  it("heeft zes producten met een was-prijs boven de huidige prijs, grootste korting eerst", async () => {
+    const { dealProducts, discountPercent, isDeal } = await import("./catalog");
+    const deals = dealProducts();
+    expect(deals).toHaveLength(6);
+    for (const p of deals) expect(isDeal(p)).toBe(true);
+    for (let i = 1; i < deals.length; i++)
+      expect(discountPercent(deals[i - 1]!)).toBeGreaterThanOrEqual(discountPercent(deals[i]!));
+    expect(discountPercent(deals[0]!)).toBe(14);
+  });
+  it("geeft de assistent de was-prijs mee voor aanbiedingen", async () => {
+    const { catalogLines } = await import("./assistant/context");
+    const { findProduct } = await import("./catalog");
+    expect(catalogLines([findProduct("montagesysteem-schuin-dak")!])).toContain("was €219");
+    expect(catalogLines([findProduct("laadstation")!])).not.toContain("was €");
+  });
+});

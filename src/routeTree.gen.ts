@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AanbiedingenRouteImport } from './routes/aanbiedingen'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdvisorRouteImport } from './routes/advisor'
 import { Route as ConfiguratorRouteImport } from './routes/configurator'
@@ -30,6 +31,11 @@ import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/l
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AanbiedingenRoute = AanbiedingenRouteImport.update({
+  id: '/aanbiedingen',
+  path: '/aanbiedingen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -116,6 +122,7 @@ const LovableEmailTransactionalPreviewRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/configurator': typeof ConfiguratorRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/configurator': typeof ConfiguratorRoute
@@ -154,6 +162,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aanbiedingen': typeof AanbiedingenRoute
   '/account': typeof AccountRoute
   '/advisor': typeof AdvisorRoute
   '/configurator': typeof ConfiguratorRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/aanbiedingen'
     | '/account'
     | '/advisor'
     | '/configurator'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/aanbiedingen'
     | '/account'
     | '/advisor'
     | '/configurator'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/aanbiedingen'
     | '/account'
     | '/advisor'
     | '/configurator'
@@ -232,6 +244,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AanbiedingenRoute: typeof AanbiedingenRoute
   AccountRoute: typeof AccountRoute
   AdvisorRoute: typeof AdvisorRoute
   ConfiguratorRoute: typeof ConfiguratorRoute
@@ -255,6 +268,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aanbiedingen': {
+      id: '/aanbiedingen'
+      path: '/aanbiedingen'
+      fullPath: '/aanbiedingen'
+      preLoaderRoute: typeof AanbiedingenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -387,6 +407,7 @@ const KennisRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AanbiedingenRoute: AanbiedingenRoute,
   AccountRoute: AccountRoute,
   AdvisorRoute: AdvisorRoute,
   ConfiguratorRoute: ConfiguratorRoute,

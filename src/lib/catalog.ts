@@ -22,6 +22,8 @@ export type Product = {
   sku: string;
   /** Illustratieve voorbeeldprijs in hele euro's, excl. btw. Geen echte ESTG-prijs. */
   price: number;
+  /** "Was"-prijs: staat die boven `price`, dan is het product in de aanbieding. */
+  originalPrice?: number;
   image?: string | undefined;
   note: string;
   /** Nominaal vermogen in Wp, alleen voor zonnepanelen. */
@@ -74,6 +76,7 @@ export const products: Product[] = [
     category: "Omvormers",
     sku: "DEMO-INV-001",
     price: 2450,
+    originalPrice: 2690,
     isBestseller: true,
     image: inverter,
     note: "Verbind zonne-energie met slimme energieopslag.",
@@ -91,6 +94,7 @@ export const products: Product[] = [
     category: "Omvormers",
     sku: "DEMO-INV-002",
     price: 1890,
+    originalPrice: 2090,
     image: inverter,
     note: "De schakel tussen je zonnepanelen en de installatie.",
     specs: [
@@ -106,6 +110,7 @@ export const products: Product[] = [
     category: "Energieopslag",
     sku: "DEMO-BAT-001",
     price: 4250,
+    originalPrice: 4690,
     isBestseller: true,
     image: battery,
     note: "Flexibele energieopslag voor thuis.",
@@ -137,6 +142,7 @@ export const products: Product[] = [
     category: "EV-laders",
     sku: "DEMO-EV-001",
     price: 799,
+    originalPrice: 899,
     isBestseller: true,
     image: charger,
     note: "Laadoplossingen voor thuis en op de werkplek.",
@@ -167,6 +173,7 @@ export const products: Product[] = [
     category: "Montagemateriaal",
     sku: "DEMO-MNT-001",
     price: 189,
+    originalPrice: 219,
     isBestseller: true,
     image: rooftop,
     note: "Rails en dakhaken voor montage op een schuin dak.",
@@ -197,6 +204,7 @@ export const products: Product[] = [
     category: "Zonnepanelen",
     sku: "DEMO-PV-003",
     price: 129,
+    originalPrice: 149,
     image: panel,
     note: "Betrouwbaar paneel voor grootschalige dakprojecten.",
     powerWp: 405,
@@ -714,3 +722,15 @@ export function brandLogo(brand: string): string | null {
 
 /** Logo's met een gevuld vlak (bijv. SMA): als wit silhouet worden dat blokken, dus tonen we ze op een lichte tegel. */
 export const solidBrandLogos = new Set(["SMA"]);
+
+export function isDeal(p: Product) {
+  return p.originalPrice !== undefined && p.originalPrice > p.price;
+}
+/** Kortingspercentage, afgerond op hele procenten. */
+export function discountPercent(p: Product) {
+  return isDeal(p) ? Math.round((1 - p.price / p.originalPrice!) * 100) : 0;
+}
+/** Producten in de aanbieding, grootste korting eerst. */
+export function dealProducts() {
+  return products.filter(isDeal).sort((a, b) => discountPercent(b) - discountPercent(a));
+}

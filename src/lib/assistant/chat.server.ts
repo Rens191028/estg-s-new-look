@@ -1,7 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { Output, streamText, type ModelMessage } from "ai";
 import { z } from "zod";
-import { categories, findProduct } from "../catalog";
+import { categories, findProduct, products } from "../catalog";
 import { evaluateSet, panelsPerSet, roofKind, roofKindFromText } from "./compat";
 import { catalogLines, compatFacts, relevantProducts } from "./context";
 import { clampMessage, MAX_HISTORY, MAX_MESSAGE_LENGTH, RATE_LIMIT } from "./guards";
@@ -43,7 +43,11 @@ const fail = (status: number, code: string, message: string) =>
   Response.json({ ok: false, code, message: `${message} ${FALLBACK}` }, { status });
 
 function systemPrompt(source: "widget" | "advisor", knowledge: string[], message: string) {
-  const list = relevantProducts(message, 40);
+  const base = relevantProducts(message, 40);
+  // Bij panelen hoort montage: zorg dat de montagesystemen altijd in de context staan.
+  const list = base.some((p) => p.category === "Zonnepanelen")
+    ? [...base, ...products.filter((p) => p.category === "Montagemateriaal" && !base.includes(p))]
+    : base;
   const facts = compatFacts(list);
   return [
     "Je bent de ESTG-assistent: een proactieve, technische B2B-adviseur voor installateurs. Antwoord in het Nederlands, zakelijk en concreet; vraag door als technische gegevens ontbreken.",
@@ -51,7 +55,7 @@ function systemPrompt(source: "widget" | "advisor", knowledge: string[], message
     "Regels: je mag prijzen noemen, maar uitsluitend de prijs die letterlijk bij het product in de catalogus hieronder staat (€ excl. btw, voorbeeldprijs) — staat er een 'was'-prijs bij (aanbieding), dan mag je die aanbieding en de was-/voorprijs noemen; verzin NOOIT een korting, aanbieding, staffelprijs of ander bedrag dat niet in de catalogus staat, en noem geen garantie-uitkomsten. Verzin NOOIT voorraad, levertijden of specificaties. Noem alleen producten uit de catalogus hieronder en verwijs naar ESTG (085 016 7800) als iets onbekend is. Deze website is een voorbeeldomgeving met een illustratief assortiment.",
     source === "widget"
       ? "Dit is de chatwidget: kort en puntig, maximaal 2-3 korte zinnen, geen opsomming van alle redenen achter elkaar in doorlopende tekst. Platte tekst zonder markdown (geen sterretjes of tabellen)."
-      : "Dit is de AI-Adviseur: geef een conclusie van maximaal 2 zinnen en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en een korte reden van 1-2 zinnen per product). Zet vervolgvragen niet in de conclusie.",
+      : "Dit is de AI-Adviseur: geef een conclusie van maximaal 2 zinnen en een lijst aanbevolen producten (product_id exact uit de catalogus, aantal en een korte reden van 1-2 zinnen per product). Zet vervolgvragen niet in de conclusie. Bevat het voorstel zonnepanelen, voeg dan ook een montagesysteem toe dat past bij het daktype (aantal sets volgens de montagecontrole).",
     `Categorieën: ${categories.join(", ")}.`,
     "Relevante catalogus (id | naam | merk | categorie | prijs | specs):\n" + catalogLines(list),
     "Door code vastgestelde compatibiliteitscontroles:\n" +

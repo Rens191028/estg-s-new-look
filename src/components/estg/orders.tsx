@@ -26,11 +26,34 @@ type Orders = {
   orders: Order[];
   loading: boolean;
   /** Slaat de (fictieve) bestelling op; geeft de opgeslagen bestelling terug of een foutmelding. */
-  place: (input: NewOrder) => Promise<{ order: Order | null; error: string | null }>;
+  place: (input: NewOrder) => Promise<{
+    order: Order | null;
+    error: string | null;
+    /** true als de database niet bereikbaar was en de bestelling alleen in deze browser is bewaard. */
+    local: boolean;
+  }>;
 };
 
 const g = globalThis as unknown as { __estgOrdersContext?: React.Context<Orders | null> };
 const Context = (g.__estgOrdersContext ??= createContext<Orders | null>(null));
+
+const localKey = (userId: string) => `estg_orders_local_${userId}`;
+function readLocal(userId: string): Order[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(localKey(userId)) ?? "[]");
+    return Array.isArray(parsed) ? (parsed as Order[]) : [];
+  } catch {
+    return [];
+  }
+}
+function writeLocal(userId: string, orders: Order[]) {
+  try {
+    localStorage.setItem(localKey(userId), JSON.stringify(orders.slice(0, 50)));
+  } catch {
+    /* opslag niet beschikbaar */
+  }
+}
+const byNewest = (a: Order, b: Order) => b.created_at.localeCompare(a.created_at);
 
 export function OrdersProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -54,7 +77,10 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (!active) return;
-        if (edits.current === seen) setOrders(((data ?? []) as OrderRow[]).map(toOrder));
+        if (edits.current === seen) {
+          const remote = ((data ?? []) as OrderRow[]).map(toOrder);
+          setOrders([...remote, ...readLocal(userId)].sort(byNewest));
+        }
         setLoading(false);
       });
     return () => {
@@ -64,7 +90,7 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
 
   const place = useCallback<Orders["place"]>(
     async (input) => {
-      if (!userId) return { order: null, error: "Niet ingelogd." };
+      if (!userId) return { order: null, error: "Niet ingelogd.", local: false };
       const { data, error } = await supabase
         .from("orders")
         .insert({
@@ -81,11 +107,28 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
         })
         .select("*")
         .single();
-      if (error || !data) return { order: null, error: error?.message ?? "Opslaan mislukt." };
-      const order = toOrder(data as OrderRow);
       edits.current += 1;
+      if (error || !data) {
+        // Database niet bereikbaar of tabel nog niet aangemaakt: bewaar de bestelling in deze browser,
+        // zodat de bestelling zichtbaar blijft in het account. De echte fout gaat naar de melding.
+        console.error("Bestelling opslaan in database mislukt:", error);
+        const created = new Date().toISOString().slice(0, 19);
+        const order: Order = {
+          id: `local-${crypto.randomUUID()}`,
+          created_at: created,
+          ship_date: input.shipDate,
+          reference: input.reference.trim() || null,
+          lines: input.lines,
+          totals: input.totals,
+          tracking_number: trackingNumber(`${userId}-${created}`),
+        };
+        writeLocal(userId, [order, ...readLocal(userId)]);
+        setOrders((prev) => [order, ...prev]);
+        return { order, error: error?.message ?? "Opslaan mislukt.", local: true };
+      }
+      const order = toOrder(data as OrderRow);
       setOrders((prev) => [order, ...prev]);
-      return { order, error: null };
+      return { order, error: null, local: false };
     },
     [userId],
   );

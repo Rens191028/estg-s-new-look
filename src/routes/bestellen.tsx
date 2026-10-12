@@ -48,7 +48,7 @@ function Order() {
   const [minDate] = useState(earliestDate);
   const [date, setDate] = useState<Date | undefined>();
   const [dateError, setDateError] = useState(false);
-  const [done, setDone] = useState<null | (typeof form & { date: Date; subtotal: number; reference: string; orderId: string | null })>(null);
+  const [done, setDone] = useState<null | (typeof form & { date: Date; subtotal: number; reference: string; orderId: string | null; saveNote: string | null })>(null);
   const [placing, setPlacing] = useState(false);
   const { place } = useOrders();
 
@@ -93,17 +93,19 @@ function Order() {
               Dit is een voorbeeldomgeving — er wordt geen echte betaling verwerkt. ESTG neemt
               contact met je op om de betaling en levering verder af te ronden.
             </p>
-            {done.orderId ? (
+            {done.saveNote && (
+              <p className="form-note" role="status">
+                Je bestelling is opgeslagen in deze browser, omdat de bestellingen-database nog niet
+                bereikbaar is. Je vindt hem onder Account → Bestellingen.
+                <small className="save-error">Technische melding: {done.saveNote}</small>
+              </p>
+            )}
+            {done.orderId && (
               <Button asChild variant="accent">
                 <Link to="/account" search={{ tab: "bestellingen", order: done.orderId }}>
                   Bekijk je bestelling
                 </Link>
               </Button>
-            ) : (
-              <p className="form-error" role="alert">
-                Je bestelling kon niet worden opgeslagen in je account. Neem contact op met ESTG als
-                dit blijft gebeuren.
-              </p>
             )}
             <Button asChild variant="outline">
               <Link to="/winkelwagen">Terug naar winkelmand</Link>
@@ -142,7 +144,7 @@ function Order() {
             if (placing) return;
             setPlacing(true);
             const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-            const { order, error } = await place({
+            const { order, error, local } = await place({
               lines: lines.map((l) => ({
                 product_id: l.product.id,
                 name: l.product.name,
@@ -157,8 +159,7 @@ function Order() {
               contact: form,
             });
             setPlacing(false);
-            if (error) console.error("Bestelling opslaan mislukt:", error);
-            setDone({ ...form, date, subtotal, reference: projectName, orderId: order?.id ?? null });
+            setDone({ ...form, date, subtotal, reference: projectName, orderId: order?.id ?? null, saveNote: local ? (error ?? "Opslaan mislukt.") : null });
             window.scrollTo({ top: 0 });
           }}
         >

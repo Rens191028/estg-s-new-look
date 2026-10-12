@@ -20,6 +20,7 @@ import { AuthProvider } from "@/components/estg/auth";
 import { FavoritesProvider } from "@/components/estg/favorites";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareBar } from "@/components/estg/compare-bar";
+import { CommandPalette } from "@/components/estg/command-palette";
 import { CookieBanner } from "@/components/estg/cookie-banner";
 import { RouteProgress } from "@/components/estg/route-progress";
 import { ScrollTop } from "@/components/estg/scroll-top";
@@ -159,6 +160,7 @@ function RootComponent() {
               <AssistantWidget />
               <ScrollTop />
               <CookieBanner />
+              <CommandPalette />
               <RouteProgress />
               <Toaster />
             </CompareProvider>

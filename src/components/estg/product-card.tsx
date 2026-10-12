@@ -19,43 +19,45 @@ export function ProductCard({ product }: { product: Product }) {
   const blocked = !selected && compare.isFull;
   return (
     <article className="product-card">
-      <Link to="/producten/$id" params={{ id: product.id }} className="product-photo">
-        {product.image ? (
-          <img src={product.image} alt={product.name} width={816} height={816} loading="lazy" />
-        ) : (
-          <span className="icon-fallback">
-            <CategoryIcon category={product.category} size={56} />
-          </span>
-        )}
-        {(product.isNew || product.isBestseller) && (
-          <span className="badge-slot">
-            {product.isNew && <Badge tone="accent">Nieuw</Badge>}
-            {product.isBestseller && <Badge tone="info">Bestseller</Badge>}
-          </span>
-        )}
-      </Link>
-      <label
-        className="compare-toggle"
-        title={blocked ? "Je kunt maximaal 4 producten vergelijken" : undefined}
-      >
-        <input
-          type="checkbox"
-          checked={selected}
-          disabled={blocked}
-          onChange={() => compare.toggle(product.id)}
-          aria-label={`${product.name} vergelijken`}
-        />
-        Vergelijk
-      </label>
-      <button
-        type="button"
-        className="fav-toggle"
-        aria-pressed={favorites.has(product.id)}
-        aria-label={`${product.name} ${favorites.has(product.id) ? "uit favorieten halen" : "aan favorieten toevoegen"}`}
-        onClick={() => void favorites.toggle(product.id)}
-      >
-        <Heart size={17} />
-      </button>
+      <div className="product-media">
+        <Link to="/producten/$id" params={{ id: product.id }} className="product-photo">
+          {product.image ? (
+            <img src={product.image} alt={product.name} width={816} height={816} loading="lazy" />
+          ) : (
+            <span className="icon-fallback">
+              <CategoryIcon category={product.category} size={56} />
+            </span>
+          )}
+          {(product.isNew || product.isBestseller) && (
+            <span className="badge-slot">
+              {product.isNew && <Badge tone="accent">Nieuw</Badge>}
+              {product.isBestseller && <Badge tone="info">Bestseller</Badge>}
+            </span>
+          )}
+        </Link>
+        <label
+          className="compare-toggle"
+          title={blocked ? "Je kunt maximaal 4 producten vergelijken" : undefined}
+        >
+          <input
+            type="checkbox"
+            checked={selected}
+            disabled={blocked}
+            onChange={() => compare.toggle(product.id)}
+            aria-label={`${product.name} vergelijken`}
+          />
+          Vergelijk
+        </label>
+        <button
+          type="button"
+          className="fav-toggle"
+          aria-pressed={favorites.has(product.id)}
+          aria-label={`${product.name} ${favorites.has(product.id) ? "uit favorieten halen" : "aan favorieten toevoegen"}`}
+          onClick={() => void favorites.toggle(product.id)}
+        >
+          <Heart size={17} />
+        </button>
+      </div>
       <div className="product-info">
         <span className="brand">{product.brand}</span>
         <Link to="/producten/$id" params={{ id: product.id }}>

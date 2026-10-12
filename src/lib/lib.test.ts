@@ -109,3 +109,54 @@ describe("beschikbaarheid", () => {
     expect(new Set(products.map((p) => availabilityFor(p.id).label)).size).toBeGreaterThan(1);
   });
 });
+
+describe("configurator", () => {
+  it("stelt een complete set samen met panelen, omvormer en montage", async () => {
+    const { buildConfiguration } = await import("./configurator");
+    const r = buildConfiguration({
+      roofArea: 200,
+      roofType: "schuin",
+      consumption: "middel",
+      battery: false,
+      charger: false,
+    });
+    const cats = r.lines.map((l) => l.product.category);
+    expect(cats).toEqual(expect.arrayContaining(["Zonnepanelen", "Omvormers", "Montagemateriaal"]));
+    expect(r.kwp).toBeGreaterThan(0);
+    expect(r.total).toBeGreaterThan(0);
+  });
+  it("begrenst panelen door het dakoppervlak", async () => {
+    const { buildConfiguration, PANEL_AREA_M2 } = await import("./configurator");
+    const r = buildConfiguration({
+      roofArea: 20,
+      roofType: "plat",
+      consumption: "groot",
+      battery: false,
+      charger: false,
+    });
+    expect(r.panelCount).toBe(Math.floor(20 / PANEL_AREA_M2));
+  });
+  it("kiest een hybride omvormer als er een batterij bij komt en voegt laadpaal toe op verzoek", async () => {
+    const { buildConfiguration } = await import("./configurator");
+    const r = buildConfiguration({
+      roofArea: 100,
+      roofType: "schuin",
+      consumption: "klein",
+      battery: true,
+      charger: true,
+    });
+    const inv = r.lines.find((l) => l.product.category === "Omvormers")!.product;
+    expect(inv.specs.find((s) => s.label === "Batterijaansluiting")?.value).toBe("Ja");
+    expect(r.lines.some((l) => l.product.category === "Energieopslag")).toBe(true);
+    expect(r.lines.some((l) => l.product.category === "EV-laders")).toBe(true);
+  });
+});
+
+describe("recent bekeken", () => {
+  it("zet het nieuwste vooraan, zonder dubbelen en begrensd", async () => {
+    const { pushRecent, MAX_RECENT } = await import("./recent");
+    expect(pushRecent(["a", "b", "c"], "b")).toEqual(["b", "a", "c"]);
+    const many = Array.from({ length: 12 }, (_, i) => `p${i}`);
+    expect(pushRecent(many, "x")).toHaveLength(MAX_RECENT);
+  });
+});

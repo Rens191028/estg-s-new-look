@@ -156,6 +156,27 @@ export type Database = {
         }
         Relationships: []
       }
+      training_enrollments: {
+        Row: {
+          created_at: string
+          id: string
+          training_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          training_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          training_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string

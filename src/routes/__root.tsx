@@ -19,6 +19,7 @@ import { StoreProvider } from "@/components/estg/store";
 import { CompareProvider } from "@/components/estg/compare";
 import { AuthProvider } from "@/components/estg/auth";
 import { FavoritesProvider } from "@/components/estg/favorites";
+import { TrainingsProvider } from "@/components/estg/trainings";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareBar } from "@/components/estg/compare-bar";
 import { CommandPalette } from "@/components/estg/command-palette";
@@ -179,6 +180,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <FavoritesProvider>
+          <TrainingsProvider>
           <StoreProvider>
             <CompareProvider>
               <Header />
@@ -195,6 +197,7 @@ function RootComponent() {
               <Toaster />
             </CompareProvider>
           </StoreProvider>
+          </TrainingsProvider>
         </FavoritesProvider>
       </AuthProvider>
     </QueryClientProvider>

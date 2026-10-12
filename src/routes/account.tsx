@@ -1,22 +1,25 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Heart, ShoppingBag } from "lucide-react";
+import { GraduationCap, Heart, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageIntro } from "@/components/estg/page-intro";
 import { ProductCard } from "@/components/estg/product-card";
 import { useAuth } from "@/components/estg/auth";
 import { useFavorites } from "@/components/estg/favorites";
+import { TrainingCard } from "@/components/estg/training-card";
+import { useTrainings } from "@/components/estg/trainings";
 import { findProduct, pageHead } from "@/lib/catalog";
+import { findTraining } from "@/lib/trainings";
 
-const TABS = ["favorieten", "gegevens", "bestellingen"] as const;
+const TABS = ["favorieten", "trainingen", "gegevens", "bestellingen"] as const;
 type Tab = (typeof TABS)[number];
 
 export const Route = createFileRoute("/account")({
   validateSearch: (s: Record<string, unknown>): { tab: Tab } => ({
     tab: TABS.includes(s["tab"] as Tab) ? (s["tab"] as Tab) : "favorieten",
   }),
-  head: () => pageHead("Account", "Je favorieten, gegevens en bestellingen bij ESTG."),
+  head: () => pageHead("Account", "Je favorieten, trainingen, gegevens en bestellingen bij ESTG."),
   component: Account,
 });
 
@@ -39,7 +42,10 @@ function Account() {
 
   return (
     <>
-      <PageIntro title="Mijn account" description="Je favorieten, gegevens en bestellingen." />
+      <PageIntro
+        title="Mijn account"
+        description="Je favorieten, trainingen, gegevens en bestellingen."
+      />
       <section className="container section account-tabs">
         <Tabs
           value={tab}
@@ -47,11 +53,15 @@ function Account() {
         >
           <TabsList>
             <TabsTrigger value="favorieten">Favorieten</TabsTrigger>
+            <TabsTrigger value="trainingen">Mijn trainingen</TabsTrigger>
             <TabsTrigger value="gegevens">Gegevens</TabsTrigger>
             <TabsTrigger value="bestellingen">Bestellingen</TabsTrigger>
           </TabsList>
           <TabsContent value="favorieten" style={{ marginTop: 24 }}>
             <FavoritesTab />
+          </TabsContent>
+          <TabsContent value="trainingen" style={{ marginTop: 24 }}>
+            <TrainingsTab />
           </TabsContent>
           <TabsContent value="gegevens" style={{ marginTop: 24 }}>
             <DetailsTab />
@@ -95,6 +105,29 @@ function FavoritesTab() {
     <div className="product-grid">
       {products.map((p) => (
         <ProductCard key={p.id} product={p} />
+      ))}
+    </div>
+  );
+}
+
+function TrainingsTab() {
+  const { ids } = useTrainings();
+  const items = ids.flatMap((id) => findTraining(id) ?? []);
+  if (!items.length)
+    return (
+      <div className="empty-state">
+        <GraduationCap size={40} />
+        <h2>Je bent nog nergens voor ingeschreven</h2>
+        <p>Bekijk het trainingsaanbod en schrijf je in met één klik.</p>
+        <Button asChild>
+          <Link to="/trainingen">Naar trainingen</Link>
+        </Button>
+      </div>
+    );
+  return (
+    <div className="training-grid">
+      {items.map((t) => (
+        <TrainingCard key={t.id} training={t} />
       ))}
     </div>
   );

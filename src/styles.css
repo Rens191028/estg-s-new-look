@@ -4969,3 +4969,32 @@ select {
     transform-origin: top;
   }
 }
+
+/* Bevestigingskaart: prijsopbouw als rijen i.p.v. gestapeld */
+.ticket-card .price-breakdown {
+  width: 100%;
+}
+.ticket-card .price-breakdown > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.ticket-card .price-breakdown .total {
+  padding-top: 12px;
+  border-top: 2px solid var(--navy-900);
+  border-bottom: 0;
+}
+.ticket-card dt {
+  font-size: 14px;
+}
+.save-error {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.8;
+  overflow-wrap: anywhere;
+}

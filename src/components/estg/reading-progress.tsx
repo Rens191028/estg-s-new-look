@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-/** Verticale voortgangsbalk langs de zijkant van het artikel die meevult met de leespositie. */
+/** Horizontale leesbalk direct onder de sticky header die van links naar rechts meevult. */
 export function ReadingProgress({ targetSelector }: { targetSelector: string }) {
   const [progress, setProgress] = useState(0);
   useEffect(() => {
@@ -30,13 +30,7 @@ export function ReadingProgress({ targetSelector }: { targetSelector: string }) 
       aria-valuemax={100}
       aria-valuenow={pct}
     >
-      <span className="reading-progress-label" aria-hidden>
-        Leesvoortgang
-      </span>
-      <div className="reading-progress-track">
-        <span style={{ transform: `scaleY(${progress})` }} />
-      </div>
-      <small aria-hidden>{pct}%</small>
+      <span style={{ transform: `scaleX(${progress})` }} />
     </div>
   );
 }

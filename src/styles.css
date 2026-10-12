@@ -3565,50 +3565,6 @@ select {
   justify-content: space-between;
   margin-top: 32px;
 }
-.reading-progress {
-  position: fixed;
-  top: 50%;
-  left: max(12px, calc(50% - 380px - 56px));
-  transform: translateY(-50%);
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-.reading-progress-track {
-  width: 6px;
-  height: min(40vh, 320px);
-  border-radius: var(--radius-full);
-  background: var(--navy-100);
-  box-shadow: inset 0 0 0 1px var(--border);
-  overflow: hidden;
-}
-.reading-progress-track span {
-  display: block;
-  height: 100%;
-  border-radius: var(--radius-full);
-  background: linear-gradient(to bottom, var(--yellow-400), var(--navy-900));
-  transform-origin: top;
-  transition: transform 0.12s linear;
-}
-.reading-progress small {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--navy-700);
-}
-@media (max-width: 1000px) {
-  .reading-progress {
-    left: 6px;
-  }
-  .reading-progress small {
-    display: none;
-  }
-  .reading-progress-track {
-    width: 4px;
-  }
-}
 .impact {
   background: var(--navy-900);
   color: var(--on-ink);
@@ -4639,51 +4595,6 @@ select {
   }
 }
 
-/* Leesvoortgang (ronde 17): altijd zichtbaar onder de sticky header, met label en percentage */
-.reading-progress {
-  top: calc(var(--header-h, 130px) + 28px);
-  transform: none;
-  padding: 10px 8px 8px;
-  background: var(--surface-0);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-}
-.reading-progress-label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--navy-700);
-}
-.reading-progress-track {
-  width: 8px;
-  height: min(34vh, 260px);
-}
-.reading-progress small {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--navy-900);
-}
-@media (max-width: 1000px) {
-  .reading-progress {
-    left: 8px;
-    padding: 6px 4px;
-  }
-  .reading-progress-label {
-    display: none;
-  }
-  .reading-progress small {
-    display: block;
-    font-size: 10px;
-  }
-  .reading-progress-track {
-    width: 6px;
-    height: min(26vh, 200px);
-  }
-}
 .article-page ul,
 .article-page ol {
   margin: 12px 0;
@@ -4716,8 +4627,22 @@ select {
   font-weight: 700;
   color: var(--navy-900);
 }
-@media (min-width: 1001px) {
-  .reading-progress {
-    left: max(12px, calc(50% - 380px - 78px));
-  }
+
+/* Leesvoortgang: dunne horizontale balk direct onder de sticky header, volle breedte */
+.reading-progress {
+  position: fixed;
+  top: var(--header-h, 0px);
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 41;
+  background: var(--navy-100);
+  pointer-events: none;
+}
+.reading-progress span {
+  display: block;
+  height: 100%;
+  background: var(--yellow-400);
+  transform-origin: left;
+  transition: transform 0.1s linear;
 }

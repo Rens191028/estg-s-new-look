@@ -1,7 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Check, ChevronRight, Heart, Minus, Plus, Scale, ShoppingBag, Star } from "lucide-react";
+import {
+  Check,
+  ChevronRight,
+  Heart,
+  Minus,
+  Plus,
+  Scale,
+  ShoppingBag,
+  Star,
+  ZoomIn,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -129,7 +140,20 @@ function Product() {
         <div className="detail-grid">
           <div className="gallery">
             {p.image ? (
-              <img src={p.image} alt={p.name} width={816} height={816} />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button type="button" className="gallery-zoom" aria-label={`${p.name} vergroten`}>
+                    <img src={p.image} alt={p.name} width={816} height={816} />
+                    <span className="gallery-zoom-icon" aria-hidden>
+                      <ZoomIn size={18} />
+                    </span>
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="lightbox">
+                  <DialogTitle className="sr-only">{p.name}</DialogTitle>
+                  <img src={p.image} alt={p.name} />
+                </DialogContent>
+              </Dialog>
             ) : (
               <span className="muted">
                 <CategoryIcon category={p.category} size={96} />

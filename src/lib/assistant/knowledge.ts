@@ -3,7 +3,7 @@
 // Zodra er een database is verhuist dit naar een beheerbare tabel (zie docs/ai-assistent.md).
 export const KNOWLEDGE_FACTS = [
   "ESTG (European Sustainable Technology Group) is een B2B-groothandel voor professionele installateurs in zonnepanelen, omvormers, energieopslag, EV-laders, montagemateriaal en klimaat.",
-  "Telefoon: +31 (0)85 016 7800, maandag t/m vrijdag 08:30 tot 17:30. Adres: Rietgraaf 2a, 6678 PJ Oosterhout (Gld).",
+  "Telefoon: +31 (0)85 016 7800, maandag t/m vrijdag 08:30 tot 17:30. Adres: Nieuwe Aamsestraat 84A, 6662 NK Elst.",
   "Deze website is een voorbeeldomgeving: er kunnen geen bestellingen worden geplaatst. Producten verzamel je in de winkelmand; de getoonde prijzen zijn indicatieve voorbeeldprijzen excl. btw en de definitieve prijs, specificaties en beschikbaarheid bevestigt ESTG.",
   "Het volledige actuele assortiment staat op estg.eu.",
 ] as const;

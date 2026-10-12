@@ -82,7 +82,15 @@ function Compare() {
                     ))}
                   </tr>
                   {labels.map((label) => (
-                    <tr key={label}>
+                    <tr
+                      key={label}
+                      className={
+                        selected.length > 1 &&
+                        new Set(selected.map((p) => specValue(p, label))).size > 1
+                          ? "differs"
+                          : undefined
+                      }
+                    >
                       <th scope="row">{label}</th>
                       {selected.map((p) => {
                         const v = specValue(p, label);
@@ -107,6 +115,11 @@ function Compare() {
                 </tbody>
               </table>
             </div>
+            {selected.length > 1 && (
+              <p className="compare-legend">
+                <span aria-hidden /> Gemarkeerde rijen: de producten verschillen op dit punt.
+              </p>
+            )}
             {selected.length < 2 && (
               <p className="sample-note">
                 Kies minstens één extra product om te kunnen vergelijken.

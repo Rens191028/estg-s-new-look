@@ -9,9 +9,9 @@ import rooftop from "@/assets/solar-rooftop.jpg";
 export const Route = createFileRoute("/inloggen")({
   head: () =>
     pageHead("Inloggen", "Log in of maak een zakelijk ESTG-account aan om favorieten op te slaan."),
-  validateSearch: (s: Record<string, unknown>): { reason?: "bestellen"; returnTo?: "/bestellen" } => ({
-    reason: s.reason === "bestellen" ? "bestellen" : undefined,
-    returnTo: s.returnTo === "/bestellen" ? "/bestellen" : undefined,
+  validateSearch: (s: Record<string, unknown>): { reason?: "bestellen" | undefined; returnTo?: "/bestellen" | undefined } => ({
+    reason: s["reason"] === "bestellen" ? "bestellen" : undefined,
+    returnTo: s["returnTo"] === "/bestellen" ? "/bestellen" : undefined,
   }),
   component: SignIn,
 });

@@ -9,12 +9,17 @@ import rooftop from "@/assets/solar-rooftop.jpg";
 export const Route = createFileRoute("/inloggen")({
   head: () =>
     pageHead("Inloggen", "Log in of maak een zakelijk ESTG-account aan om favorieten op te slaan."),
+  validateSearch: (s: Record<string, unknown>): { reason?: "bestellen"; returnTo?: "/bestellen" } => ({
+    reason: s.reason === "bestellen" ? "bestellen" : undefined,
+    returnTo: s.returnTo === "/bestellen" ? "/bestellen" : undefined,
+  }),
   component: SignIn,
 });
 
 function SignIn() {
   const { user, loading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const { reason, returnTo } = Route.useSearch();
   const [mode, setMode] = useState<"login" | "register">("login");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -22,9 +27,11 @@ function SignIn() {
 
   // Al ingelogd of net ingelogd: door naar het account.
   useEffect(() => {
-    if (!loading && user)
-      navigate({ to: "/account", search: { tab: "favorieten" }, replace: true });
-  }, [loading, user, navigate]);
+    if (!loading && user) {
+      if (returnTo === "/bestellen") navigate({ to: "/bestellen", replace: true });
+      else navigate({ to: "/account", search: { tab: "favorieten" }, replace: true });
+    }
+  }, [loading, user, navigate, returnTo]);
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,6 +93,11 @@ function SignIn() {
               </button>
             ))}
           </div>
+          {reason === "bestellen" && !notice && (
+            <div className="form-note" role="status">
+              Log in om je bestelling af te ronden.
+            </div>
+          )}
           {error && (
             <div className="form-error" role="alert">
               {error}

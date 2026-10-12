@@ -8,7 +8,7 @@ import { formatEuro } from "@/lib/format";
 import { useCompare } from "./compare";
 import { useFavorites } from "./favorites";
 import { useStore } from "./store";
-import { AvailabilityBadge, CategoryIcon } from "./ui-bits";
+import { AvailabilityBadge, CategoryIcon, Price } from "./ui-bits";
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useStore();
@@ -68,9 +68,7 @@ export function ProductCard({ product }: { product: Product }) {
           <AvailabilityBadge productId={product.id} />
         </div>
         <div className="product-bottom">
-          <span className="card-price">
-            {formatEuro(product.price)} <small>excl. btw</small>
-          </span>
+          <Price product={product} />
           <Button
             variant="default"
             size="sm"

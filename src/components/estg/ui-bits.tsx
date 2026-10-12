@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { availabilityFor } from "@/lib/availability";
-import type { Category } from "@/lib/catalog";
+import { discountPercent, isDeal, type Category, type Product } from "@/lib/catalog";
+import { formatEuro } from "@/lib/format";
 
 // Tijdelijke iconen uit lucide totdat de eigen ESTG-iconenset per categorie bestaat.
 const categoryIcons: Record<Category, LucideIcon> = {
@@ -168,6 +169,23 @@ export function CountUp({
       {prefix}
       {new Intl.NumberFormat("nl-NL").format(value)}
       {suffix}
+    </span>
+  );
+}
+
+/** Prijsweergave met was-prijs (doorgestreept) en kortingsbadge wanneer het product in de aanbieding is. */
+export function Price({ product, size = "card" }: { product: Product; size?: "card" | "detail" }) {
+  const deal = isDeal(product);
+  return (
+    <span className={`price-line price-line--${size}`}>
+      {deal && (
+        <s className="price-was" aria-label={`Was ${formatEuro(product.originalPrice!)}`}>
+          {formatEuro(product.originalPrice!)}
+        </s>
+      )}
+      <span className={deal ? "price-now deal" : "price-now"}>{formatEuro(product.price)}</span>
+      <small>excl. btw</small>
+      {deal && <span className="deal-badge">−{discountPercent(product)}%</span>}
     </span>
   );
 }

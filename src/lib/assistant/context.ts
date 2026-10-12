@@ -1,4 +1,4 @@
-import { categories, products, type Category, type Product } from "../catalog";
+import { categories, products, type Category, type Product, isDeal } from "../catalog";
 import { evaluateSet } from "./compat";
 import { KNOWLEDGE_FACTS, KNOWLEDGE_RULES } from "./knowledge";
 
@@ -37,7 +37,7 @@ export function catalogLines(list: Product[]) {
   return list
     .map(
       (p) =>
-        `- ${p.id} | ${p.name} | ${p.brand} | ${p.category} | €${p.price} excl. btw | ${p.specs.map((s) => `${s.label}: ${s.value}`).join("; ")}`,
+        `- ${p.id} | ${p.name} | ${p.brand} | ${p.category} | €${p.price} excl. btw${isDeal(p) ? ` (aanbieding, was €${p.originalPrice})` : ""} | ${p.specs.map((s) => `${s.label}: ${s.value}`).join("; ")}`,
     )
     .join("\n");
 }

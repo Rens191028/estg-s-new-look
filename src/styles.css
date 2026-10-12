@@ -4276,3 +4276,174 @@ select {
     font-weight: 700;
   }
 }
+
+/* ---------- Ronde 15: homepage-polish en AI-adviseur ---------- */
+.category-grid > *:nth-child(odd) .category-tile .icon-wrap {
+  background: var(--yellow-100);
+  color: var(--navy-900);
+}
+.category-grid > *:nth-child(even) .category-tile .icon-wrap {
+  background: var(--navy-100);
+  color: var(--navy-700);
+}
+.category-grid > * .category-tile:hover .icon-wrap {
+  background: var(--yellow-400);
+  color: var(--navy-900);
+}
+.chip-link {
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.15s ease-out,
+    background-color 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+.chip-link svg:first-child {
+  color: var(--yellow-500, #c9a900);
+}
+.chip-link .chip-arrow {
+  opacity: 0.4;
+  transition:
+    transform 0.15s ease-out,
+    opacity 0.15s ease-out;
+}
+.chip-link:hover {
+  background: var(--yellow-100);
+  border-color: var(--yellow-400);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.chip-link:hover .chip-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+.advisor-page {
+  position: relative;
+}
+.advisor-card {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--yellow-400);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+  background-image: radial-gradient(closest-side at 100% 0%, var(--yellow-100), transparent 60%);
+}
+.advisor-picks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.advisor-picks > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy-700);
+}
+.pick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface-0);
+  color: var(--navy-900);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease-out,
+    background-color 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+.pick-chip:hover {
+  background: var(--yellow-100);
+  border-color: var(--yellow-400);
+  transform: translateY(-1px);
+}
+.advice-answer {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  background: var(--surface-50);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--yellow-400);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+}
+.advice-answer-icon {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--navy-900);
+  color: var(--yellow-400);
+}
+.advisor-page .advice-answer .advice-summary {
+  margin: 0;
+  font-family: var(--font-sans, inherit);
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--navy-900);
+}
+.advisor-page .advice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.advisor-page .advice-card {
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 14px;
+  padding: 0 0 18px;
+  overflow: hidden;
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+}
+.advisor-page .advice-card > div,
+.advisor-page .advice-card > .line-price {
+  padding-inline: 18px;
+}
+.advisor-page .advice-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+  background: var(--surface-0);
+  border-bottom: 1px solid var(--border);
+}
+.advisor-page .advice-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.advisor-page .advice-card .line-price {
+  text-align: left;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.advice-summary-card {
+  position: static;
+  margin-top: 24px;
+}
+@media (max-width: 700px) {
+  .advisor-page .advice-grid {
+    grid-template-columns: 1fr;
+  }
+  .advisor-card {
+    padding: 20px;
+  }
+}

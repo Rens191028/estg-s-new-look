@@ -1243,18 +1243,19 @@ select {
 .gallery {
   position: relative;
   border-radius: var(--radius-xl);
-  background: var(--surface-50);
-  height: 520px;
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  height: 480px;
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 32px;
+  padding: 0;
 }
 .gallery img {
   position: absolute;
-  inset: 32px;
-  width: calc(100% - 64px);
-  height: calc(100% - 64px);
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
   object-fit: contain;
   transition: transform 0.4s ease-out;
 }
@@ -1265,7 +1266,7 @@ select {
 }
 .detail-info {
   display: grid;
-  gap: 14px;
+  gap: 18px;
   align-content: start;
 }
 .detail-info .brandline {
@@ -1280,11 +1281,26 @@ select {
   line-height: 26px;
   margin: 0;
 }
+.detail-summary {
+  display: grid;
+  gap: 8px;
+}
+.detail-summary h1 {
+  margin: 0;
+}
 .price-box {
-  background: var(--surface-50);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
-  border: 1px solid var(--border);
+  padding: 4px 0 0;
+}
+.price-box > span {
+  display: block;
+  margin-top: 2px;
+}
+.detail-footnote {
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--navy-700);
+  opacity: 0.85;
 }
 .price-box strong {
   display: block;
@@ -1813,7 +1829,7 @@ select {
     align-items: start;
   }
   .gallery {
-    height: 380px;
+    height: 360px;
   }
 }
 @media (max-width: 760px) {
@@ -3099,9 +3115,9 @@ select {
 }
 .gallery-zoom img {
   position: absolute;
-  inset: 32px;
-  width: calc(100% - 64px);
-  height: calc(100% - 64px);
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
   object-fit: contain;
 }
 .gallery-zoom-icon {

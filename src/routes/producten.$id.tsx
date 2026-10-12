@@ -183,23 +183,25 @@ function Product() {
               {p.isBestseller && <Badge tone="info">Bestseller</Badge>}
               <AvailabilityBadge productId={p.id} />
             </div>
-            <h1>{p.name}</h1>
-            <span className="sku">{p.sku}</span>
-            <p>{p.note}</p>
-            <div className="price-box">
-              <strong className="price">
-                <Price product={p} size="detail" />
-              </strong>
-              <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
+            <div className="detail-summary">
+              <h1>{p.name}</h1>
+              <span className="sku">{p.sku}</span>
+              <p>{p.note}</p>
+              <div className="price-box">
+                <strong className="price">
+                  <Price product={p} size="detail" />
+                </strong>
+                <span>Voorbeeldprijs, definitieve prijs bevestigt ESTG.</span>
+              </div>
+              <a className="rating-line" href={googleRating.url} target="_blank" rel="noreferrer">
+                <span className="stars" aria-hidden>
+                  <Star size={15} fill="currentColor" />
+                </span>
+                <strong>{String(googleRating.average).replace(".", ",")} ★</strong> gebaseerd op{" "}
+                {googleRating.count} Google-reviews van ESTG
+              </a>
             </div>
             <PriceTiers product={p} quantity={quantity} />
-            <a className="rating-line" href={googleRating.url} target="_blank" rel="noreferrer">
-              <span className="stars" aria-hidden>
-                <Star size={15} fill="currentColor" />
-              </span>
-              <strong>{String(googleRating.average).replace(".", ",")} ★</strong> gebaseerd op{" "}
-              {googleRating.count} Google-reviews van ESTG
-            </a>
             <div className="detail-buy" ref={buyRef}>
               <div className="quantity">
                 <Button
@@ -262,12 +264,10 @@ function Product() {
                 Bekijk winkelmand →
               </Link>
             )}
-            <p className="sample-note" style={{ padding: 0 }}>
-              {catalogDisclaimer}
-            </p>
           </div>
         </div>
 
+        <p className="detail-footnote">{catalogDisclaimer}</p>
         <div className="accordion-wrap">
           <Accordion type="multiple" defaultValue={["specs"]}>
             <AccordionItem value="specs">

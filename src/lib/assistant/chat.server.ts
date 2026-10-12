@@ -202,11 +202,19 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
         const fits = (id: string) => {
           const p = findProduct(id);
           const kind = roofKind(p?.specs.find((s) => s.label === "Daktype")?.value);
-          return !!p && p.category === "Montagemateriaal" && !!panelsPerSet(p) && (!roof || kind === roof);
+          return (
+            !!p &&
+            p.category === "Montagemateriaal" &&
+            !!panelsPerSet(p) &&
+            (!roof || kind === roof)
+          );
         };
         let idx = recommendations.findIndex((r) => fits(r.productId));
         for (let i = recommendations.length - 1; i >= 0; i--)
-          if (findProduct(recommendations[i]!.productId)?.category === "Montagemateriaal" && i !== idx) {
+          if (
+            findProduct(recommendations[i]!.productId)?.category === "Montagemateriaal" &&
+            i !== idx
+          ) {
             recommendations.splice(i, 1);
             if (i < idx) idx--;
           }

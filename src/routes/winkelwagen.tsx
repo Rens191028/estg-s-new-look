@@ -14,12 +14,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { PageIntro } from "@/components/estg/page-intro";
 import { useStore } from "@/components/estg/store";
-import { CategoryIcon } from "@/components/estg/ui-bits";
+import { CategoryIcon, PriceBreakdown, shippingNote } from "@/components/estg/ui-bits";
 import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
 import { pageHead } from "@/lib/catalog";
 import { COMPANY, COMPANY_ADDRESS } from "@/lib/company";
+import { orderTotals } from "@/lib/pricing";
 import { groupByCategory, projectLines, projectWarnings, totalKwp } from "@/lib/project";
-import { formatEuro, formatInt, formatKg, formatKwp } from "@/lib/format";
+import { formatEuro, formatEuroExact, formatInt, formatKg, formatKwp } from "@/lib/format";
 
 export const Route = createFileRoute("/winkelwagen")({
   head: () =>
@@ -45,6 +46,7 @@ function Cart() {
   const kwp = totalKwp(lines);
   const co2 = kwp > 0 ? estimateCo2Savings(kwp) : null;
 
+  const totals = orderTotals(subtotal);
   const download = () => {
     const text =
       `ESTG — Selectie\n${COMPANY_ADDRESS} · ${COMPANY.phone}\n${new Date().toLocaleDateString("nl-NL")}\n${projectName ? `Project/klantreferentie: ${projectName}\n` : ""}\n` +
@@ -54,7 +56,10 @@ function Cart() {
             `${l.quantity} × ${l.product.name} (${l.product.brand}, ${l.product.sku}) — ${formatEuro(l.product.price)} p/st, ${formatEuro(l.product.price * l.quantity)}`,
         )
         .join("\n") +
-      `\n\nSubtotaal (excl. btw): ${formatEuro(subtotal)}` +
+      `\n\nSubtotaal (excl. btw): ${formatEuroExact(totals.subtotal)}` +
+      `\nVerzending (excl. btw): ${formatEuroExact(totals.shipping)}` +
+      `\nBtw (21%): ${formatEuroExact(totals.vat)}` +
+      `\nTotaal (incl. btw en verzending): ${formatEuroExact(totals.total)}` +
       "\n\nVoorbeeldprijzen, excl. btw. Definitieve prijs, specificaties en beschikbaarheid bevestigt ESTG. Geen bestelling geplaatst.";
     const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
     const a = document.createElement("a");
@@ -167,7 +172,8 @@ function Cart() {
             </div>
             <aside className="summary-card" aria-label="Samenvatting">
               <h3>Samenvatting</h3>
-              <dl>
+              <PriceBreakdown subtotal={subtotal} />
+              <dl className="project-facts">
                 <div>
                   <dt>Producten</dt>
                   <dd>{formatInt(count)}</dd>
@@ -175,10 +181,6 @@ function Cart() {
                 <div>
                   <dt>Regels</dt>
                   <dd>{formatInt(lines.length)}</dd>
-                </div>
-                <div>
-                  <dt>Subtotaal (excl. btw)</dt>
-                  <dd>{formatEuro(subtotal)}</dd>
                 </div>
                 {kwp > 0 && (
                   <div>
@@ -197,9 +199,7 @@ function Cart() {
                   , {CO2_FACTOR.year}).
                 </p>
               )}
-              <p className="co2-note">
-                Voorbeeldprijzen, excl. btw. Definitieve prijs en verzendkosten bevestigt ESTG.
-              </p>
+              <p className="co2-note">{shippingNote}</p>
               <Button variant="accent" size="lg" onClick={order}>
                 Bestellen <ArrowUpRight />
               </Button>
@@ -293,9 +293,24 @@ function Cart() {
               ))}
             </tbody>
           </table>
-          <p className="print-total">
-            Totaal (excl. btw): <strong>{formatEuro(subtotal)}</strong>
-          </p>
+          <dl className="print-breakdown">
+            <div>
+              <dt>Subtotaal (excl. btw)</dt>
+              <dd>{formatEuroExact(totals.subtotal)}</dd>
+            </div>
+            <div>
+              <dt>Verzending (excl. btw)</dt>
+              <dd>{formatEuroExact(totals.shipping)}</dd>
+            </div>
+            <div>
+              <dt>Btw (21%)</dt>
+              <dd>{formatEuroExact(totals.vat)}</dd>
+            </div>
+            <div className="total">
+              <dt>Totaal (incl. btw en verzending)</dt>
+              <dd>{formatEuroExact(totals.total)}</dd>
+            </div>
+          </dl>
           <footer className="print-foot">
             <p>
               Voorbeeldassortiment: prijzen, specificaties en beschikbaarheid zijn illustratief en

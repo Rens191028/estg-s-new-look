@@ -178,3 +178,17 @@ describe("certificeringen", () => {
     expect(withCert.length).toBeLessThan(products.length);
   });
 });
+
+describe("prijsopbouw", () => {
+  it("telt verzending en 21% btw op over subtotaal + verzending", async () => {
+    const { orderTotals, SHIPPING_EX_VAT } = await import("./pricing");
+    const t = orderTotals(1000);
+    expect(t.shipping).toBe(SHIPPING_EX_VAT);
+    expect(t.vat).toBeCloseTo(225.75, 2);
+    expect(t.total).toBeCloseTo(1300.75, 2);
+  });
+  it("rekent niets voor een lege selectie", async () => {
+    const { orderTotals } = await import("./pricing");
+    expect(orderTotals(0)).toEqual({ subtotal: 0, shipping: 0, vat: 0, total: 0 });
+  });
+});

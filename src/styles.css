@@ -4216,3 +4216,63 @@ select {
   line-height: 18px;
   color: var(--navy-700);
 }
+
+/* ---------- Ronde 13: prijsopbouw ---------- */
+.price-breakdown,
+.project-facts,
+.print-breakdown {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.price-breakdown > div,
+.project-facts > div,
+.print-breakdown > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+.price-breakdown dd,
+.project-facts dd,
+.print-breakdown dd {
+  margin: 0;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.price-breakdown .total {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 2px solid var(--navy-900);
+  font-size: 15px;
+  font-weight: 700;
+}
+.price-breakdown .total dd {
+  font-size: 16px;
+}
+.project-facts {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.ticket-card .price-breakdown {
+  padding: 12px 0;
+}
+@media print {
+  .print-breakdown {
+    margin-top: 14px;
+    margin-left: auto;
+    width: 60%;
+    font-size: 12px;
+  }
+  .print-breakdown > div {
+    justify-content: space-between;
+  }
+  .print-breakdown .total {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 2px solid #00183d;
+    font-size: 14px;
+    font-weight: 700;
+  }
+}

@@ -20,6 +20,7 @@ import { CompareProvider } from "@/components/estg/compare";
 import { AuthProvider } from "@/components/estg/auth";
 import { FavoritesProvider } from "@/components/estg/favorites";
 import { TrainingsProvider } from "@/components/estg/trainings";
+import { OrdersProvider } from "@/components/estg/orders";
 import { Toaster } from "@/components/ui/sonner";
 import { CompareBar } from "@/components/estg/compare-bar";
 import { CommandPalette } from "@/components/estg/command-palette";
@@ -181,22 +182,24 @@ function RootComponent() {
       <AuthProvider>
         <FavoritesProvider>
           <TrainingsProvider>
-          <StoreProvider>
-            <CompareProvider>
-              <Header />
-              <main>
-                <PageTransition />
-              </main>
-              <Footer />
-              <CompareBar />
-              <AssistantWidget />
-              <ScrollTop />
-              <CookieBanner />
-              <CommandPalette />
-              <RouteProgress />
-              <Toaster />
-            </CompareProvider>
-          </StoreProvider>
+            <OrdersProvider>
+              <StoreProvider>
+                <CompareProvider>
+                  <Header />
+                  <main>
+                    <PageTransition />
+                  </main>
+                  <Footer />
+                  <CompareBar />
+                  <AssistantWidget />
+                  <ScrollTop />
+                  <CookieBanner />
+                  <CommandPalette />
+                  <RouteProgress />
+                  <Toaster />
+                </CompareProvider>
+              </StoreProvider>
+            </OrdersProvider>
           </TrainingsProvider>
         </FavoritesProvider>
       </AuthProvider>

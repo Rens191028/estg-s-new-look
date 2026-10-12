@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { PageIntro } from "@/components/estg/page-intro";
 import { PriceBreakdown, shippingNote } from "@/components/estg/ui-bits";
+import { useOrders } from "@/components/estg/orders";
+import { orderTotals } from "@/lib/pricing";
 import { useStore } from "@/components/estg/store";
 import { useAuth } from "@/components/estg/auth";
 import { pageHead } from "@/lib/catalog";
@@ -46,7 +48,9 @@ function Order() {
   const [minDate] = useState(earliestDate);
   const [date, setDate] = useState<Date | undefined>();
   const [dateError, setDateError] = useState(false);
-  const [done, setDone] = useState<null | typeof form & { date: Date; subtotal: number; reference: string }>(null);
+  const [done, setDone] = useState<null | (typeof form & { date: Date; subtotal: number; reference: string; orderId: string | null })>(null);
+  const [placing, setPlacing] = useState(false);
+  const { place } = useOrders();
 
   useEffect(() => {
     if (!loading && !user)
@@ -89,6 +93,18 @@ function Order() {
               Dit is een voorbeeldomgeving — er wordt geen echte betaling verwerkt. ESTG neemt
               contact met je op om de betaling en levering verder af te ronden.
             </p>
+            {done.orderId ? (
+              <Button asChild variant="accent">
+                <Link to="/account" search={{ tab: "bestellingen", order: done.orderId }}>
+                  Bekijk je bestelling
+                </Link>
+              </Button>
+            ) : (
+              <p className="form-error" role="alert">
+                Je bestelling kon niet worden opgeslagen in je account. Neem contact op met ESTG als
+                dit blijft gebeuren.
+              </p>
+            )}
             <Button asChild variant="outline">
               <Link to="/winkelwagen">Terug naar winkelmand</Link>
             </Button>
@@ -120,10 +136,29 @@ function Order() {
       <section className="container section" style={{ paddingBlock: 0 }}>
         <form
           className="project-layout"
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
             if (!date) return setDateError(true);
-            setDone({ ...form, date, subtotal, reference: projectName });
+            if (placing) return;
+            setPlacing(true);
+            const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+            const { order, error } = await place({
+              lines: lines.map((l) => ({
+                product_id: l.product.id,
+                name: l.product.name,
+                brand: l.product.brand,
+                sku: l.product.sku,
+                quantity: l.quantity,
+                unit_price: l.product.price,
+              })),
+              totals: orderTotals(subtotal),
+              shipDate: iso,
+              reference: projectName,
+              contact: form,
+            });
+            setPlacing(false);
+            if (error) console.error("Bestelling opslaan mislukt:", error);
+            setDone({ ...form, date, subtotal, reference: projectName, orderId: order?.id ?? null });
             window.scrollTo({ top: 0 });
           }}
         >
@@ -184,8 +219,8 @@ function Order() {
               <div><dt>Verzenddatum</dt><dd>{date ? date.toLocaleDateString("nl-NL") : "—"}</dd></div>
             </dl>
             <p className="co2-note">{shippingNote} Er wordt geen echte betaling verwerkt.</p>
-            <Button type="submit" variant="accent" size="lg">
-              Doorgaan naar betaling <ArrowUpRight />
+            <Button type="submit" variant="accent" size="lg" disabled={placing}>
+              {placing ? "Bestelling plaatsen…" : "Doorgaan naar betaling"} <ArrowUpRight />
             </Button>
           </aside>
         </form>

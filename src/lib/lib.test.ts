@@ -192,3 +192,26 @@ describe("prijsopbouw", () => {
     expect(orderTotals(0)).toEqual({ subtotal: 0, shipping: 0, vat: 0, total: 0 });
   });
 });
+
+describe("bestellingen en tracking", () => {
+  const order = { created_at: "2026-10-12T09:00:00", ship_date: "2026-10-14" };
+  it("geeft een stabiel fictief trackingnummer", async () => {
+    const { trackingNumber } = await import("./orders");
+    expect(trackingNumber("abc")).toBe(trackingNumber("abc"));
+    expect(trackingNumber("abc")).toMatch(/^DX-\d{4}-\d{6}$/);
+  });
+  it("laat stappen oplopen in de tijd", async () => {
+    const { trackingSteps } = await import("./orders");
+    const t = trackingSteps(order).map((s) => s.at.getTime());
+    expect([...t].sort((a, b) => a - b)).toEqual(t);
+    expect(new Set(t).size).toBe(4);
+  });
+  it("bepaalt de huidige stap op basis van de tijd", async () => {
+    const { trackingSteps, currentStep } = await import("./orders");
+    const steps = trackingSteps(order);
+    expect(currentStep(steps, new Date("2026-10-12T09:00:01"))).toBe(0);
+    expect(currentStep(steps, new Date("2026-10-12T13:00:00"))).toBe(1);
+    expect(currentStep(steps, new Date("2026-10-13T19:00:00"))).toBe(2);
+    expect(currentStep(steps, new Date("2026-10-15T00:00:00"))).toBe(3);
+  });
+});

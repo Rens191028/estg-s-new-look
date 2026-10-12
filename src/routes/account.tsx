@@ -10,14 +10,17 @@ import { useFavorites } from "@/components/estg/favorites";
 import { TrainingCard } from "@/components/estg/training-card";
 import { useTrainings } from "@/components/estg/trainings";
 import { findProduct, pageHead } from "@/lib/catalog";
+import { OrderCard } from "@/components/estg/order-tracking";
+import { useOrders } from "@/components/estg/orders";
 import { findTraining } from "@/lib/trainings";
 
 const TABS = ["favorieten", "trainingen", "gegevens", "bestellingen"] as const;
 type Tab = (typeof TABS)[number];
 
 export const Route = createFileRoute("/account")({
-  validateSearch: (s: Record<string, unknown>): { tab: Tab } => ({
+  validateSearch: (s: Record<string, unknown>): { tab: Tab; order?: string | undefined } => ({
     tab: TABS.includes(s["tab"] as Tab) ? (s["tab"] as Tab) : "favorieten",
+    order: typeof s["order"] === "string" ? s["order"] : undefined,
   }),
   head: () => pageHead("Account", "Je favorieten, trainingen, gegevens en bestellingen bij ESTG."),
   component: Account,
@@ -25,7 +28,7 @@ export const Route = createFileRoute("/account")({
 
 function Account() {
   const { user, loading } = useAuth();
-  const { tab } = Route.useSearch();
+  const { tab, order } = Route.useSearch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,17 +70,7 @@ function Account() {
             <DetailsTab />
           </TabsContent>
           <TabsContent value="bestellingen" style={{ marginTop: 24 }}>
-            <div className="empty-state">
-              <ShoppingBag size={40} />
-              <h2>Je hebt nog geen bestellingen</h2>
-              <p>
-                Bestellen via deze voorbeeldwebsite is nog niet mogelijk. Gebruik je winkelmand om
-                je selectie met ESTG te bespreken.
-              </p>
-              <Button asChild>
-                <Link to="/winkelwagen">Naar winkelmand</Link>
-              </Button>
-            </div>
+            <OrdersTab openId={order} />
           </TabsContent>
         </Tabs>
       </section>
@@ -105,6 +98,42 @@ function FavoritesTab() {
     <div className="product-grid">
       {products.map((p) => (
         <ProductCard key={p.id} product={p} />
+      ))}
+    </div>
+  );
+}
+
+function OrdersTab({ openId }: { openId: string | undefined }) {
+  const { orders, loading } = useOrders();
+  useEffect(() => {
+    if (!openId) return;
+    const t = setTimeout(
+      () => document.getElementById(`order-${openId}`)?.scrollIntoView({ block: "start" }),
+      150,
+    );
+    return () => clearTimeout(t);
+  }, [openId, orders.length]);
+  if (loading && !orders.length) return <p className="muted">Even laden…</p>;
+  if (!orders.length)
+    return (
+      <div className="empty-state">
+        <ShoppingBag size={40} />
+        <h2>Je hebt nog geen bestellingen</h2>
+        <p>
+          Zodra je een bestelling plaatst, vind je die hier terug met productfoto&apos;s,
+          prijsopbouw en de status van de zending.
+        </p>
+        <Button asChild>
+          <Link to="/webshop" search={{ q: "", category: "", brand: "" }}>
+            Naar het assortiment
+          </Link>
+        </Button>
+      </div>
+    );
+  return (
+    <div className="order-list">
+      {orders.map((o, i) => (
+        <OrderCard key={o.id} order={o} defaultOpen={openId ? o.id === openId : i === 0} />
       ))}
     </div>
   );

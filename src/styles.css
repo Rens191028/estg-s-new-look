@@ -4651,3 +4651,321 @@ select {
     transition: none;
   }
 }
+
+/* ---------- Ronde 18: bestellingen en DACHSER-tracking ---------- */
+.order-list {
+  display: grid;
+  gap: 16px;
+}
+.order-card {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease-out;
+}
+.order-card.is-open {
+  box-shadow: var(--shadow-md);
+  border-color: var(--navy-100);
+}
+.order-summary {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px;
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.order-summary:hover {
+  background: var(--surface-50);
+}
+.order-main {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.order-main strong {
+  font-size: 16px;
+}
+.order-main small {
+  font-size: 13px;
+  color: var(--navy-700);
+}
+.order-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: none;
+}
+.order-total {
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+.order-summary .chev {
+  transition: transform 0.2s ease-out;
+}
+.order-card.is-open .order-summary .chev {
+  transform: rotate(180deg);
+}
+.order-details {
+  display: grid;
+  gap: 24px;
+  padding: 4px 22px 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 22px;
+  animation: fade-in 0.3s ease-out;
+}
+.order-lines h3,
+.order-totals h3 {
+  font-size: 14px;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--navy-700);
+}
+.order-line {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.order-line img,
+.order-thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface-0);
+}
+.order-line strong {
+  display: block;
+  font-size: 15px;
+}
+.order-line small {
+  font-size: 13px;
+  color: var(--navy-700);
+}
+.order-line-price {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.order-line-price small {
+  display: block;
+  font-family: var(--font-sans, inherit);
+  font-weight: 400;
+}
+.order-totals {
+  max-width: 420px;
+  margin-left: auto;
+  width: 100%;
+}
+
+/* DACHSER-tracker (fictief) */
+.tracker {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 22px;
+  background:
+    radial-gradient(closest-side at 100% 0%, var(--yellow-100), transparent 55%), var(--surface-0);
+}
+.tracker-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 28px;
+  margin-bottom: 28px;
+}
+.dachser-badge {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 8px 16px 7px;
+  border-radius: var(--radius-md);
+  background: var(--yellow-400);
+  color: var(--navy-900);
+  box-shadow: var(--shadow-sm);
+}
+.dachser-badge strong {
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 22px;
+  letter-spacing: 0.08em;
+}
+.dachser-badge span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.tracker-head dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 0;
+}
+.tracker-head dt {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--navy-700);
+}
+.tracker-head dd {
+  margin: 2px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+.tracker-number {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.tracker-steps {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.tracker-line {
+  position: absolute;
+  left: 12.5%;
+  right: 12.5%;
+  top: 22px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: var(--radius-full);
+  background: var(--navy-100);
+  overflow: hidden;
+}
+.tracker-line span {
+  display: block;
+  height: 100%;
+  width: var(--pct, 0%);
+  transform-origin: left;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--yellow-400), var(--navy-900));
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tracker-step {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+  padding-inline: 6px;
+}
+.tracker-dot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-0);
+  border: 2px solid var(--navy-100);
+  color: var(--navy-700);
+  margin-bottom: 8px;
+  transition:
+    background-color 0.4s ease-out,
+    border-color 0.4s ease-out,
+    color 0.4s ease-out;
+}
+.tracker-step strong {
+  font-size: 14px;
+  line-height: 18px;
+}
+.tracker-step small {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--navy-700);
+}
+.tracker-step.is-done .tracker-dot {
+  background: var(--navy-900);
+  border-color: var(--navy-900);
+  color: var(--yellow-400);
+}
+.tracker-step.is-active .tracker-dot {
+  background: var(--yellow-400);
+  border-color: var(--navy-900);
+  color: var(--navy-900);
+  animation: tracker-pulse 2s ease-out infinite;
+}
+.tracker-step.is-todo strong,
+.tracker-step.is-todo small {
+  opacity: 0.6;
+}
+.tracker-step.is-todo small {
+  font-style: italic;
+}
+@keyframes tracker-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 206, 17, 0.7);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px rgba(243, 206, 17, 0);
+  }
+}
+.tracker-note {
+  margin: 22px 0 0;
+  font-size: 12px;
+  color: var(--navy-700);
+}
+@media (max-width: 640px) {
+  .order-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .order-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .order-line {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+  .order-line-price {
+    grid-column: 2;
+    text-align: left;
+  }
+  .order-line img,
+  .order-thumb {
+    width: 56px;
+    height: 56px;
+  }
+  .tracker-steps {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .tracker-step {
+    grid-template-columns: 44px 1fr;
+    justify-items: start;
+    text-align: left;
+    column-gap: 14px;
+    row-gap: 0;
+  }
+  .tracker-dot {
+    grid-row: 1 / 3;
+    margin-bottom: 0;
+  }
+  .tracker-line {
+    left: 21px;
+    right: auto;
+    top: 22px;
+    bottom: 22px;
+    width: 6px;
+    height: auto;
+    margin: 0;
+  }
+  .tracker-line span {
+    transform-origin: top;
+  }
+}

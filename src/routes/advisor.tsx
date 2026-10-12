@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertTriangle, Check, Sparkles } from "lucide-react";
+import { AlertTriangle, ArrowRight, Check, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageIntro } from "@/components/estg/page-intro";
@@ -29,6 +29,25 @@ type Result = ({ ok: true } & AdviceResult) | { ok: false; message: string };
 function estimatedTotal(recs: { productId: string; quantity: number }[]) {
   return recs.reduce((sum, r) => sum + (findProduct(r.productId)?.price ?? 0) * r.quantity, 0);
 }
+
+// Veelgebruikte startpunten; een klik vult de velden in (er wordt nog niets verstuurd).
+const QUICK_PICKS: { label: string; message: string; requirements: string }[] = [
+  {
+    label: "20 panelen + batterij",
+    message: "20 zonnepanelen op een schuin dak, met batterij",
+    requirements: "",
+  },
+  {
+    label: "EV-laadpaal thuis",
+    message: "Een laadpaal voor thuis, met slim laden op zonne-energie",
+    requirements: "3-fase aansluiting",
+  },
+  {
+    label: "Warmtepomp voor woning",
+    message: "Een warmtepomp voor een woning, het liefst in combinatie met zonnepanelen",
+    requirements: "",
+  },
+];
 
 function Advisor() {
   const { add } = useStore();
@@ -65,13 +84,33 @@ function Advisor() {
         title="AI-adviseur"
         description="Beschrijf je project, bijvoorbeeld het aantal panelen en of je een batterij wilt. Je krijgt een advies uit het voorbeeldassortiment."
       />
-      <section className="container section" style={{ maxWidth: 860 }}>
+      <section className="container section advisor-page" style={{ maxWidth: 980 }}>
         <form
+          className="advisor-card"
           onSubmit={(e) => {
             e.preventDefault();
             void submit();
           }}
         >
+          <div className="advisor-picks">
+            <span>
+              <Sparkles size={14} aria-hidden /> Snel starten:
+            </span>
+            {QUICK_PICKS.map((q) => (
+              <button
+                key={q.label}
+                type="button"
+                className="pick-chip"
+                onClick={() => {
+                  setMessage(q.message);
+                  setRequirements(q.requirements);
+                }}
+              >
+                {q.label}
+                <ArrowRight size={14} aria-hidden />
+              </button>
+            ))}
+          </div>
           <div className="field">
             <label htmlFor="project">Projectomschrijving</label>
             <textarea
@@ -116,7 +155,12 @@ function Advisor() {
         )}
         {result?.ok && (
           <div style={{ marginTop: 32 }}>
-            <p className="advice-summary">{result.reply}</p>
+            <div className="advice-answer">
+              <span className="advice-answer-icon" aria-hidden>
+                <Zap size={16} fill="currentColor" />
+              </span>
+              <p className="advice-summary">{result.reply}</p>
+            </div>
             {result.warnings.length > 0 && (
               <div className="compat-warn" role="status">
                 <AlertTriangle size={20} />
@@ -137,7 +181,7 @@ function Advisor() {
                       <article className="advice-card" key={r.productId}>
                         <Link to="/producten/$id" params={{ id: p.id }} className="advice-thumb">
                           {p.image ? (
-                            <img src={p.image} alt={p.name} width={96} height={96} />
+                            <img src={p.image} alt={p.name} width={816} height={816} />
                           ) : (
                             <CategoryIcon category={p.category} size={36} />
                           )}
@@ -161,20 +205,29 @@ function Advisor() {
                     );
                   })}
                 </div>
-                <p className="advisor-total">
-                  Geschat totaal (excl. btw):{" "}
-                  <strong>{formatEuro(estimatedTotal(result.recommendations))}</strong>
-                  <small>Voorbeeldprijzen, definitieve prijs bevestigt ESTG.</small>
-                </p>
-                <Button
-                  onClick={() => {
-                    for (const r of result.recommendations) add(r.productId, r.quantity);
-                    setAdded(true);
-                  }}
+                <aside
+                  className="summary-card advice-summary-card"
+                  aria-label="Samenvatting advies"
                 >
-                  {added ? <Check /> : null}
-                  {added ? "Toegevoegd aan winkelmand" : "Alles toevoegen aan winkelmand"}
-                </Button>
+                  <dl>
+                    <div>
+                      <dt>Geschat totaal (excl. btw)</dt>
+                      <dd>{formatEuro(estimatedTotal(result.recommendations))}</dd>
+                    </div>
+                  </dl>
+                  <p className="co2-note">Voorbeeldprijzen, definitieve prijs bevestigt ESTG.</p>
+                  <Button
+                    variant="accent"
+                    size="lg"
+                    onClick={() => {
+                      for (const r of result.recommendations) add(r.productId, r.quantity);
+                      setAdded(true);
+                    }}
+                  >
+                    {added ? <Check /> : null}
+                    {added ? "Toegevoegd aan winkelmand" : "Alles toevoegen aan winkelmand"}
+                  </Button>
+                </aside>
               </>
             )}
           </div>

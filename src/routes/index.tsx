@@ -94,7 +94,7 @@ function AdvisorBand() {
         <div className="chips">
           {ADVISOR_QUESTIONS.map((q) => (
             <Link key={q} to="/advisor" search={{ vraag: q }} className="chip chip-link">
-              <Sparkles size={14} /> {q}
+              <Sparkles size={14} /> {q} <ArrowRight size={14} className="chip-arrow" />
             </Link>
           ))}
         </div>

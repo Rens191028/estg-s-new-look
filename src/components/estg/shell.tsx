@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
+  ArrowRight,
   ArrowUpRight,
   ChevronDown,
   BookOpen,
@@ -377,6 +378,14 @@ export function Header() {
                     </Link>
                   ))}
                 </div>
+                <Link
+                  to="/webshop"
+                  search={{ q: "", category: "", brand: "" }}
+                  className="mega-all"
+                  onClick={close}
+                >
+                  Bekijk het hele assortiment <ArrowRight size={16} />
+                </Link>
               </div>
               <div className="mega-popular">
                 <h3 className="mega-title">Populair</h3>

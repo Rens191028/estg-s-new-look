@@ -751,7 +751,7 @@ export function brandLogo(brand: string): string | null {
 }
 
 /** Logo's met een gevuld vlak (bijv. SMA): als wit silhouet worden dat blokken, dus tonen we ze op een lichte tegel. */
-export const solidBrandLogos = new Set(["SMA"]);
+export const solidBrandLogos = new Set(["SMA", "K2 Systems"]);
 
 export function isDeal(p: Product) {
   return p.originalPrice !== undefined && p.originalPrice > p.price;

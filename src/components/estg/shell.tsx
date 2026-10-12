@@ -196,7 +196,19 @@ export function Header() {
   const navigate = useNavigate();
   const [pop, setPop] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const previousCount = useRef(count);
+  // Houd de actuele headerhoogte bij als CSS-variabele (ook tijdens het krimpen) voor elementen eronder.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return undefined;
+    const set = () =>
+      document.documentElement.style.setProperty("--header-h", `${el.offsetHeight}px`);
+    set();
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   // Header wordt compacter met schaduw zodra er gescrold is (hysterese voorkomt flikkeren).
   useEffect(() => {
     const onScroll = () => {
@@ -228,7 +240,7 @@ export function Header() {
   return (
     <>
       <BrandBar />
-      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
+      <header ref={headerRef} className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <div className="container main-header">
           <Link to="/" aria-label="ESTG home" onClick={close}>
             <Logo />

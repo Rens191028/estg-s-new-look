@@ -1326,15 +1326,26 @@ select {
   position: fixed;
   left: 0;
   right: 0;
-  top: 0;
-  z-index: 55;
+  /* Direct onder de sticky header; --header-h wordt door de Header bijgehouden. */
+  top: var(--header-h, 130px);
+  z-index: 35;
   background: var(--navy-900);
   color: var(--on-ink);
+  box-shadow: var(--shadow-md);
   transform: translateY(-100%);
-  transition: transform 0.25s ease-out;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 0.25s ease-out,
+    opacity 0.25s ease-out,
+    visibility 0s linear 0.25s,
+    top 0.25s ease-out;
 }
 .sticky-buy.visible {
   transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 .sticky-buy-inner {
   display: flex;
@@ -1345,6 +1356,13 @@ select {
 }
 .sticky-buy strong {
   font-size: 15px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sticky-buy-inner > button {
+  flex-shrink: 0;
 }
 .spec-table {
   width: 100%;
@@ -3794,7 +3812,9 @@ select {
 }
 /* Routewissel */
 .page-enter {
-  animation: rise-in 0.32s ease-out both;
+  /* 'backwards' i.p.v. 'both': na afloop geen transform vasthouden, anders wordt dit element de
+     containing block van position:fixed-kinderen (zoals de sticky koopbalk). */
+  animation: rise-in 0.32s ease-out backwards;
 }
 /* Categorietegels */
 .category-tile:hover {

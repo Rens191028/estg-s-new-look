@@ -61,6 +61,13 @@ export function checkPanelInverterSizing(
       reason: "Paneel- of omvormervermogen is niet bekend.",
     };
   const ratio = kwp / kw;
+  const maxDc = numberIn(spec(inverter, "Max. DC-ingangsvermogen"));
+  if (maxDc && kwp > maxDc)
+    return {
+      rule: "dimensionering",
+      status: "niet-compatibel",
+      reason: `${quantity} × ${panel.powerWp} Wp = ${kwp.toFixed(2)} kWp, boven het max. DC-ingangsvermogen van ${maxDc} kWp van ${inverter.name}.`,
+    };
   const text = `${quantity} × ${panel.powerWp} Wp = ${kwp.toFixed(2)} kWp op ${kw} kW omvormer (DC/AC ${ratio.toFixed(2)}).`;
   if (ratio > MAX_DC_AC_RATIO)
     return {
@@ -77,8 +84,58 @@ export function checkPanelInverterSizing(
   return { rule: "dimensionering", status: "compatibel", reason: text };
 }
 
+/** Normaliseert een daktype naar "schuin" of "plat" (pannendak telt als schuin). */
+export function roofKind(value: string | undefined): "schuin" | "plat" | undefined {
+  const v = value?.toLowerCase() ?? "";
+  if (/plat/.test(v)) return "plat";
+  if (/schuin|pannen|hellend/.test(v)) return "schuin";
+  return undefined;
+}
+
+/** Leidt een gevraagd daktype af uit vrije tekst (bijv. de projectomschrijving). */
+export function roofKindFromText(text: string) {
+  return roofKind(text.match(/plat(te)? dak|platdak|schuin|pannendak|hellend dak/i)?.[0]);
+}
+
+export const panelsPerSet = (mounting: Product) => numberIn(spec(mounting, "Panelen per set"));
+
+/**
+ * Paneel ↔ montagemateriaal. Vuistregel op basis van illustratieve specs: daktype moet aansluiten
+ * op het gevraagde daktype (indien bekend) en het aantal sets = panelen / panelen per set, naar boven.
+ */
+export function checkPanelMounting(
+  panel: Product,
+  quantity: number,
+  mounting: Product,
+  roof?: "schuin" | "plat",
+): CompatResult {
+  const kind = roofKind(spec(mounting, "Daktype"));
+  if (roof && kind && roof !== kind)
+    return {
+      rule: "montage",
+      status: "niet-compatibel",
+      reason: `${mounting.name} is voor een ${kind} dak, het project heeft een ${roof} dak.`,
+    };
+  const per = panelsPerSet(mounting);
+  if (!per || !kind)
+    return {
+      rule: "montage",
+      status: "onbekend",
+      reason: `Daktype of capaciteit per set van ${mounting.name} is niet bekend.`,
+    };
+  const sets = Math.ceil(quantity / per);
+  return {
+    rule: "montage",
+    status: "compatibel",
+    reason: `${quantity} × ${panel.name} / ${per} panelen per set = ${sets} ${sets === 1 ? "set" : "sets"} ${mounting.name} (${kind} dak) nodig.`,
+  };
+}
+
 /** Controleert alle relevante combinaties binnen een set (id + aantal). */
-export function evaluateSet(items: { id: string; quantity: number }[]): CompatResult[] {
+export function evaluateSet(
+  items: { id: string; quantity: number }[],
+  roof?: "schuin" | "plat",
+): CompatResult[] {
   const lines = items.flatMap((i) => {
     const product = findProduct(i.id);
     return product ? [{ product, quantity: i.quantity }] : [];
@@ -91,5 +148,8 @@ export function evaluateSet(items: { id: string; quantity: number }[]): CompatRe
     for (const bat of of("Energieopslag"))
       results.push(checkInverterBattery(inv.product, bat.product));
   }
+  for (const mnt of of("Montagemateriaal"))
+    for (const pan of of("Zonnepanelen"))
+      results.push(checkPanelMounting(pan.product, pan.quantity, mnt.product, roof));
   return results;
 }

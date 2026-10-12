@@ -2,7 +2,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { Output, streamText, type ModelMessage } from "ai";
 import { z } from "zod";
 import { categories, findProduct } from "../catalog";
-import { evaluateSet } from "./compat";
+import { evaluateSet, panelsPerSet, roofKind, roofKindFromText } from "./compat";
 import { catalogLines, compatFacts, relevantProducts } from "./context";
 import { clampMessage, MAX_HISTORY, MAX_MESSAGE_LENGTH, RATE_LIMIT } from "./guards";
 
@@ -189,8 +189,41 @@ export async function handleAssistantChat(request: Request): Promise<Response> {
             ]
           : [],
       );
+      // Montage: bij panelen altijd een passend systeem (op daktype) met het berekende aantal sets.
+      const roof = roofKindFromText(data.message);
+      const panelCount = recommendations
+        .filter((r) => findProduct(r.productId)?.category === "Zonnepanelen")
+        .reduce((a, r) => a + r.quantity, 0);
+      if (panelCount > 0) {
+        const fits = (id: string) => {
+          const p = findProduct(id);
+          const kind = roofKind(p?.specs.find((s) => s.label === "Daktype")?.value);
+          return !!p && p.category === "Montagemateriaal" && !!panelsPerSet(p) && (!roof || kind === roof);
+        };
+        let idx = recommendations.findIndex((r) => fits(r.productId));
+        for (let i = recommendations.length - 1; i >= 0; i--)
+          if (findProduct(recommendations[i]!.productId)?.category === "Montagemateriaal" && i !== idx) {
+            recommendations.splice(i, 1);
+            if (i < idx) idx--;
+          }
+        if (idx < 0 && roof) {
+          const pick = products.find((p) => fits(p.id));
+          if (pick) {
+            recommendations.push({ productId: pick.id, quantity: 1, reason: "" });
+            idx = recommendations.length - 1;
+          }
+        }
+        const rec = idx >= 0 ? recommendations[idx] : undefined;
+        const mnt = rec && findProduct(rec.productId);
+        const per = mnt && panelsPerSet(mnt);
+        if (rec && per) {
+          rec.quantity = Math.ceil(panelCount / per);
+          rec.reason = `Passend bij een ${roofKind(mnt.specs.find((s) => s.label === "Daktype")?.value)} dak: ${panelCount} panelen / ${per} per set = ${rec.quantity} ${rec.quantity === 1 ? "set" : "sets"}.`;
+        }
+      }
       const warnings = evaluateSet(
         recommendations.map((r) => ({ id: r.productId, quantity: r.quantity })),
+        roof,
       )
         .filter((r) => r.status === "niet-compatibel")
         .map((r) => r.reason);

@@ -42,6 +42,7 @@
   --color-navy-700: var(--navy-700);
   --color-navy-500: var(--navy-500);
   --color-navy-100: var(--navy-100);
+  --color-yellow-500: var(--yellow-500);
   --color-yellow-400: var(--yellow-400);
   --color-yellow-100: var(--yellow-100);
   --color-success-700: var(--success-700);
@@ -68,6 +69,8 @@
   --navy-500: #8c97a8;
   --navy-100: #e6e9f0;
   /* Geel uit de bliksemflits */
+  /* Geel: 400 is het merkgeel voor vlakken, 500 de donkere variant voor accenten op wit */
+  --yellow-500: #c9a900;
   --yellow-400: #f3ce11;
   --yellow-100: #fdf3cf;
   /* Status */
@@ -2148,9 +2151,10 @@ select {
 .bestsellers {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
+/* Adviesband: licht en rustig, geel komt alleen terug als accent (titel, chips, knop). */
 .advisor-band {
-  background: var(--yellow-100);
-  padding-block: 28px;
+  background: var(--surface-50);
+  padding-block: clamp(40px, 6vw, 68px) var(--section-y-sm);
 }
 .advisor-inner {
   display: flex;
@@ -2161,6 +2165,20 @@ select {
 }
 .advisor-inner p {
   margin: 4px 0 0;
+}
+.advisor-inner h2 {
+  position: relative;
+  padding-bottom: 12px;
+}
+.advisor-inner h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--yellow-400);
 }
 .advisor-inner .chips {
   margin: 0;
@@ -4291,13 +4309,13 @@ select {
   color: var(--navy-900);
 }
 .chip-link {
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  border: 0;
+  background: var(--surface-0);
+  box-shadow: var(--shadow-md);
   transition:
     transform 0.15s ease-out,
     box-shadow 0.15s ease-out,
-    background-color 0.15s ease-out,
-    border-color 0.15s ease-out;
+    background-color 0.15s ease-out;
 }
 .chip-link svg:first-child {
   color: var(--yellow-500, #c9a900);
@@ -4309,9 +4327,10 @@ select {
     opacity 0.15s ease-out;
 }
 .chip-link:hover {
-  background: var(--yellow-100);
-  border-color: var(--yellow-400);
-  box-shadow: var(--shadow-md);
+  background: var(--surface-0);
+  box-shadow:
+    0 0 0 2px var(--yellow-400),
+    var(--shadow-md);
   transform: translateY(-2px);
 }
 .chip-link:hover .chip-arrow {

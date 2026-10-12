@@ -194,7 +194,18 @@ export function Header() {
   const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [pop, setPop] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const previousCount = useRef(count);
+  // Header wordt compacter met schaduw zodra er gescrold is (hysterese voorkomt flikkeren).
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled((was) => (was ? y > 12 : y > 32));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   // Korte "pop" op de pil zodra er iets aan de winkelmand is toegevoegd.
   useEffect(() => {
     const grew = count > previousCount.current;
@@ -216,7 +227,7 @@ export function Header() {
   return (
     <>
       <BrandBar />
-      <header className="site-header">
+      <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
         <div className="container main-header">
           <Link to="/" aria-label="ESTG home" onClick={close}>
             <Logo />

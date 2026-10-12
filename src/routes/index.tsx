@@ -26,8 +26,8 @@ import { CO2_FACTOR, estimateCo2Savings } from "@/lib/co2";
 import { formatEuro, formatInt, formatKwp } from "@/lib/format";
 import rooftop from "@/assets/solar-rooftop.jpg";
 import inverter from "@/assets/inverter.jpg";
-import battery from "@/assets/battery.jpg";
-import charger from "@/assets/charger.jpg";
+import battery from "@/assets/battery-wide.jpg";
+import charger from "@/assets/charger-wide.jpg";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -281,7 +281,7 @@ function WhyEstg() {
 const FAQ = [
   {
     q: "Kan ik op deze website al bestellen?",
-    a: "Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en klik op \"Bestellen\" om je bestelling met een gewenste verzenddatum door te geven. Er wordt geen echte betaling verwerkt: ESTG neemt contact met je op om betaling en levering af te ronden.",
+    a: 'Nee, dit is een voorbeeldomgeving. Verzamel producten in je winkelmand en klik op "Bestellen" om je bestelling met een gewenste verzenddatum door te geven. Er wordt geen echte betaling verwerkt: ESTG neemt contact met je op om betaling en levering af te ronden.',
   },
   {
     q: "Zijn de getoonde prijzen definitief?",
@@ -503,11 +503,11 @@ function Index() {
               </Button>
             </div>
             <img
-              className="contain"
+              className="framed"
               src={battery}
               alt="Thuisbatterij"
-              width={816}
-              height={816}
+              width={1650}
+              height={1000}
               loading="lazy"
             />
           </div>
@@ -517,8 +517,8 @@ function Index() {
             <div>
               <h2>Stel je selectie samen</h2>
               <p>
-                Verzamel producten in je winkelmand, controleer of de set compleet is en bestel direct
-                of download je selectie om met ESTG te bespreken.
+                Verzamel producten in je winkelmand, controleer of de set compleet is en bestel
+                direct of download je selectie om met ESTG te bespreken.
               </p>
               <Button asChild>
                 <Link to="/winkelwagen">
@@ -527,11 +527,11 @@ function Index() {
               </Button>
             </div>
             <img
-              className="contain"
+              className="framed"
               src={charger}
               alt="Laadoplossing"
-              width={816}
-              height={816}
+              width={1650}
+              height={1000}
               loading="lazy"
             />
           </div>

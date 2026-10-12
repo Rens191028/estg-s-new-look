@@ -3,6 +3,7 @@ import {
   Outlet,
   Link,
   createRootRouteWithContext,
+  useLocation,
   useRouter,
   HeadContent,
   Scripts,
@@ -142,7 +143,36 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+/** Korte fade/slide-in van de paginainhoud bij elke routewissel (op pad, niet op zoekparameters). */
+function PageTransition() {
+  const pathname = useLocation({ select: (l) => l.pathname });
+  return (
+    <div key={pathname} className="page-enter">
+      <Outlet />
+    </div>
+  );
+}
+
+/** Schudt een ongeldig formulierveld even zodat de fout opvalt (naast de standaard melding). */
+function useInvalidShake() {
+  useEffect(() => {
+    const onInvalid = (e: Event) => {
+      const el = e.target;
+      if (!(el instanceof HTMLElement)) return;
+      el.classList.remove("field-shake");
+      void el.offsetWidth;
+      el.classList.add("field-shake");
+      el.addEventListener("animationend", () => el.classList.remove("field-shake"), {
+        once: true,
+      });
+    };
+    document.addEventListener("invalid", onInvalid, true);
+    return () => document.removeEventListener("invalid", onInvalid, true);
+  }, []);
+}
+
 function RootComponent() {
+  useInvalidShake();
   const { queryClient } = Route.useRouteContext();
 
   return (
@@ -153,7 +183,7 @@ function RootComponent() {
             <CompareProvider>
               <Header />
               <main>
-                <Outlet />
+                <PageTransition />
               </main>
               <Footer />
               <CompareBar />

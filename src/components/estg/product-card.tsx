@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Check, Heart, Plus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { bump, flyToCart } from "./fly-to-cart";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/lib/catalog";
 import { formatEuro } from "@/lib/format";
@@ -53,7 +54,10 @@ export function ProductCard({ product }: { product: Product }) {
           className="fav-toggle"
           aria-pressed={favorites.has(product.id)}
           aria-label={`${product.name} ${favorites.has(product.id) ? "uit favorieten halen" : "aan favorieten toevoegen"}`}
-          onClick={() => void favorites.toggle(product.id)}
+          onClick={(e) => {
+            bump(e.currentTarget);
+            void favorites.toggle(product.id);
+          }}
         >
           <Heart size={17} />
         </button>
@@ -73,7 +77,8 @@ export function ProductCard({ product }: { product: Product }) {
             variant="default"
             size="sm"
             aria-label={`${product.name} toevoegen aan winkelmand`}
-            onClick={() => {
+            onClick={(e) => {
+              flyToCart(e.currentTarget);
               add(product.id);
               setAdded(true);
               setTimeout(() => setAdded(false), 1800);

@@ -9,9 +9,11 @@ import rooftop from "@/assets/solar-rooftop.jpg";
 export const Route = createFileRoute("/inloggen")({
   head: () =>
     pageHead("Inloggen", "Log in of maak een zakelijk ESTG-account aan om favorieten op te slaan."),
-  validateSearch: (s: Record<string, unknown>): { reason?: "bestellen" | undefined; returnTo?: "/bestellen" | undefined } => ({
-    reason: s["reason"] === "bestellen" ? "bestellen" : undefined,
-    returnTo: s["returnTo"] === "/bestellen" ? "/bestellen" : undefined,
+  validateSearch: (s: Record<string, unknown>): { reason?: "bestellen" | "trainingen" | undefined; returnTo?: "/bestellen" | "/trainingen" | undefined } => ({
+    reason:
+      s["reason"] === "bestellen" || s["reason"] === "trainingen" ? s["reason"] : undefined,
+    returnTo:
+      s["returnTo"] === "/bestellen" || s["returnTo"] === "/trainingen" ? s["returnTo"] : undefined,
   }),
   component: SignIn,
 });
@@ -29,6 +31,7 @@ function SignIn() {
   useEffect(() => {
     if (!loading && user) {
       if (returnTo === "/bestellen") navigate({ to: "/bestellen", replace: true });
+      else if (returnTo === "/trainingen") navigate({ to: "/trainingen", replace: true });
       else navigate({ to: "/account", search: { tab: "favorieten" }, replace: true });
     }
   }, [loading, user, navigate, returnTo]);
@@ -93,6 +96,11 @@ function SignIn() {
               </button>
             ))}
           </div>
+          {reason === "trainingen" && !notice && (
+            <div className="form-note" role="status">
+              Log in om je aan te melden voor een training.
+            </div>
+          )}
           {reason === "bestellen" && !notice && (
             <div className="form-note" role="status">
               Log in om je bestelling af te ronden.

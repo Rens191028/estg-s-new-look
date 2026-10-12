@@ -30,6 +30,9 @@ export function ReadingProgress({ targetSelector }: { targetSelector: string }) 
       aria-valuemax={100}
       aria-valuenow={pct}
     >
+      <span className="reading-progress-label" aria-hidden>
+        Leesvoortgang
+      </span>
       <div className="reading-progress-track">
         <span style={{ transform: `scaleY(${progress})` }} />
       </div>

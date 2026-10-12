@@ -538,6 +538,7 @@ export function Footer() {
         </FooterCol>
         <FooterCol title="Ontdek ESTG">
           <Link to="/over-estg">Over ons</Link>
+          <Link to="/trainingen">Trainingen</Link>
           <Link to="/winkelwagen">Winkelmand</Link>
           <a href="https://www.estg.eu/nl-nl" target="_blank" rel="noreferrer">
             Huidige ESTG-website

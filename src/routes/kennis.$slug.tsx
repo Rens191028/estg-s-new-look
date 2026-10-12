@@ -53,6 +53,39 @@ function ShareRow({ title }: { title: string }) {
   );
 }
 
+/** Rendert een sectietekst: alinea's, opsommingen ("- ") en genummerde lijsten ("1. "), gescheiden door lege regels. */
+function ArticleBody({ text }: { text: string }) {
+  return (
+    <>
+      {text.split("\n\n").map((block, i) => {
+        const lines = block.split("\n");
+        const bullets = lines.filter((l) => l.startsWith("- "));
+        const numbered = lines.filter((l) => /^\d+\. /.test(l));
+        const intro = lines.filter((l) => !l.startsWith("- ") && !/^\d+\. /.test(l));
+        return (
+          <div key={i}>
+            {intro.length > 0 && <p>{intro.join(" ")}</p>}
+            {bullets.length > 0 && (
+              <ul>
+                {bullets.map((l) => (
+                  <li key={l}>{l.slice(2)}</li>
+                ))}
+              </ul>
+            )}
+            {numbered.length > 0 && (
+              <ol>
+                {numbered.map((l) => (
+                  <li key={l}>{l.replace(/^\d+\. /, "")}</li>
+                ))}
+              </ol>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 function Article() {
   const { slug } = Route.useParams();
   const a = articles.find((x) => x.slug === slug);
@@ -81,7 +114,7 @@ function Article() {
         {a.sections.map(([title, body]) => (
           <section key={title}>
             <h2>{title}</h2>
-            <p>{body}</p>
+            <ArticleBody text={body} />
           </section>
         ))}
         <p className="sample-note">

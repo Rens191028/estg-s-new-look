@@ -10,6 +10,7 @@ import { pageHead } from "@/lib/catalog";
 import {
   buildConfiguration,
   CONSUMPTION,
+  describeConfiguration,
   PANEL_AREA_M2,
   type ConsumptionClass,
   type RoofType,
@@ -229,7 +230,15 @@ function Configurator() {
                 Toevoegen en naar winkelmand <ArrowRight />
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link to="/advisor" search={{ vraag: "" }}>
+                <Link
+                  to="/advisor"
+                  search={{
+                    vraag: describeConfiguration(
+                      { roofArea, roofType, consumption, battery, charger },
+                      result,
+                    ),
+                  }}
+                >
                   Verfijn met de AI-adviseur
                 </Link>
               </Button>

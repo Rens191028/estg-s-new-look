@@ -150,6 +150,19 @@ describe("configurator", () => {
     expect(r.lines.some((l) => l.product.category === "Energieopslag")).toBe(true);
     expect(r.lines.some((l) => l.product.category === "EV-laders")).toBe(true);
   });
+  it("beschrijft de set in natuurlijke taal voor de AI-adviseur", async () => {
+    const { buildConfiguration, describeConfiguration } = await import("./configurator");
+    const input = { roofArea: 200, roofType: "schuin", consumption: "middel", battery: true, charger: false } as const;
+    const r = buildConfiguration(input);
+    const text = describeConfiguration(input, r);
+    expect(text).toContain("schuin dak");
+    expect(text).toContain("middelgroot bedrijf");
+    expect(text).toContain("met batterij voor opslag");
+    expect(text).toContain("zonder laadpaal");
+    expect(text).toContain(`${r.panelCount} panelen`);
+    expect(text).toContain(r.lines[0]!.product.name);
+    expect(text.length).toBeLessThan(1000);
+  });
 });
 
 describe("aanbiedingen", () => {

@@ -1,5 +1,6 @@
 import { products, type Product } from "./catalog";
 import { estimateCo2Savings } from "./co2";
+import { formatInt, formatKwp } from "./format";
 import { evaluateSet, MAX_DC_AC_RATIO, type CompatResult } from "./assistant/compat";
 
 export type RoofType = "schuin" | "plat";
@@ -137,4 +138,25 @@ export function buildConfiguration(input: ConfigInput): ConfigResult {
     checks,
     notes,
   };
+}
+
+/**
+ * Natuurlijk-taalsamenvatting van een samengestelde set, voor de doorlink naar de AI-adviseur.
+ * Zo hoeft de klant niets over te typen als hij vanuit de configurator doorklikt.
+ * Blijft ruim binnen MAX_MESSAGE_LENGTH (1000): de adviseur prefilt hier alleen het tekstveld mee.
+ */
+export function describeConfiguration(input: ConfigInput, result: ConfigResult): string {
+  const c = CONSUMPTION[input.consumption];
+  const set = result.lines.map((l) => `${l.quantity} × ${l.product.name}`).join(", ");
+  return [
+    `Systeem van ongeveer ${formatKwp(result.kwp)} (${result.panelCount} panelen) op een ${
+      input.roofType === "schuin" ? "schuin" : "plat"
+    } dak van ${formatInt(input.roofArea)} m²,`,
+    `verbruiksklasse ${c.label.toLowerCase()} (±${formatInt(c.kwh)} kWh per jaar),`,
+    `${input.battery ? "met" : "zonder"} batterij voor opslag en ${
+      input.charger ? "met" : "zonder"
+    } laadpaal voor elektrische auto’s.`,
+    `De set die ik nu heb samengesteld: ${set}.`,
+    "Klopt deze opzet, of kan het anders?",
+  ].join(" ");
 }

@@ -14,7 +14,6 @@ import { toOrder, trackingNumber, type Order, type OrderLine, type OrderRow } fr
 import type { OrderTotals } from "@/lib/pricing";
 import { useAuth } from "./auth";
 
-
 export type NewOrder = {
   lines: OrderLine[];
   totals: OrderTotals;

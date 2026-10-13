@@ -177,6 +177,51 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: {
+          contact: Json
+          created_at: string
+          id: string
+          lines: Json
+          reference: string | null
+          ship_date: string
+          shipping: number
+          subtotal: number
+          total: number
+          tracking_number: string
+          user_id: string
+          vat: number
+        }
+        Insert: {
+          contact?: Json
+          created_at?: string
+          id?: string
+          lines: Json
+          reference?: string | null
+          ship_date: string
+          shipping: number
+          subtotal: number
+          total: number
+          tracking_number: string
+          user_id: string
+          vat: number
+        }
+        Update: {
+          contact?: Json
+          created_at?: string
+          id?: string
+          lines?: Json
+          reference?: string | null
+          ship_date?: string
+          shipping?: number
+          subtotal?: number
+          total?: number
+          tracking_number?: string
+          user_id?: string
+          vat?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           company_name: string | null

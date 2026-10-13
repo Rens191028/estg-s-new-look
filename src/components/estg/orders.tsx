@@ -13,10 +13,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toOrder, trackingNumber, type Order, type OrderLine, type OrderRow } from "@/lib/orders";
 import type { OrderTotals } from "@/lib/pricing";
 import { useAuth } from "./auth";
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-// The orders table is not in the generated database types yet (its setup has not run), so query it untyped.
-const ordersDb = supabase as unknown as SupabaseClient;
 
 export type NewOrder = {
   lines: OrderLine[];
@@ -74,7 +70,7 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     let active = true;
     const seen = edits.current;
     setLoading(true);
-    ordersDb
+    supabase
       .from("orders")
       .select("*")
       .eq("user_id", userId)
@@ -95,7 +91,7 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
   const place = useCallback<Orders["place"]>(
     async (input) => {
       if (!userId) return { order: null, error: "Niet ingelogd.", local: false };
-      const { data, error } = await ordersDb
+      const { data, error } = await supabase
         .from("orders")
         .insert({
           user_id: userId,
